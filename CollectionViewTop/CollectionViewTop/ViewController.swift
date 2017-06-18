@@ -8,17 +8,21 @@
 
 import UIKit
 
-class TopPageViewController: UICollectionViewController{
+class TopPageViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout{
     
     
     private let cellid = "cellid"
+    
+    
+    //Override UICollectionViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         collectionView?.backgroundColor = UIColor.white
-        collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: cellid)
+        collectionView?.register(CategoryCell.self,forCellWithReuseIdentifier: cellid)
         view.addSubview(collectionView!)
+
     }
     
     
@@ -31,25 +35,14 @@ class TopPageViewController: UICollectionViewController{
         return 3
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: view.frame.width, height: 154)
-//    }
+    
+    //Override FlowlayoutDelegate
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 154)
+    }
+    
+
 }
 
-
-class CategoryCell: UICollectionViewCell{
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setUpViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setUpViews(){
-        backgroundColor = UIColor.red
-    }
-}
 

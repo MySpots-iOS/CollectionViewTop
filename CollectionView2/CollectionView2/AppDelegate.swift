@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  CollectionViewTop
+//  CollectionView2
 //
 //  Created by ayako_sayama on 2017-06-17.
 //  Copyright © 2017 ayako_sayama. All rights reserved.
@@ -11,19 +11,11 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window:UIWindow?
+    var window: UIWindow?
+
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-        
-        let layout = UICollectionViewFlowLayout()
-        let topPageVC = TopPageViewController(collectionViewLayout: layout)
-        
-        window!.rootViewController = UINavigationController(rootViewController: topPageVC)
-
         return true
     }
 
