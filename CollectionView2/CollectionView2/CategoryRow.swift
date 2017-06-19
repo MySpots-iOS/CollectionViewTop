@@ -4,22 +4,26 @@
 //
 //  Created by ayako_sayama on 2017-06-17.
 //  Copyright © 2017 ayako_sayama. All rights reserved.
-//
+
+//1. getCurrentLocation
+//2. show currentLocation on map
+//3. get Locations from MySpot.locations
+//4. show them on pin
 
 import UIKit
 
-class CategoryRow : UITableViewCell{
+class CategoryRow : UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegate{
+    
     @IBOutlet weak var collectionView: UICollectionView!
-
     
-}
-
-extension CategoryRow : UICollectionViewDataSource, UICollectionViewDelegate {
+    var cellNum = ["Beach", "FriendsHouse", "Party", "Drinking", "Cities"]
     
+ 
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 8
+        return cellNum.count
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "folderCell", for: indexPath) as! FolderCell
@@ -27,27 +31,27 @@ extension CategoryRow : UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
         if segue.identifier == "mySpotsMap" {
             let mapVC = segue.destination as! MySpotsMapVC
-            //            let indexPath = sender as! NSIndexPath
+            let indexPath = sender as? Int
+            mapVC.folderName = "\(cellNum[indexPath!])"
             
-            let image = UIImage(named: "mySpot1")
-            let mySpots = MySpots(spotName: "Cornerstone", folderImage: image!, latitude: 49.285131, longitude: -123.112998)
-            mapVC.myspots = mySpots
+            let locations = [                Location(folderID: indexPath!, spotName: "New York, NY", latitude: 40.713054, longitude: -74.007228),
+                                             Location(folderID: indexPath!, spotName: "Los Angeles, CA", latitude: 34.052238, longitude: -118.243344),
+                                             Location(folderID: indexPath!, spotName: "Chicago, IL", latitude: 41.883229, longitude: -87.632398)            ]
+            
+//            let mySpots = MySpots(folderName: "\(cellNum[indexPath!])", locations: locations)
+            mapVC.loca = locations
         }
-    }
-    
-    // Set the indexPath of the selected item as the sender for the segue
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        
-//        
-//        performSegue(withIdentifier: "mySpotsMap", sender: indexPath)
-//    }
+        
 
     
-    
-    
+    }
 }
+
+
+
 
 extension CategoryRow : UICollectionViewDelegateFlowLayout {
     

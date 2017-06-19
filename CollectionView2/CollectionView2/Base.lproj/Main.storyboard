@@ -73,6 +73,7 @@
                                                             </constraints>
                                                             <size key="customSize" width="160" height="160"/>
                                                             <connections>
+                                                                <outlet property="folderName" destination="h3R-mL-DEk" id="idw-U3-rzY"/>
                                                                 <outlet property="imageView" destination="1A9-6v-lqC" id="I3P-oc-gMM"/>
                                                                 <segue destination="pav-sa-v2c" kind="show" identifier="mySpotsMap" id="Lfp-Pl-a5y"/>
                                                             </connections>

@@ -69,8 +69,8 @@
 				74313A581EF62A13006A6053 /* LaunchScreen.storyboard */,
 				74313A5B1EF62A13006A6053 /* Info.plist */,
 				74313A611EF62E51006A6053 /* CategoryRow.swift */,
-				74313A651EF6311A006A6053 /* FolderCell.swift */,
 				74313A871EF71F6B006A6053 /* MySpots.swift */,
+				74313A651EF6311A006A6053 /* FolderCell.swift */,
 				74313A8B1EF72F3D006A6053 /* MySpotsMapVC.swift */,
 			);
 			path = CollectionView2;
