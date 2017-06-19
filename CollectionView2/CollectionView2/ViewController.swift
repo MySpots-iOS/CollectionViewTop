@@ -12,12 +12,16 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    var segIdentifier = "mySpotsMap"
+    
     override func viewDidLoad() {
         tableView.delegate = self
         tableView.dataSource = self
     }
     
     var categories = ["MySpots", "Explore", "Near You"]
+
+    
 }
 
 extension ViewController : UITableViewDelegate { }

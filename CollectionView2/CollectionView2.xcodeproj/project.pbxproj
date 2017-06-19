@@ -15,6 +15,7 @@
 		74313A621EF62E51006A6053 /* CategoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74313A611EF62E51006A6053 /* CategoryRow.swift */; };
 		74313A661EF6311A006A6053 /* FolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74313A651EF6311A006A6053 /* FolderCell.swift */; };
 		74313A881EF71F6B006A6053 /* MySpots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74313A871EF71F6B006A6053 /* MySpots.swift */; };
+		74313A8C1EF72F3D006A6053 /* MySpotsMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74313A8B1EF72F3D006A6053 /* MySpotsMapVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		74313A611EF62E51006A6053 /* CategoryRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryRow.swift; sourceTree = "<group>"; };
 		74313A651EF6311A006A6053 /* FolderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCell.swift; sourceTree = "<group>"; };
 		74313A871EF71F6B006A6053 /* MySpots.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MySpots.swift; sourceTree = "<group>"; };
+		74313A8B1EF72F3D006A6053 /* MySpotsMapVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MySpotsMapVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				74313A611EF62E51006A6053 /* CategoryRow.swift */,
 				74313A651EF6311A006A6053 /* FolderCell.swift */,
 				74313A871EF71F6B006A6053 /* MySpots.swift */,
+				74313A8B1EF72F3D006A6053 /* MySpotsMapVC.swift */,
 			);
 			path = CollectionView2;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				74313A881EF71F6B006A6053 /* MySpots.swift in Sources */,
+				74313A8C1EF72F3D006A6053 /* MySpotsMapVC.swift in Sources */,
 				74313A521EF62A13006A6053 /* ViewController.swift in Sources */,
 				74313A621EF62E51006A6053 /* CategoryRow.swift in Sources */,
 				74313A501EF62A13006A6053 /* AppDelegate.swift in Sources */,

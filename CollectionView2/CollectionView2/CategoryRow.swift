@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CategoryRow : UITableViewCell {
+class CategoryRow : UITableViewCell{
     @IBOutlet weak var collectionView: UICollectionView!
 
     
@@ -25,6 +25,27 @@ extension CategoryRow : UICollectionViewDataSource, UICollectionViewDelegate {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "folderCell", for: indexPath) as! FolderCell
         return cell
     }
+    
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "mySpotsMap" {
+            let mapVC = segue.destination as! MySpotsMapVC
+            //            let indexPath = sender as! NSIndexPath
+            
+            let image = UIImage(named: "mySpot1")
+            let mySpots = MySpots(spotName: "Cornerstone", folderImage: image!, latitude: 49.285131, longitude: -123.112998)
+            mapVC.myspots = mySpots
+        }
+    }
+    
+    // Set the indexPath of the selected item as the sender for the segue
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        
+//        
+//        performSegue(withIdentifier: "mySpotsMap", sender: indexPath)
+//    }
+
+    
+    
     
 }
 

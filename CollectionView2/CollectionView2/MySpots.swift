@@ -10,12 +10,15 @@ import UIKit
 
 class MySpots{
     
-    var spotName:String
-    var longitude: Float
-    var latitude: Float
+    var spotName:String?
+    var folderImage:UIImage?
     
-    init(spotName: String, latitude:Float, longitude:Float) {
+    var longitude: Double?
+    var latitude: Double?
+    
+    init(spotName: String, folderImage:UIImage, latitude:Double, longitude:Double) {
         self.spotName = spotName
+        self.folderImage = folderImage
         self.latitude = latitude
         self.longitude = longitude
     }

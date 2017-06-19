@@ -29,7 +29,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="160"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z7s-Vt-L4F" id="EoD-Wv-JBi">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="159.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="160"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="BRW-YH-DMe">
@@ -50,20 +50,31 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1A9-6v-lqC">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="160" height="133"/>
+                                                                        <color key="backgroundColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
                                                                     </imageView>
+                                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="textfield" textAlignment="natural" minimumFontSize="19" translatesAutoresizingMaskIntoConstraints="NO" id="h3R-mL-DEk">
+                                                                        <rect key="frame" x="0.0" y="143" width="160" height="17"/>
+                                                                        <nil key="textColor"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <textInputTraits key="textInputTraits"/>
+                                                                    </textField>
                                                                 </subviews>
                                                             </view>
-                                                            <color key="backgroundColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="bottom" secondItem="1A9-6v-lqC" secondAttribute="bottom" id="3DS-Wd-BZv"/>
                                                                 <constraint firstAttribute="trailing" secondItem="1A9-6v-lqC" secondAttribute="trailing" id="9nc-Lu-Nwq"/>
                                                                 <constraint firstItem="1A9-6v-lqC" firstAttribute="leading" secondItem="aLC-Lq-IsO" secondAttribute="leading" id="Cq3-89-8JE"/>
+                                                                <constraint firstItem="h3R-mL-DEk" firstAttribute="top" secondItem="1A9-6v-lqC" secondAttribute="bottom" constant="10" id="LcW-TW-yNL"/>
+                                                                <constraint firstAttribute="bottom" secondItem="h3R-mL-DEk" secondAttribute="bottom" id="SZW-Do-HPD"/>
+                                                                <constraint firstAttribute="trailing" secondItem="h3R-mL-DEk" secondAttribute="trailing" id="kVG-Yw-HEY"/>
                                                                 <constraint firstItem="1A9-6v-lqC" firstAttribute="top" secondItem="aLC-Lq-IsO" secondAttribute="top" id="lDY-uO-Sge"/>
+                                                                <constraint firstItem="h3R-mL-DEk" firstAttribute="leading" secondItem="aLC-Lq-IsO" secondAttribute="leading" id="s4c-pK-kbR"/>
                                                             </constraints>
                                                             <size key="customSize" width="160" height="160"/>
                                                             <connections>
                                                                 <outlet property="imageView" destination="1A9-6v-lqC" id="I3P-oc-gMM"/>
+                                                                <segue destination="pav-sa-v2c" kind="show" identifier="mySpotsMap" id="Lfp-Pl-a5y"/>
                                                             </connections>
                                                         </collectionViewCell>
                                                     </cells>
@@ -107,7 +118,34 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="878" y="777"/>
+            <point key="canvasLocation" x="877.60000000000002" y="776.76161919040487"/>
+        </scene>
+        <!--My Spots MapVC-->
+        <scene sceneID="1B5-wJ-INe">
+            <objects>
+                <viewController id="pav-sa-v2c" customClass="MySpotsMapVC" customModule="CollectionView2" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3bH-Rn-cTS"/>
+                        <viewControllerLayoutGuide type="bottom" id="qhW-z4-l06"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="sgr-fH-PeZ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ej7-Qb-tJ4">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="bigMap" destination="Ej7-Qb-tJ4" id="GFT-Di-P59"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2mD-Tt-zn0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1548" y="776.76161919040487"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="e98-13-GAr">
