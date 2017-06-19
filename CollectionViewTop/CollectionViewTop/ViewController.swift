@@ -39,7 +39,7 @@ class TopPageViewController: UICollectionViewController, UICollectionViewDelegat
     //Override FlowlayoutDelegate
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 154)
+        return CGSize(width: view.frame.width, height: 230)
     }
     
 

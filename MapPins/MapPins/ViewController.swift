@@ -43,7 +43,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         for location in locations {
             let annotation = MKPointAnnotation()
             annotation.title = location["title"] as? String
-            annotation.coordinate = CLLocationCoordinate2D(latitude: location["latitude"] as! Double, longitude: location["longitude"] as! Double)
+            annotation.coordinate  = CLLocationCoordinate2D(latitude: location["latitude"] as! Double, longitude: location["longitude"] as! Double)
             mapView.addAnnotation(annotation)
         }
         

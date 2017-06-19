@@ -35,7 +35,7 @@ class MySpotsMapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelega
         self.bigMap.showsUserLocation = true
         
         
-        print("name: \(myspots.locations[1].spotName ?? "No name")")
+//        print("name: \(myspots.locations[1].spotName ?? "No name")")
 
         
         

@@ -21,6 +21,41 @@ class ViewController: UIViewController {
     
     var categories = ["MySpots", "Explore", "Near You"]
 
+    var cellNum = ["Beach", "FriendsHouse", "Party", "Drinking", "Cities"]
+
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        print("This is seg2!")
+//        
+//        
+//        if segue.identifier == "mySpotsMap" {
+//            
+//            print("This is seg3!")
+//            
+//            let mapVC = segue.destination as! MySpotsMapVC
+//            
+//            let tag = segue as! Int
+//            mapVC.folderName = "\(cellNum[tag])"
+//            
+//
+//            
+//            let locations = [
+//                Location(folderID: indexPath!, spotName: "New York, NY", latitude: 40.713054, longitude: -74.007228),
+//                
+//                Location(folderID: indexPath!, spotName: "Los Angeles, CA", latitude: 34.052238, longitude: -118.243344),
+//                
+//                Location(folderID: indexPath!, spotName: "Chicago, IL", latitude: 41.883229, longitude: -87.632398)
+//            ]
+//            
+//            //            let mySpots = MySpots(folderName: "\(cellNum[indexPath!])", locations: locations)
+//            mapVC.loca = locations
+//        }
+//        
+//
+//    }
+    
+
+    
     
 }
 

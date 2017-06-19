@@ -22,11 +22,7 @@ class MySpots{
 //        self.folderImage = UIImage(named: "mySpots1")!
         self.locations = locations
     }
-//        self.locations = [
-//            Location(spotName: "New York, NY", latitude: 40.713054, longitude: -74.007228),
-//            Location(spotName: "Los Angeles, CA", latitude: 34.052238, longitude: -118.243344),
-//            Location(spotName: "Chicago, IL", latitude: 41.883229, longitude: -87.632398)
-//        ]
+
 }
 
 
