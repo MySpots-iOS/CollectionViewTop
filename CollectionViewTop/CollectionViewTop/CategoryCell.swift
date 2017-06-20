@@ -11,8 +11,15 @@ import UIKit
 
 class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     
-    
 
+    var topPageCategory: ToppageCategory?{
+    didSet{
+        if let name = topPageCategory?.name{
+            nameCatLabel.text = name
+        }
+    }
+    
+    }
     
     private let cellid = "myspotCellid"
     
@@ -80,13 +87,18 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        if let count =  topPageCategory?.folders?.count{
+            return count
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
 
-        return collectionView.dequeueReusableCell(withReuseIdentifier: cellid, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellid, for: indexPath) as! MySpotCell
+        cell.folder = topPageCategory?.folders?[indexPath.item]
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -102,11 +114,24 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
 
 class MySpotCell: UICollectionViewCell{
     
+    var folder: Folder?{
+        didSet{
+            if let name = folder?.folderName{
+                nameLabel.text = name
+            }
+            
+            categoryLabel.text = folder?.category
+            spotsLabel.text = "\(folder?.spotsNum ?? 0) spots"
+    
+            if let imageName = folder?.imageName{
+                imageView.image = UIImage(named: imageName)
+            }
+        }
+    }
     
     //Add imageView
     let imageView:UIImageView = {
         let iv = UIImageView()
-        iv.image = UIImage(named: "cafe1")
         iv.contentMode = .scaleAspectFill
         iv.layer.cornerRadius = 16
         iv.layer.masksToBounds = true

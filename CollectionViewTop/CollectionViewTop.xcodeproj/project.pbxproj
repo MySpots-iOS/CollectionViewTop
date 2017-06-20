@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		74313A861EF71D21006A6053 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74313A851EF71D21006A6053 /* CategoryCell.swift */; };
+		74313AD01EF8931D006A6053 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74313ACF1EF8931D006A6053 /* Model.swift */; };
 		74F4949E1EF60D750050F84A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F4949D1EF60D750050F84A /* AppDelegate.swift */; };
 		74F494A01EF60D750050F84A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F4949F1EF60D750050F84A /* ViewController.swift */; };
 		74F494A31EF60D760050F84A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74F494A11EF60D760050F84A /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		74313A851EF71D21006A6053 /* CategoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		74313ACF1EF8931D006A6053 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		74F4949A1EF60D750050F84A /* CollectionViewTop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollectionViewTop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		74F4949D1EF60D750050F84A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		74F4949F1EF60D750050F84A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				74F494A61EF60D760050F84A /* LaunchScreen.storyboard */,
 				74F494A91EF60D760050F84A /* Info.plist */,
 				74313A851EF71D21006A6053 /* CategoryCell.swift */,
+				74313ACF1EF8931D006A6053 /* Model.swift */,
 			);
 			path = CollectionViewTop;
 			sourceTree = "<group>";
@@ -142,6 +145,7 @@
 				74F494A01EF60D750050F84A /* ViewController.swift in Sources */,
 				74F4949E1EF60D750050F84A /* AppDelegate.swift in Sources */,
 				74313A861EF71D21006A6053 /* CategoryCell.swift in Sources */,
+				74313AD01EF8931D006A6053 /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
