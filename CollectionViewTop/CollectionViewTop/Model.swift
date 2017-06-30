@@ -16,19 +16,18 @@ class ToppageCategory: NSObject{
     
     //本番のデータここから呼ぶ
     
-//    static func fetchTopPageSpots() -> [ToppageCategory]{
-//        //fetch JSON data from Database?
-//    }
-    
+
     
     //仮でデータを作っている(viewControllerから　SampleAppCategoriesが呼ばれている)
-    static func sampleAppCategories() -> [ToppageCategory]{
+    static func topPageCategories() -> [ToppageCategory]{
         
         //1. Cateogry1
         
         let mySpotsCat = ToppageCategory()
         mySpotsCat.name = "My Spots"
         
+        
+        //ここから先のデータをDatabaseでひっぱってくる！
         var folders = [Folder]()
         
         let folder1 = Folder()
@@ -67,7 +66,6 @@ class ToppageCategory: NSObject{
         exploreCat.folders = exploreFolders
         
         
-        
         return [mySpotsCat, exploreCat]
 
     }
@@ -83,3 +81,34 @@ class Folder: NSObject {
     var imageName: String?
     var spotsNum: Int?
 }
+
+
+
+class Spot:NSObject{
+    
+    var folderID:NSNumber?
+    var spotName:String?
+    var latitude:Double?
+    var longitude:Double?
+    
+}
+
+
+//extension Spot{
+//    
+//    class MySpot:NSObject{
+//        var folderID:NSNumber?
+//        var spotName:String?
+//        var latitude:Double?
+//        var longitude:Double?
+//    }
+//    
+//    class ExploreSpot:NSObject{
+//        var folderID:NSNumber?
+//        var spotName:String?
+//        var latitude:Double?
+//        var longitude:Double?
+//    }
+//}
+
+

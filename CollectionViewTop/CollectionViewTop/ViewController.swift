@@ -21,8 +21,7 @@ class TopPageViewController: UICollectionViewController, UICollectionViewDelegat
         super.viewDidLoad()
         
         
-//        topPageCategory = ToppageCategory.fetchTopPageSpots()
-        topPageCategory = ToppageCategory.sampleAppCategories()
+        topPageCategory = ToppageCategory.topPageCategories()
         
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(CategoryCell.self,forCellWithReuseIdentifier: cellid)

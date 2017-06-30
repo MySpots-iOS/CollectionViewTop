@@ -14,11 +14,8 @@ import UIKit
 
 class CategoryRow : UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegate{
     
-    @IBOutlet weak var collectionView: UICollectionView!
-    
-//    var cellNum = ["Beach", "FriendsHouse", "Party", "Drinking", "Cities"]
-    
- 
+    @IBOutlet weak var cView: UICollectionView!
+
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 5
@@ -28,8 +25,19 @@ class CategoryRow : UITableViewCell, UICollectionViewDataSource, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "folderCell", for: indexPath) as! FolderCell
         print("This is seg1!")
+        
+        
         return cell
     }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "mySpotsMap") as? MySpotsMapVC else {
+            print("Could not instantiate view controller with identifier of type SecondViewController")
+            return
+        }
+
+           }
     
     
     
@@ -57,13 +65,9 @@ class CategoryRow : UITableViewCell, UICollectionViewDataSource, UICollectionVie
 //            let mySpots = MySpots(folderName: "\(cellNum[indexPath!])", locations: locations)
             mapVC.loca = locations
         }
-        
-
     
     }
 }
-
-
 
 
 extension CategoryRow : UICollectionViewDelegateFlowLayout {
