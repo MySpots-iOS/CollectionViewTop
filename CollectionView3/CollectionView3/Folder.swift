@@ -13,5 +13,6 @@ class Folder: NSObject {
     var folderName: String?
     var category: String?
     var imageName: String?
-    var spotsNum: Int?
+    
+    var spots:[Spot]?
 }

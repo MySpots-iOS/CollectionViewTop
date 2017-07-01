@@ -1,21 +1,14 @@
-//
-//  DataSource.swift
-//  CollectionView3
-//
-//  Created by ayako_sayama on 2017-06-29.
-//  Copyright © 2017 ayako_sayama. All rights reserved.
-//
 
 import Foundation
 import Firebase
 
 class DataSource {
     
-//    let ref = Database.database().reference()
+    let ref = Database.database().reference()
     let firebasePath: String = "MySpotsFolder"
     
     var folders:[Folder] = []
-
+    
     
     init() {
 //        populateData()
@@ -23,19 +16,32 @@ class DataSource {
     }
     
 //    var spots:[Spot] = []
-    
-    
+   
 //    func numbeOfRowsInEachGroup(_ index: Int) -> Int {
 //        return spotsInFolder(index).count
 //    }
-//    
+    
     func numberOfFolders() -> Int {
         return folders.count
     }
-//
-//    func getFolderLabelAtIndex(_ index: Int) -> String {
-//        return folders[index].folderName!
-//    }
+    
+    func numberOfSpots(_ index: Int) -> Int{
+        
+        if folders[index].spots?.count != nil{
+            return (folders[index].spots?.count)!
+        }
+        return 0
+    }
+
+    func getFolderLabelAtIndex(_ index: Int) -> String {
+        return folders[index].folderName!
+    }
+    
+    func getImageNameAtIndex(_ index: Int) -> String{
+        return folders[index].imageName!
+    }
+    
+    
     
     // MARK:- Populate Data from plist
     
@@ -49,50 +55,109 @@ class DataSource {
     
     func firstInit(){
 
+        
+        self.ref.child(firebasePath).observe(.value, with: { (snapshot) in
 //        self.ref.child(firebasePath).observeSingleEvent(of: .value, with: { (snapshot) in
-//            for folder in snapshot.children {
-//                if let snap = folder as? DataSnapshot {
-//                    let folder = self.makeFolder(folder: snap)
-//                    self.folders.append(folder)
-//                }
-//            }
-//            
-//            NotificationCenter.default.post(name: Notification.Name(rawValue:"FirebaseNotification"), object: nil)
-//            
-//        }) { (error) in
-//            print(error.localizedDescription)
-//        }
+            
+            
+            for folder in snapshot.children{
+                let newFolder: Folder?
+                
+                print("Readme")
+
+            
+                if let snap = folder as? DataSnapshot {
+                    newFolder = self.makeFolder(folder: snap)
+                    self.folders.append(newFolder!)
+                    
+                    print(newFolder?.imageName ?? 0)
+                    
+//                    if let snapSpots = (folder as? DataSnapshot)?.childSnapshot(forPath: "Spot") {
+//                        
+//                        for spot in snapSpots.children{
+//                            if let snap = spot as? DataSnapshot{
+//                                let newSpot = self.makeSpot(snap)
+//                                newFolder?.spots?.append(newSpot)
+//                                
+//                                print(newSpot.spotName ?? "noname")
+//                            }
+//                            
+//                        }
+//                        
+//                    }
+                }
+
+            }
+            
+            NotificationCenter.default.post(name: Notification.Name(rawValue:"FirebaseNotification"), object: nil)
+        }) { (error) in
+            print(error.localizedDescription)
+        }
     }
    
     
-//    func makeFolder(folder:DataSnapshot) -> Folder {
-//        
-//        let newFolder = Folder()
-//        
-//        //print("make folder: \(folder.value ?? "no value")")
-//        
-//        let value = folder.value as? NSDictionary
-//        
-//        if let category = value?["category"] {
-//            newFolder.category = category as? String
+    func makeFolder(folder:DataSnapshot) -> Folder {
+        
+        let newFolder = Folder()
+        
+        let value = folder.value as? NSDictionary
+        
+        if let category = value?["category"] {
+            newFolder.category = category as? String
+        }
+        
+        if let folderName = value?["folderName"] {
+            newFolder.folderName = folderName as? String
+        }
+        
+        if let imageName = value?["imageName"] {
+            newFolder.imageName = imageName as? String
+        }
+        
+
+        let spots = folder.childSnapshot(forPath: "Spots")
+        print(spots.children)
+
+
+//        for spot in spots.children{
+//            if let snap = spot as? DataSnapshot{
+//                let newSpot = makeSpot(snap)
+//                newFolder.spots?.append(newSpot)
+//                
+//                print(newSpot.spotName ?? "noname")
+//            }
+//            
+//            
 //        }
 //        
-//        if let folderName = value?["folderName"] {
-//            newFolder.folderName = folderName as? String
-//        }
-//        
-//        if let imageName = value?["imageName"] {
-//            newFolder.imageName = imageName as? String
-//        }
-//        
-//        if let spotsNum = value?["spotsNum"] {
-//            newFolder.spotsNum = spotsNum as? Int
-//        }
-//        
-//        return newFolder
-//    }
+//        print(newFolder.spots?.count ?? 0)
+        
+        return newFolder
+    }
 
     
+    func makeSpot(_ spots:DataSnapshot) -> Spot{
+        
+        let newSpot = Spot()
+        let value = spots.value as? NSDictionary
+        
+        
+        if let folderID = value?["folderID"] {
+            newSpot.folderID = folderID as? NSNumber
+        }
+        
+        if let latitude = value?["latitude"] {
+            newSpot.latitude = latitude as? Double
+        }
+        
+        if let longitude = value?["longitude"] {
+            newSpot.longitude = longitude as? Double
+        }
+        
+        return newSpot
+    }
+    
+}
     // MARK:- FruitsForEachGroup
     
 //    func spotsInFolder(_ index: Int) -> [Spot] {
@@ -131,7 +196,7 @@ class DataSource {
 //    }
     
     
-}
+
 
 //extension Array {
 //    func indexOfObject<T:AnyObject>(_ item:T) -> Int {
