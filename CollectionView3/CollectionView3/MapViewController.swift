@@ -67,9 +67,9 @@ class MapViewController: UIViewController{
         mapView.delegate = self as? GMSMapViewDelegate
         
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
-        marker.title = "Sydney"
-        marker.snippet = "Australia"
+        marker.position = CLLocationCoordinate2D(latitude: -123.111191, longitude: -123.111191)
+        marker.title = "Vancouver"
+        marker.snippet = "Canada"
         marker.map = mapView
         
         // Add the map to the view, hide it until we've got a location update.

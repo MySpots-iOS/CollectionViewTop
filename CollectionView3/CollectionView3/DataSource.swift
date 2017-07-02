@@ -11,15 +11,8 @@ class DataSource {
     
     
     init() {
-//        populateData()
         firstInit()
     }
-    
-//    var spots:[Spot] = []
-   
-//    func numbeOfRowsInEachGroup(_ index: Int) -> Int {
-//        return spotsInFolder(index).count
-//    }
     
     func numberOfFolders() -> Int {
         return folders.count
@@ -42,20 +35,8 @@ class DataSource {
     }
     
     
-    
-    // MARK:- Populate Data from plist
-    
-//    func populateData() {
-//        if let path = Bundle.main.path(forResource: "fruits", ofType: "plist") {
-//                for item in dictArray {
-//   
-//            }
-//        }
-//    }
-    
     func firstInit(){
 
-        
         self.ref.child(firebasePath).observe(.value, with: { (snapshot) in
 //        self.ref.child(firebasePath).observeSingleEvent(of: .value, with: { (snapshot) in
             
