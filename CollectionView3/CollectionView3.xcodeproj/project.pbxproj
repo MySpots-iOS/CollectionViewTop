@@ -21,12 +21,10 @@
 		747B71B21F05016A001F6A6F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 747B71B11F05016A001F6A6F /* GoogleService-Info.plist */; };
 		747B71B51F07569A001F6A6F /* CustomTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 747B71B31F07569A001F6A6F /* CustomTableViewCell.xib */; };
 		747B71B61F07569A001F6A6F /* PlaceInformation.xib in Resources */ = {isa = PBXBuildFile; fileRef = 747B71B41F07569A001F6A6F /* PlaceInformation.xib */; };
-		747B71B81F0757B2001F6A6F /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747B71B71F0757B2001F6A6F /* MapController.swift */; };
 		747B71BC1F0761EE001F6A6F /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747B71BB1F0761EE001F6A6F /* CustomTableViewCell.swift */; };
 		747B71BE1F0763DB001F6A6F /* PlaceInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747B71BD1F0763DB001F6A6F /* PlaceInformation.swift */; };
 		747B71C11F0764BB001F6A6F /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747B71C01F0764BB001F6A6F /* KeyManager.swift */; };
 		747B71C31F0764E5001F6A6F /* APIKey.plist in Resources */ = {isa = PBXBuildFile; fileRef = 747B71C21F0764E5001F6A6F /* APIKey.plist */; };
-		747B71C51F078DAA001F6A6F /* PlaceMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747B71C41F078DAA001F6A6F /* PlaceMaker.swift */; };
 		C3844DA88DF188C996995006 /* libPods-CollectionView3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2CBDE087E606394CFC39C3B /* libPods-CollectionView3.a */; };
 /* End PBXBuildFile section */
 
@@ -47,12 +45,10 @@
 		747B71B11F05016A001F6A6F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		747B71B31F07569A001F6A6F /* CustomTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTableViewCell.xib; sourceTree = "<group>"; };
 		747B71B41F07569A001F6A6F /* PlaceInformation.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceInformation.xib; sourceTree = "<group>"; };
-		747B71B71F0757B2001F6A6F /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		747B71BB1F0761EE001F6A6F /* CustomTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		747B71BD1F0763DB001F6A6F /* PlaceInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceInformation.swift; sourceTree = "<group>"; };
 		747B71C01F0764BB001F6A6F /* KeyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyManager.swift; sourceTree = "<group>"; };
 		747B71C21F0764E5001F6A6F /* APIKey.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = APIKey.plist; sourceTree = "<group>"; };
-		747B71C41F078DAA001F6A6F /* PlaceMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceMaker.swift; sourceTree = "<group>"; };
 		B0BB333F1E684AF0BDC0BEEA /* Pods-CollectionView3.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CollectionView3.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CollectionView3/Pods-CollectionView3.debug.xcconfig"; sourceTree = "<group>"; };
 		C883967A0FF34AA2BC393275 /* Pods-CollectionView3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CollectionView3.release.xcconfig"; path = "Pods/Target Support Files/Pods-CollectionView3/Pods-CollectionView3.release.xcconfig"; sourceTree = "<group>"; };
 		F2CBDE087E606394CFC39C3B /* libPods-CollectionView3.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CollectionView3.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,7 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				747B71AD1F04E4BC001F6A6F /* DataSource.swift */,
-				747B71B71F0757B2001F6A6F /* MapController.swift */,
 			);
 			name = DataSource;
 			sourceTree = "<group>";
@@ -150,7 +145,6 @@
 			children = (
 				747B71AB1F04E3CD001F6A6F /* Spot.swift */,
 				747B71AF1F04E4E2001F6A6F /* Folder.swift */,
-				747B71C41F078DAA001F6A6F /* PlaceMaker.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -318,9 +312,7 @@
 				747B71AC1F04E3CD001F6A6F /* Spot.swift in Sources */,
 				747B71BC1F0761EE001F6A6F /* CustomTableViewCell.swift in Sources */,
 				747B71AE1F04E4BC001F6A6F /* DataSource.swift in Sources */,
-				747B71B81F0757B2001F6A6F /* MapController.swift in Sources */,
 				747B71A21F0491A2001F6A6F /* MySpotsCell.swift in Sources */,
-				747B71C51F078DAA001F6A6F /* PlaceMaker.swift in Sources */,
 				747B71C11F0764BB001F6A6F /* KeyManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

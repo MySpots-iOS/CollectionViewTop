@@ -7,7 +7,6 @@ import GooglePlacePicker
 class MapViewController: UIViewController{
     
     @IBOutlet weak var mapView: GMSMapView!
-//    var mapController:MapController?
     
     fileprivate var locationManager = CLLocationManager()
     var didFindMyLocation = false
@@ -28,9 +27,6 @@ class MapViewController: UIViewController{
         mapInit()
         locationInit()
 
-//        mapController = MapController(folderIndex: folderIndexPath[1])
-//        mapController?.makeMarker(mapView: mapView, folderIndex: folderIndexPath[1])
-        
         dataSource.makeMarkers(mapView: mapView, folderIndex: folderIndexPath.row)
 
     }
