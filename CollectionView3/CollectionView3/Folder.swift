@@ -14,5 +14,5 @@ class Folder: NSObject {
     var category: String?
     var imageName: String?
     
-    var spots:[Spot]?
+    var spots:[Spot] = []
 }
