@@ -13,9 +13,10 @@ import UIKit
 class Spot:NSObject{
 
     var folderID:NSNumber?
-    var spotName:String?
     var latitude:Double?
     var longitude:Double?
+    var placeID:String?
+    var spotName:String?
 
 }
 

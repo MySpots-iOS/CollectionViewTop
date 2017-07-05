@@ -1,17 +1,9 @@
-//
-//  ViewController.swift
-//  CollectionView3
-//
-//  Created by ayako_sayama on 2017-06-28.
-//  Copyright © 2017 ayako_sayama. All rights reserved.
-//
-
 import UIKit
 
 class ViewController: UIViewController{
+    
 
     @IBOutlet weak var cView: UICollectionView!
-    
     private let nc = NotificationCenter.default
 
     
@@ -26,23 +18,20 @@ class ViewController: UIViewController{
         super.viewDidLoad()
         
 
+        dataSource = DataSource()
+
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("FirebaseNotification"), object: nil)
 
-        dataSource = DataSource()
-        
         cView.delegate = self
         cView.dataSource = self
     }
     
     func initCompleted(notification: Notification?) {
-
         self.nc.removeObserver(self)
         refreshCollectionView()
     }
     
-    /**
-     If data changed, it must be called to update collection view
-     */
+    //If data changed, it must be called to update collection view
     func refreshCollectionView() {
         self.cView?.reloadData()
     }
@@ -53,15 +42,13 @@ class ViewController: UIViewController{
     }
     
     
-    // MARK:- prepareForSegue
+    // MARK:- prepareForSegue: passed to MapViewController
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        
         if getIndexPathForSelectedCell() != nil {
-//            let fruit = dataSource.fruitsInGroup(indexPath.section)[indexPath.row]
-            _ = segue.destination as! MapViewController
-//            detailViewController.label.text = "\(indexPath)"
+            let newMapView = segue.destination as! MapViewController
+            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
+            newMapView.dataSource = self.dataSource
         }
     }
     
@@ -128,7 +115,6 @@ extension ViewController: UICollectionViewDataSource{
 
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
-    // MARK:- UICollectioViewDelegateFlowLayout methods
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {

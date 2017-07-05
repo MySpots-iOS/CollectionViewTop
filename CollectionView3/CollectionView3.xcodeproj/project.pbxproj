@@ -119,7 +119,6 @@
 			children = (
 				747B718C1F048FB6001F6A6F /* ViewController.swift */,
 				747B71A31F049CE6001F6A6F /* MapViewController.swift */,
-				747B71B71F0757B2001F6A6F /* MapController.swift */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -141,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				747B71AD1F04E4BC001F6A6F /* DataSource.swift */,
+				747B71B71F0757B2001F6A6F /* MapController.swift */,
 			);
 			name = DataSource;
 			sourceTree = "<group>";
