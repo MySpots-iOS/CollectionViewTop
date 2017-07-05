@@ -63,7 +63,6 @@ class DataSource {
     }
 
 
-
     func makeFolder(folder:DataSnapshot) -> Folder {
         
         let newFolder = Folder()
@@ -81,22 +80,18 @@ class DataSource {
         if let imageName = value?["imageName"] {
             newFolder.imageName = imageName as? String
         }
-        
 
         let spots = folder.childSnapshot(forPath: "Spots")
 
         for spot in spots.children{
 
             guard let snap = spot as? DataSnapshot else{
-                print("ohh nooo")
                 return spot as! Folder
             }
             
             let newSpot:Spot = makeSpot(snap)!
             newFolder.spots.append(newSpot)
 
-            print("newspot1:\(newSpot)")
-            print("newspot2:\(newFolder.spots)")
         }
         return newFolder
     }
@@ -136,78 +131,34 @@ class DataSource {
             newSpot.longitude = (longitude as? Double)!
         }
         
-        print("makeSpot: \(String(describing: newSpot.longitude!))")
-        
         return newSpot
     }
     
     
-    func makeMarker(mapView: GMSMapView, folderIndex: Int){
-        
-        
-        //バンクーバーあたりのカフェを入れておいた。placeIDも正確なはず。
-        
-        let map1 = CLLocationCoordinate2D.init(latitude: 49.288102, longitude: -123.113128)
-        let placeID1 = "ChIJ32puLoJxhlQRusnG9dNlmzU"
-        
-        let map2 = CLLocationCoordinate2D.init(latitude: 49.288826, longitude: -123.114628)
-        let placeID2 = "ChIJ32puLoJxhlQRusnG9dNlmzU"
-        
-        let map3 =  CLLocationCoordinate2D.init(latitude: 49.280515, longitude: -123.116851)
-        let placeID3 = "ChIJ32puLoJxhlQRusnG9dNlmzU"
-        
+    func makeMarkers(mapView: GMSMapView, folderIndex: Int){
         
         let data:Folder? = folders[folderIndex]
         
         if (data != nil){
-            print("data: \(String(describing: data!.folderName))")
-            print("spots: \(String(describing: data!.spots))")
-            
-//                for spot in (data?.spots!)!{
-//                    print("spot: \(String(describing: spot.spotName))")
-//                }
-            
+            for spot in (data?.spots)!{
+                let marker = makeMarker(spot: spot)
+                marker.map = mapView
+            }
         }
-        
-        
-//        let data = self.folders[1]
-//        
-//        if data != nil{
-//            print("folders!:\(String(describing: data.folderName)) ")
-//            
-//            for spot in data.spots!{
-//                print("spot: \(spot.spotName)")
-//            }
-//        } else{
-//            print("not there")
-//        }
-        
 
-        
-        let marker = GMSMarker(position: map1)
-        marker.snippet = placeID1
-        marker.icon = GMSMarker.markerImage(with: UIColor.black)
-        marker.map = mapView
-        
-        let marker2 = GMSMarker(position: map2)
-        marker2.snippet = placeID2
-        marker2.icon = GMSMarker.markerImage(with: UIColor.black)
-        marker2.map = mapView
-        
-        let marker3 = GMSMarker(position: map3)
-        marker3.snippet = placeID3
-        marker3.icon = GMSMarker.markerImage(with: UIColor.black)
-        marker3.map = mapView
-        
-        // TODO set flag which is stored or not
-        marker.userData = "test"
-        marker2.userData = "test"
-        marker3.userData = "test"
-
-        //        return [marker, marker2, marker3]
     }
     
-
+    func makeMarker(spot: Spot) -> GMSMarker {
+        
+        let map = CLLocationCoordinate2D.init(latitude: spot.latitude!, longitude: spot.longitude!)
+        let marker = GMSMarker(position: map)
+        marker.snippet = spot.spotName!
+        marker.icon = GMSMarker.markerImage(with: UIColor.black)
+        marker.userData = "test"
+        
+        return marker
+    }
+    
     
 }
  

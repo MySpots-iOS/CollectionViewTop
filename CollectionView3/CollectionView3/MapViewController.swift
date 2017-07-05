@@ -31,7 +31,7 @@ class MapViewController: UIViewController{
 //        mapController = MapController(folderIndex: folderIndexPath[1])
 //        mapController?.makeMarker(mapView: mapView, folderIndex: folderIndexPath[1])
         
-        dataSource.makeMarker(mapView: mapView, folderIndex: folderIndexPath[1])
+        dataSource.makeMarkers(mapView: mapView, folderIndex: folderIndexPath.row)
 
     }
 
