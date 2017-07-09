@@ -41,15 +41,7 @@ class MapViewController: UIViewController{
         super.viewWillAppear(animated)
         placeInfoView.center.y  += view.bounds.height
     }
-    
-    
-//    func animateShow(){
-//        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],animations: {
-//                self.placeInfoView.center.y -= self.view.bounds.height
-//            },completion: nil
-//        )
-//    }
-    
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -102,16 +94,28 @@ extension MapViewController: GMSMapViewDelegate{
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         print("Executed: didtapmarker")
         
+        var tappedMarker: GMSMarker!
+        
         if !placeInfoAppear {
+            tappedMarker = marker
             Animation().animateShow(myplaceInfoView)
             placeInfoAppear = true
-        } else {
+        } else if placeInfoAppear && marker != tappedMarker{
+            print("No animation")
+        }else {
             Animation().animateHide(myplaceInfoView)
             placeInfoAppear = false
         }
 
 //        setGeneralInformation(marker.snippet!, userData: marker.userData!)
         return true
+    }
+    
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        if placeInfoAppear {
+            Animation().animateHide(myplaceInfoView)
+            placeInfoAppear = false
+        }
     }
     
 //    func setGeneralInformation(_ placeID: String, userData: Any?) {

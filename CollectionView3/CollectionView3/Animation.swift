@@ -18,7 +18,6 @@ struct Animation{
         )
     }
     
-    
     func animateHide(_ view:UIView){
         UIView.animate(withDuration: 0.5, delay: 0.3, options: [],animations: {
             view.center.y += view.bounds.height
