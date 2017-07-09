@@ -100,14 +100,16 @@ extension MapViewController: GMSMapViewDelegate{
             tappedMarker = marker
             Animation().animateShow(myplaceInfoView)
             placeInfoAppear = true
+            setGeneralInformation(marker.userData! as! String, userData: marker.userData!)
         } else if placeInfoAppear && marker != tappedMarker{
+            setGeneralInformation(marker.userData! as! String, userData: marker.userData!)
             print("No animation")
         }else {
             Animation().animateHide(myplaceInfoView)
             placeInfoAppear = false
         }
 
-//        setGeneralInformation(marker.snippet!, userData: marker.userData!)
+
         return true
     }
     
@@ -118,37 +120,35 @@ extension MapViewController: GMSMapViewDelegate{
         }
     }
     
-//    func setGeneralInformation(_ placeID: String, userData: Any?) {
-//        if let savedFlag = userData as? [String: Bool] {
-//            if savedFlag["saved"]! == true {
-//                self.placeInfoView?.setSavedIcon()
-//                self.placeInfoView?.saved = savedFlag["saved"]!
-//            } else {
-//                self.placeInfoView?.setUnSavedIcon()
-//                self.placeInfoView?.saved = savedFlag["saved"]!
-//            }
-//        }
-//        
-//        placesClient.lookUpPlaceID(placeID, callback: { (place, error) -> Void in
-//            if let error = error {
-//                print("lookup place id query error: \(error.localizedDescription)")
-//                return
-//            }
-//            
-//            guard let place = place else {
-//                print("No place details for \(placeID)")
-//                return
-//            }
-//            
-//            self.placeInfoView?.setSelectedPlaceName(place.name)
-//            self.placeInfoView?.setSelectedAddress(place.formattedAddress!)
-//            self.placeInfoView?.setGooglePlaceID(placeID)
-//            self.placeInfoView?.setPlaceRate(place.rating)
-//        })
-//        animateShow()
-//    }
+    func setGeneralInformation(_ placeID: String, userData: Any?) {
+        if let savedFlag = userData as? [String: Bool] {
+            if savedFlag["saved"]! == true {
+                self.myplaceInfoView.setSavedIcon()
+                self.myplaceInfoView.saved = savedFlag["saved"]!
+            } else {
+                self.myplaceInfoView?.setUnSavedIcon()
+                self.myplaceInfoView?.saved = savedFlag["saved"]!
+            }
+        }
+        
+        placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
+            if let error = error {
+                print("lookup place id query error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let place = place else {
+                print("No place details for \(placeID)")
+                return
+            }
+            
+            self.myplaceInfoView?.setSelectedPlaceName(place.name)
+            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+            self.myplaceInfoView?.setGooglePlaceID(placeID)
+            self.myplaceInfoView?.setPlaceRate(place.rating)
+        })
+    }
     
-
 }
 
 
