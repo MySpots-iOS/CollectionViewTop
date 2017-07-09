@@ -7,6 +7,7 @@ import GooglePlacePicker
 class MapViewController: UIViewController{
     
     @IBOutlet weak var mapView: GMSMapView!
+    @IBOutlet weak var placeInfoView: UIView!
     
     fileprivate var locationManager = CLLocationManager()
     var didFindMyLocation = false
@@ -24,12 +25,32 @@ class MapViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        loadTemplate()
+
         mapInit()
         locationInit()
 
         dataSource.makeMarkers(mapView: mapView, folderIndex: folderIndexPath.row)
-
     }
+    
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        
+//        placeInfoView.center.y  += view.bounds.height
+//    }
+//    
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        
+//        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],
+//                       animations: {
+//                        self.placeInfoView.center.y -= self.view.bounds.height
+//        },
+//                       completion: nil
+//        )
+//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -70,6 +91,11 @@ class MapViewController: UIViewController{
         placesClient = GMSPlacesClient.shared()
 
     }
+    
+    func loadTemplate(){
+        let myView = PlaceInformation(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        placeInfoView.addSubview(myView)
+    }
 }
 
 extension MapViewController: GMSMapViewDelegate{
@@ -78,7 +104,7 @@ extension MapViewController: GMSMapViewDelegate{
 
 
 extension MapViewController: CLLocationManagerDelegate {
-    
+
     // Handle incoming location events.
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location: CLLocation = locations.last!

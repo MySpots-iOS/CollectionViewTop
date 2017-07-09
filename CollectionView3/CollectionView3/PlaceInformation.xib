@@ -11,13 +11,13 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaceInformation" customModule="CollectionView3" customModuleProvider="target">
             <connections>
-                <outlet property="addressName" destination="uLy-fS-wgg" id="Y53-Hc-JHk"/>
-                <outlet property="distanceIcon" destination="nEv-bI-xIg" id="v7G-rC-m38"/>
+                <outlet property="addressName" destination="uLy-fS-wgg" id="JqD-LJ-FJY"/>
+                <outlet property="distanceIcon" destination="nEv-bI-xIg" id="ZPZ-wj-cSu"/>
                 <outlet property="placeName" destination="cmF-gA-OUI" id="mkd-G8-dv0"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PlaceInformation" customModule="CollectionView3" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
