@@ -17,10 +17,13 @@ class MapViewController: UIViewController{
     var dataSource:DataSource = DataSource()
     
     var markers: [GMSMarker] = []
+    var placeInfoAppear = false
     
     fileprivate var placesClient: GMSPlacesClient!
     fileprivate var zoomLevel: Float = 15.0
 
+    
+    var myplaceInfoView: PlaceInformation!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,23 +37,19 @@ class MapViewController: UIViewController{
     }
     
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        placeInfoView.center.y  += view.bounds.height
-//    }
-//    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        placeInfoView.center.y  += view.bounds.height
+    }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        
-//        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],
-//                       animations: {
-//                        self.placeInfoView.center.y -= self.view.bounds.height
-//        },
-//                       completion: nil
+    
+//    func animateShow(){
+//        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],animations: {
+//                self.placeInfoView.center.y -= self.view.bounds.height
+//            },completion: nil
 //        )
 //    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -93,12 +92,58 @@ class MapViewController: UIViewController{
     }
     
     func loadTemplate(){
-        let myView = PlaceInformation(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
-        placeInfoView.addSubview(myView)
+        myplaceInfoView = PlaceInformation(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        placeInfoView.addSubview(myplaceInfoView)
     }
 }
 
 extension MapViewController: GMSMapViewDelegate{
+    
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        print("Executed: didtapmarker")
+        
+        if !placeInfoAppear {
+            Animation().animateShow(myplaceInfoView)
+            placeInfoAppear = true
+        } else {
+            Animation().animateHide(myplaceInfoView)
+            placeInfoAppear = false
+        }
+
+//        setGeneralInformation(marker.snippet!, userData: marker.userData!)
+        return true
+    }
+    
+//    func setGeneralInformation(_ placeID: String, userData: Any?) {
+//        if let savedFlag = userData as? [String: Bool] {
+//            if savedFlag["saved"]! == true {
+//                self.placeInfoView?.setSavedIcon()
+//                self.placeInfoView?.saved = savedFlag["saved"]!
+//            } else {
+//                self.placeInfoView?.setUnSavedIcon()
+//                self.placeInfoView?.saved = savedFlag["saved"]!
+//            }
+//        }
+//        
+//        placesClient.lookUpPlaceID(placeID, callback: { (place, error) -> Void in
+//            if let error = error {
+//                print("lookup place id query error: \(error.localizedDescription)")
+//                return
+//            }
+//            
+//            guard let place = place else {
+//                print("No place details for \(placeID)")
+//                return
+//            }
+//            
+//            self.placeInfoView?.setSelectedPlaceName(place.name)
+//            self.placeInfoView?.setSelectedAddress(place.formattedAddress!)
+//            self.placeInfoView?.setGooglePlaceID(placeID)
+//            self.placeInfoView?.setPlaceRate(place.rating)
+//        })
+//        animateShow()
+//    }
+    
 
 }
 
