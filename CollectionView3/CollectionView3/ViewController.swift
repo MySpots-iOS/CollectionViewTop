@@ -13,7 +13,6 @@ class ViewController: UIViewController{
     
     var dataSource:DataSource!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,8 +71,6 @@ class ViewController: UIViewController{
 
 }
 
-
-
 extension ViewController: UICollectionViewDataSource{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -98,7 +95,6 @@ extension ViewController: UICollectionViewDataSource{
         cell.mySpotsLabel.text = folderName
         cell.spotsNumLabel.text = "\(spotsNum) Spots"
         
-        
         return cell
     }
     
@@ -112,7 +108,6 @@ extension ViewController: UICollectionViewDataSource{
         return headerView
     }
 }
-
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
     

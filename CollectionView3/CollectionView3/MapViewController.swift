@@ -1,6 +1,5 @@
 import UIKit
 import GoogleMaps
-//import GooglePlaces
 import GooglePlacePicker
 
 
@@ -9,143 +8,129 @@ class MapViewController: UIViewController{
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
     
-    fileprivate var locationManager = CLLocationManager()
-    var didFindMyLocation = false
-    
     //These are passed from ViewController by segue
     var folderIndexPath:IndexPath = IndexPath()
     var dataSource:DataSource = DataSource()
     
     var markers: [GMSMarker] = []
     
+    var locationManager:MapCLLocationManager!
+    var mapViewDelegate:MapViewDelegate!
+
+    var placeInfoAppear = false
+
     fileprivate var placesClient: GMSPlacesClient!
-    fileprivate var zoomLevel: Float = 15.0
+    var myplaceInfoView: PlaceInformation!
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        locationManager = MapCLLocationManager(mapView)
+        mapViewDelegate = MapViewDelegate(self)
+        self.loadTemplate()
+
+        mapView.isHidden = true
         
-        loadTemplate()
-
-        mapInit()
-        locationInit()
-
-        dataSource.makeMarkers(mapView: mapView, folderIndex: folderIndexPath.row)
+        let mapMaker = MapMaker()
+        let folders = dataSource.getFolders(folderIndex: folderIndexPath)
+        mapMaker.makeMarkers(mapView: mapView, folder: folders[folderIndexPath.row])
+        placesClient = GMSPlacesClient.shared()
     }
     
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        placeInfoView.center.y  += view.bounds.height
-//    }
-//    
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        
-//        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],
-//                       animations: {
-//                        self.placeInfoView.center.y -= self.view.bounds.height
-//        },
-//                       completion: nil
-//        )
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        placeInfoView.center.y  += view.bounds.height
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func mapInit() {
-        
-        mapView.delegate = self
-        
-        //default position
-        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
-        
-        mapView.camera = camera
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
-        mapView.settings.myLocationButton = true
-        
-        
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: -123.111191, longitude: -123.111191)
-        marker.title = "Vancouver"
-        marker.snippet = "Canada"
-        marker.map = mapView
-        
-        // Add the map to the view, hide it until we've got a location update.
-        mapView.isHidden = true
-    }
 
-    func locationInit() {
-        
-        locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
-        
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.distanceFilter = 100
-        locationManager.startUpdatingLocation()
-        
-        placesClient = GMSPlacesClient.shared()
-
-    }
-    
     func loadTemplate(){
-        let myView = PlaceInformation(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
-        placeInfoView.addSubview(myView)
+        myplaceInfoView = PlaceInformation(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        placeInfoView.addSubview(myplaceInfoView)
     }
-}
-
-extension MapViewController: GMSMapViewDelegate{
-
-}
-
-
-extension MapViewController: CLLocationManagerDelegate {
-
-    // Handle incoming location events.
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location: CLLocation = locations.last!
-        //print("Location: \(location)")
+    
+    func markerTapped(_ marker:GMSMarker){
         
-        let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude, longitude: location.coordinate.longitude, zoom: zoomLevel)
+        print(marker.userData!)
         
-        if mapView.isHidden {
-            mapView.isHidden = false
-            mapView.camera = camera
+        if !placeInfoAppear {
+            self.animateShow(placeInfoView)
+            placeInfoAppear = true
+            setGeneralInformation(marker)
+        } else{
+            setGeneralInformation(marker)
+            print("No animation")
+        }
+        
+    }
+    
+    func coordinateTapped(){
+        
+        if !placeInfoAppear{
+            self.animateShow(placeInfoView)
+            placeInfoAppear = true
         } else {
-            mapView.animate(to: camera)
+            self.animateHide(placeInfoView)
+            placeInfoAppear = false
         }
     }
     
-    // Handle authorization for the location manager.
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    
+    func setGeneralInformation(_ marker: GMSMarker) {
         
-        switch status {
-        case .restricted:
-            print("Location access was restricted.")
-        case .denied:
-            print("User denied access to location.")
-            // Display the map using the default location.
-            mapView.isHidden = false
-        case .notDetermined:
-            print("Location status not determined.")
-        case .authorizedAlways:
-            fallthrough
-        case .authorizedWhenInUse:
-            
-            mapView.isMyLocationEnabled = true
-            print("Location status is OK.")
+        let userData = marker.userData
+        
+        if let savedFlag = userData as? [String: Bool] {
+            if savedFlag["saved"]! == true {
+                self.myplaceInfoView.setSavedIcon()
+                self.myplaceInfoView.saved = savedFlag["saved"]!
+            } else {
+                self.myplaceInfoView?.setUnSavedIcon()
+                self.myplaceInfoView?.saved = savedFlag["saved"]!
+            }
         }
+        
+        placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
+            if let error = error {
+                print("lookup place id query error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let place = place else {
+                print("No place details for \(userData ?? "no placeID")")
+                return
+            }
+            
+            self.myplaceInfoView?.setSelectedPlaceName(place.name)
+            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
+            self.myplaceInfoView?.setPlaceRate(place.rating)
+        })
+        
+        self.myplaceInfoView.reloadInputViews()
     }
     
-    // Handle location manager errors.
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        locationManager.stopUpdatingLocation()
-        print("Error: \(error)")
+    func animateShow(_ placeInfoView:UIView){
+        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],animations: {
+            placeInfoView.center.y -= self.view.bounds.height
+        },completion: nil
+        )
     }
+    
+    func animateHide(_ placeInfoView:UIView){
+        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],animations: {
+            placeInfoView.center.y += self.view.bounds.height
+        },completion: nil
+        )
+    }
+
 }
+
+
 
 
