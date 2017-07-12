@@ -22,14 +22,19 @@ class PlaceInformation: UIView {
         super.init(coder: aDecoder)
         loadXibView()
     }
+    @IBAction func pressed(_ sender: Any) {
+        print("infobar pressed!")
+    }
     
     func loadXibView() {
+        
         let view = Bundle.main.loadNibNamed( "PlaceInformation", owner: self, options: nil)?.first as! UIView
         view.frame = self.bounds
         self.placeName.textColor = UIColor.green
         self.distanceIcon.isUserInteractionEnabled = true
         self.addSubview(view)
     }
+    
     
     func setSelectedPlaceName(_ name:String) {
         self.placeName.text = name
