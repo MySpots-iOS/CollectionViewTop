@@ -21,10 +21,10 @@ class DataSource {
     
     func numberOfSpots(_ index: Int) -> Int{
         
-        if folders[index].spots.count != nil{
-            return (folders[index].spots.count)
-        }
-        return 0
+//        if folders[index].spots.count{
+//            return (folders[index].spots.count)
+//        }
+        return folders[index].spots.count
     }
 
     func getFolderLabelAtIndex(_ index: Int) -> String {
@@ -35,8 +35,12 @@ class DataSource {
         return folders[index].imageName!
     }
     
-    func getFolders(folderIndex: IndexPath) -> [Folder]{
+    func getFolder(folderIndex: IndexPath) -> [Folder]{
         return [folders[folderIndex[1]]]
+    }
+    
+    func getFolders() -> [Folder]{
+        return self.folders
     }
     
     
@@ -134,6 +138,26 @@ class DataSource {
         return newSpot
     }
     
+    func makeNewFolder(_ folderName:String){
+
+        let folderRef = ref.child(firebasePath).childByAutoId()
+
+        let newFolder = ["category": "Not set", "folderName": folderName, "imageName":"livehouse1", "spotsNum":1, "Spots":0] as [String : Any]
+        
+
+        folderRef.updateChildValues(newFolder)
+
+    }
     
+    func addNewSpot(_ marker:GMSMarker, _ folderRef:NSNumber){
+        
+        let newSpot = ["folderID":folderRef,"latitude":marker.position.latitude, "longitude":marker.position.longitude,"placeID":marker.userData!, "spotName":marker.snippet ?? "no name"] as [String : Any]
+        
+        let spotRef = ref.child(firebasePath).child(folderRef).child("Spots").childByAutoId()
+        let spotFolder = spotRef.childByAutoId()
+        
+        spotRef.updateChildValues(newSpot)
+    }
+  
 }
- 
+

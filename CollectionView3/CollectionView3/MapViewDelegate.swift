@@ -25,14 +25,14 @@ class MapViewDelegate: NSObject, GMSMapViewDelegate{
     }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        print("Executed: didtapmarker")
-        vc.markerTapped(marker)
+        
+        let isSaved = true
+        vc.markerTapped(marker, isSaved)
         return true
     }
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         vc.coordinateTapped()
-        print("tapped!")
     }
     
     
@@ -50,6 +50,9 @@ class MapViewDelegate: NSObject, GMSMapViewDelegate{
         infoMarker.userData = placeID
         infoMarker.map = mapView
         mapView.selectedMarker = infoMarker
+        
+        let isSaved = false
+        vc.markerTapped(infoMarker, isSaved)
     }
     
     func reverseGeocodeCoordinate(coordinate: CLLocationCoordinate2D, marker: GMSMarker) {
@@ -58,7 +61,6 @@ class MapViewDelegate: NSObject, GMSMapViewDelegate{
         geocoder.reverseGeocodeCoordinate(coordinate) { response, error in
             if let address = response?.firstResult() {
                 
-                // 3
                 let title = address.lines as [String]?
                 marker.title = title?.first
                 

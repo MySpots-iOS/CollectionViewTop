@@ -25,8 +25,14 @@ class ViewController: UIViewController{
         cView.dataSource = self
     }
     
+    
     func initCompleted(notification: Notification?) {
         self.nc.removeObserver(self)
+        refreshCollectionView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         refreshCollectionView()
     }
     
