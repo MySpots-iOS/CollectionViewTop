@@ -21,10 +21,7 @@ class DataSource {
     
     func numberOfSpots(_ index: Int) -> Int{
         
-        if folders[index].spots.count != nil{
-            return (folders[index].spots.count)
-        }
-        return 0
+        return folders[index].spots.count
     }
 
     func getFolderLabelAtIndex(_ index: Int) -> String {
@@ -35,8 +32,12 @@ class DataSource {
         return folders[index].imageName!
     }
     
-    func getFolders(folderIndex: IndexPath) -> [Folder]{
-        return [folders[folderIndex[1]]]
+    func getFolder(folderIndex: IndexPath) -> Folder{
+        return folders[folderIndex[1]]
+    }
+    
+    func getFolders() -> [Folder]{
+        return self.folders
     }
     
     
@@ -44,6 +45,8 @@ class DataSource {
 
         self.ref.child(firebasePath).observe(.value, with: { (snapshot) in
 //        self.ref.child(firebasePath).observeSingleEvent(of: .value, with: { (snapshot) in
+        
+            self.folders.removeAll()
             
             for folder in snapshot.children{
                 let newFolder: Folder?
@@ -52,7 +55,6 @@ class DataSource {
                     newFolder = self.makeFolder(folder: snap)
                     self.folders.append(newFolder!)
                 }
-
             }
             
             NotificationCenter.default.post(name: Notification.Name(rawValue:"FirebaseNotification"), object: nil)
@@ -83,21 +85,21 @@ class DataSource {
 
         let spots = folder.childSnapshot(forPath: "Spots")
 
+        
         for spot in spots.children{
-
-            guard let snap = spot as? DataSnapshot else{
-                return spot as! Folder
-            }
             
-            let newSpot:Spot = makeSpot(snap)!
-            newFolder.spots.append(newSpot)
+            print(spot)
 
+            if let snap = spot as? DataSnapshot{
+                if let newSpot:Spot = makeSpot(snap){
+                    newFolder.spots.append(newSpot)
+                }
+            }
         }
         return newFolder
     }
     
 
-    
     func makeSpot(_ spots:DataSnapshot) -> Spot? {
         
         let newSpot = Spot()
@@ -134,6 +136,26 @@ class DataSource {
         return newSpot
     }
     
-    
+    func makeNewFolder(_ folderName:String, _ placeInfo:PlaceInformation){
+        
+        let folderRef = ref.child(firebasePath).childByAutoId()
+        
+        let newFolder = ["category": "Not set", "folderName": folderName, "imageName":"garragePic", "spotsNum":1, "Spots":0] as [String : Any]
+        folderRef.updateChildValues(newFolder)
+        
+        print(folderRef.key)
+        
+        let folderKey = folderRef.key
+        
+        print("latitude:\(placeInfo.marker.position.latitude), longitude:\(placeInfo.marker.position.longitude), placeID:\(placeInfo.placeID), name: \(placeInfo.placeName)")
+        
+        let addSpot = ["folderID":folderKey,"latitude":placeInfo.marker.position.latitude, "longitude":placeInfo.marker.position.longitude,"placeID":placeInfo.placeID, "spotName":placeInfo.placeName.text!] as [String : Any]
+        
+        let spotRef = folderRef.child("Spots").childByAutoId()
+        print(spotRef)
+        
+        spotRef.setValue(addSpot)
+    }
+
 }
- 
+

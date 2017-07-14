@@ -13,6 +13,7 @@
             <connections>
                 <outlet property="addressName" destination="uLy-fS-wgg" id="bcB-qH-ZvY"/>
                 <outlet property="distanceIcon" destination="nEv-bI-xIg" id="6z7-Oe-SGF"/>
+                <outlet property="gestureR" destination="3rT-F7-fRG" id="ptD-Th-H7v"/>
                 <outlet property="placeName" destination="cmF-gA-OUI" id="f9n-D9-uRn"/>
                 <outlet property="placeRating" destination="e6c-Na-zhj" id="oLa-Go-jHx"/>
             </connections>
@@ -36,10 +37,14 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nEv-bI-xIg">
+                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nEv-bI-xIg">
                     <rect key="frame" x="324" y="33" width="35" height="35"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.96853119134902954" green="0.89306718111038208" blue="0.19012340903282166" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="3rT-F7-fRG" appends="YES" id="MUB-yF-5v2"/>
+                    </connections>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rating:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e6c-Na-zhj">
                     <rect key="frame" x="16" y="57" width="54" height="21"/>
@@ -56,10 +61,15 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" red="0.14008372920527867" green="0.85592691438825363" blue="0.92145264148712158" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
             <gestureRecognizers/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="33.5" y="-229"/>
         </view>
+        <tapGestureRecognizer id="3rT-F7-fRG">
+            <connections>
+                <action selector="savedIconTapped:" destination="-1" id="jtQ-Qf-5nn"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>

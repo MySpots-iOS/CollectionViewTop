@@ -1,7 +1,8 @@
 
 import UIKit
+import GoogleMaps
 
-class PlaceInformation: UIView {
+class PlaceInformation: UIView, UIGestureRecognizerDelegate{
 
     @IBOutlet weak var placeName: UILabel!
     @IBOutlet weak var addressName: UILabel!
@@ -10,11 +11,14 @@ class PlaceInformation: UIView {
     
     var placeID: String = ""
     var saved: Bool = false
-
+    var vc = MapViewController()
+    var marker = GMSMarker()
     
+    @IBOutlet var gestureR: UITapGestureRecognizer!
     override init(frame: CGRect) {
         super.init(frame: frame)
         autoresizesSubviews = false
+ 
         loadXibView()
     }
     
@@ -22,8 +26,19 @@ class PlaceInformation: UIView {
         super.init(coder: aDecoder)
         loadXibView()
     }
-    @IBAction func pressed(_ sender: Any) {
-        print("infobar pressed!")
+
+    @IBAction func savedIconTapped(_ sender: Any?) {
+        let alert = AlertControl.init(vc, self)
+        alert.saveToFolder()
+    }
+    
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        
+        if touch.view == distanceIcon{
+            return false
+        }
+        return true
     }
     
     func loadXibView() {
@@ -60,8 +75,13 @@ class PlaceInformation: UIView {
         self.placeID = placeID
     }
     
-    func gerGooglePlaceID() -> String {
+    func getGooglePlaceID() -> String {
         return self.placeID
     }
     
+    func getSavedBool() -> Bool {
+        return self.saved
+    }
+    
 }
+

@@ -53,7 +53,6 @@ class SpotDetailViewController: UIViewController{
                 print("No place details for \(placeID)")
                 return
             }
-            //let test = GMSPlacesOpenNowStatus(rawValue: place.openNowStatus.rawValue)
             
             self.placeName.text = place.name
             self.placeRating.text = String(place.rating)

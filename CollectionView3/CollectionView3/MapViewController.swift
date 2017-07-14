@@ -33,8 +33,8 @@ class MapViewController: UIViewController{
         mapView.isHidden = true
         
         let mapMaker = MapMaker()
-        let folders = dataSource.getFolders(folderIndex: folderIndexPath)
-        mapMaker.makeMarkers(mapView: mapView, folder: folders[folderIndexPath.row])
+        let folder = dataSource.getFolder(folderIndex: folderIndexPath)
+        mapMaker.makeMarkers(mapView: mapView, folder: folder)
         placesClient = GMSPlacesClient.shared()
     }
     
@@ -48,15 +48,26 @@ class MapViewController: UIViewController{
         super.didReceiveMemoryWarning()
     }
     
+    
+    @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
+        //set placeID
+        vc.placeID = myplaceInfoView.getGooglePlaceID()
+        vc.saved = myplaceInfoView.getSavedBool()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
 
     func loadTemplate(){
         myplaceInfoView = PlaceInformation(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        myplaceInfoView.vc = self
+
         placeInfoView.addSubview(myplaceInfoView)
     }
     
-    func markerTapped(_ marker:GMSMarker){
+    func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
         
-        print(marker.userData!)
+        myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
             self.animateShow(placeInfoView)
@@ -64,7 +75,6 @@ class MapViewController: UIViewController{
             setGeneralInformation(marker)
         } else{
             setGeneralInformation(marker)
-            print("No animation")
         }
         
     }
@@ -79,20 +89,18 @@ class MapViewController: UIViewController{
             placeInfoAppear = false
         }
     }
-    
+
     
     func setGeneralInformation(_ marker: GMSMarker) {
         
-        let userData = marker.userData
+        myplaceInfoView.marker = marker
         
-        if let savedFlag = userData as? [String: Bool] {
-            if savedFlag["saved"]! == true {
-                self.myplaceInfoView.setSavedIcon()
-                self.myplaceInfoView.saved = savedFlag["saved"]!
-            } else {
-                self.myplaceInfoView?.setUnSavedIcon()
-                self.myplaceInfoView?.saved = savedFlag["saved"]!
-            }
+        let userData = marker.userData
+    
+        if myplaceInfoView.saved == true{
+            self.myplaceInfoView.setSavedIcon()
+        } else {
+            self.myplaceInfoView?.setUnSavedIcon()
         }
         
         placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
@@ -130,7 +138,4 @@ class MapViewController: UIViewController{
     }
 
 }
-
-
-
 
