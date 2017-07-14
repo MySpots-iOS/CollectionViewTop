@@ -136,7 +136,7 @@ class DataSource {
         return newSpot
     }
     
-    func makeNewFolder(_ folderName:String){
+    func makeNewFolder(_ folderName:String, _ placeInfo:PlaceInformation){
         
         let folderRef = ref.child(firebasePath).childByAutoId()
         
@@ -146,13 +146,15 @@ class DataSource {
         print(folderRef.key)
         
         let folderKey = folderRef.key
-        let addSpot = ["folderID":folderKey,"latitude":123456, "longitude":123456,"placeID":"aasdfasfas32432fvfa", "spotName":"Test Spot"] as [String : Any]
+        
+        print("latitude:\(placeInfo.marker.position.latitude), longitude:\(placeInfo.marker.position.longitude), placeID:\(placeInfo.placeID), name: \(placeInfo.placeName)")
+        
+        let addSpot = ["folderID":folderKey,"latitude":placeInfo.marker.position.latitude, "longitude":placeInfo.marker.position.longitude,"placeID":placeInfo.placeID, "spotName":placeInfo.placeName.text!] as [String : Any]
         
         let spotRef = folderRef.child("Spots").childByAutoId()
         print(spotRef)
         
         spotRef.setValue(addSpot)
-
     }
 
 }

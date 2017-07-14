@@ -57,7 +57,7 @@ struct AlertControl{
                 // Get 1st TextField's text
                 let textField = alertController.textFields![0]
                 print(textField.text!)
-                self.vc.dataSource.makeNewFolder(textField.text!)
+                self.vc.dataSource.makeNewFolder(textField.text!, self.placeInfo)
             })
             
             // Cancel button
