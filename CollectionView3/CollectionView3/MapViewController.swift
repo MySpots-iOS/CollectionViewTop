@@ -33,8 +33,8 @@ class MapViewController: UIViewController{
         mapView.isHidden = true
         
         let mapMaker = MapMaker()
-        let folders = dataSource.getFolder(folderIndex: folderIndexPath)
-        mapMaker.makeMarkers(mapView: mapView, folder: folders[folderIndexPath.row])
+        let folder = dataSource.getFolder(folderIndex: folderIndexPath)
+        mapMaker.makeMarkers(mapView: mapView, folder: folder)
         placesClient = GMSPlacesClient.shared()
     }
     
@@ -138,7 +138,4 @@ class MapViewController: UIViewController{
     }
 
 }
-
-
-
 

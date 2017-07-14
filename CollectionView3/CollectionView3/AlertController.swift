@@ -27,7 +27,7 @@ struct AlertControl{
             
             let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
                 (action: UIAlertAction!) in
-                self.vc.dataSource.addNewSpot(placeInfo.marker, folder.folderID)
+//                self.vc.dataSource.addNewSpot(self.placeInfo.marker, folder.id!)
             })
             
             alert.addAction(action)
