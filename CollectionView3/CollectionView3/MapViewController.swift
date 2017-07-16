@@ -42,6 +42,7 @@ class MapViewController: UIViewController{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         placeInfoView.center.y  += view.bounds.height
+        placeInfoAppear = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -124,14 +125,14 @@ class MapViewController: UIViewController{
     }
     
     func animateShow(_ placeInfoView:UIView){
-        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
             placeInfoView.center.y -= self.view.bounds.height
         },completion: nil
         )
     }
     
     func animateHide(_ placeInfoView:UIView){
-        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
             placeInfoView.center.y += self.view.bounds.height
         },completion: nil
         )
