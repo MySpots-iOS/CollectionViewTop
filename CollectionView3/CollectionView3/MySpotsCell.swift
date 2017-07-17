@@ -31,6 +31,32 @@ class MySpotsCell: UICollectionViewCell {
 //            }
         }
     }
+    
+    
+    func update(_ image:UIImage?){
+        if let photoImage = image{
+            mySpotsImage.image = photoImage
+        } else{
+            mySpotsImage.image = nil
+        }
+    }
+    
+//    func update(_ image:UIImage?, _ placeName:String?, _ spotsNum:String?){
+//        
+//        if image != nil{
+//            mySpotsImage.image = image
+//        } else{
+//            mySpotsImage.image = nil
+//        }
+//        
+//        if placeName != nil{
+//            mySpotsLabel.text = placeName
+//        }
+//        
+//        if spotsNum != nil{
+//            spotsNumLabel.text = spotsNum
+//        }
+//    }
 
 
 }

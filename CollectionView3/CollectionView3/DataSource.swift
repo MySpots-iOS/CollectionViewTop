@@ -2,6 +2,7 @@
 import Foundation
 import Firebase
 import GoogleMaps
+import GooglePlaces
 
 class DataSource {
     
@@ -28,9 +29,77 @@ class DataSource {
         return folders[index].folderName!
     }
     
-    func getImageNameAtIndex(_ index: Int) -> String{
-        return folders[index].imageName!
+//    func getImageNameAtIndex(_ index: Int) -> String{
+//        return folders[index].imageName!
+//    }
+    
+//    func getImageNameAtIndex(_ indexPath:IndexPath, _ placesClient:GMSPlacesClient) -> UIImage{
+//        
+//        let folder = getFolder(folderIndex: indexPath)
+//        let firstSpotPlaceID = folder.spots.first?.placeID
+//        
+//        var image = UIImage()
+//        
+//        placesClient.lookUpPhotos(forPlaceID: firstSpotPlaceID!, callback: { (photos, error) -> Void in
+// 
+//            
+//            if let error = error {
+//                // TODO: handle the error.
+//                print("Error: \(error.localizedDescription)")
+//            } else {
+//                if let firstPhoto = photos?.results.first {
+//                    
+//                    DispatchQueue.main.async {
+//                        image = self.loadImageForMetadata(firstPhoto)
+//                        print("Imagein firstPhoto: \(image)")
+//                    }
+//                }
+//            }
+//        })
+//        
+//        print("return photo: \(image)")
+//        
+//        return image
+//    }
+    
+    func getImageNameAtIndex(_ indexPath:IndexPath, _ placesClient:GMSPlacesClient, _ cell:MySpotsCell){
+        
+        let folder = getFolder(folderIndex: indexPath)
+        let firstSpotPlaceID = folder.spots.first?.placeID
+        
+        print("FirstPhotoID: \(String(describing: firstSpotPlaceID))")
+        
+        placesClient.lookUpPhotos(forPlaceID: firstSpotPlaceID!, callback: { (photos, error) -> Void in
+            
+            
+            if let error = error {
+                // TODO: handle the error.
+                print("Error: \(error.localizedDescription)")
+            } else {
+                if let firstPhoto = photos?.results.first {
+                    self.loadImageForMetadata(firstPhoto, cell)
+                }
+            }
+        })
+
     }
+    
+    
+    func loadImageForMetadata(_ photoMetadata:GMSPlacePhotoMetadata, _ cell:MySpotsCell){
+        
+        
+        GMSPlacesClient.shared().loadPlacePhoto(photoMetadata, callback: {
+            (photo, error) -> Void in
+            if let error = error {
+                // TODO: handle the error.
+                print("Error: \(error.localizedDescription)")
+            } else {
+                cell.update(photo)
+            }
+        })
+        
+    }
+    
     
     func getFolder(folderIndex: IndexPath) -> Folder{
         return folders[folderIndex[1]]
