@@ -11,19 +11,29 @@ import UIKit
 
 
 struct Animation {
-    
-    
-    
+
     func animateShow(_ mapVC:MapViewController){
+        
         UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
             mapVC.placeInfoView.center.y -= mapVC.view.bounds.height
+            mapVC.showListButton.center.y += mapVC.view.bounds.height
         },completion: nil
         )
     }
     
     func animateHide(_ mapVC:MapViewController){
+        
         UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
             mapVC.placeInfoView.center.y += mapVC.view.bounds.height
+            mapVC.showListButton.center.y -= mapVC.view.bounds.height
+
+        },completion: nil
+        )
+    }
+    
+    func animateShowList(_ mapVC:MapViewController){
+        UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
+            mapVC.showListButton.center.y -= mapVC.view.bounds.height
         },completion: nil
         )
     }

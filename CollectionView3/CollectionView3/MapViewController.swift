@@ -7,6 +7,7 @@ class MapViewController: UIViewController{
     
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
+    @IBOutlet weak var showListButton: UIButton!
     
     //These are passed from ViewController by segue
     var folderIndexPath:IndexPath = IndexPath()
@@ -22,6 +23,9 @@ class MapViewController: UIViewController{
     fileprivate var placesClient: GMSPlacesClient!
     var myplaceInfoView: PlaceInformation!
     
+    @IBAction func listBtnPushed(_ sender: UIButton) {
+        print("tapped btn!")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +34,7 @@ class MapViewController: UIViewController{
         mapViewDelegate = MapViewDelegate(self)
         self.loadTemplate()
 
+        mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         mapView.isHidden = true
         
         let mapMaker = MapMaker()
@@ -41,8 +46,10 @@ class MapViewController: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        placeInfoView.center.y  += view.bounds.height
-        placeInfoAppear = false
+        
+        if !placeInfoAppear{
+            placeInfoView.center.y  += view.bounds.height
+        }
     }
 
     override func didReceiveMemoryWarning() {

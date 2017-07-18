@@ -15,16 +15,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var segIdentifier = "mySpotsMap"
     
     
-    
     override func viewDidLoad() {
         tableView.delegate = self
         tableView.dataSource = self
     }
     
-    var categories = ["MySpots", "Explore", "Near You"]
-
-    var cellNum = ["Beach", "FriendsHouse", "Party", "Drinking", "Cities"]
-    
+    var categories = ["MySpots", "Explore", "Near You"]    
     
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

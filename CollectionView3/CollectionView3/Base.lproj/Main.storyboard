@@ -136,6 +136,15 @@
                                     <outletCollection property="gestureRecognizers" destination="hq0-jH-oup" appends="YES" id="gZ6-sR-vDi"/>
                                 </connections>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q1F-cI-nrF">
+                                <rect key="frame" x="0.0" y="597" width="375" height="70"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Show Saved Spots"/>
+                                <connections>
+                                    <action selector="listBtnPushed:" destination="d2Z-8d-ZEt" eventType="touchUpInside" id="1RC-XM-KOL"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
@@ -143,6 +152,7 @@
                     <connections>
                         <outlet property="mapView" destination="qYU-fM-iPs" id="jZN-tn-mm8"/>
                         <outlet property="placeInfoView" destination="eg6-5s-bxe" id="6KG-h3-JKN"/>
+                        <outlet property="showListButton" destination="q1F-cI-nrF" id="0Dl-Cz-dGA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qoc-1G-CvK" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -152,7 +162,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1645.6000000000001" y="780.35982008995506"/>
+            <point key="canvasLocation" x="1645.5999999999999" y="780.35982008995506"/>
         </scene>
         <!--Spot Detail View Controller-->
         <scene sceneID="DID-5O-rma">
@@ -176,7 +186,7 @@
                                             <constraint firstAttribute="width" constant="343" id="Ihh-LX-h6j"/>
                                         </constraints>
                                         <string key="text"> 3883 Imperial Street, Burnaby, BC V5G 4H7 Stadium that's home to a Major League Soccer franchise &amp; varsity teams for Simon Fraser University.</string>
-                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="15"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -374,6 +384,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yzi-nJ-lyi" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <value key="contentSizeForViewInPopover" type="size" width="375" height="667"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Ouz-kg-fkZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
