@@ -9,7 +9,7 @@
 import UIKit
 
 class Folder: NSObject {
-    var id: NSNumber?
+//    var id: NSNumber?
     var folderName: String?
     var category: String?
     var imageName: String?

@@ -1,4 +1,5 @@
 import UIKit
+import GooglePlaces
 
 class ViewController: UIViewController{
     
@@ -16,7 +17,6 @@ class ViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
         dataSource = DataSource()
 
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("FirebaseNotification"), object: nil)
@@ -47,7 +47,6 @@ class ViewController: UIViewController{
     }
     
     
-    // MARK:- prepareForSegue: passed to MapViewController
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if getIndexPathForSelectedCell() != nil {
@@ -57,13 +56,11 @@ class ViewController: UIViewController{
         }
     }
     
-    // MARK:- Should Perform Segue
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         return !isEditing
     }
     
-    // MARK:- Selected Cell IndexPath
     
     func getIndexPathForSelectedCell() -> IndexPath? {
         
@@ -76,6 +73,7 @@ class ViewController: UIViewController{
     }
 
 }
+
 
 extension ViewController: UICollectionViewDataSource{
     
@@ -92,15 +90,17 @@ extension ViewController: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier,for:indexPath) as! MySpotsCell
-        
-        let imageName = dataSource.getImageNameAtIndex(indexPath.row)
+
+
+        let placesClient:GMSPlacesClient = GMSPlacesClient.shared()
+        dataSource.getImageNameAtIndex(indexPath, placesClient, cell)
+
         let folderName = dataSource.getFolderLabelAtIndex(indexPath.row)
         let spotsNum = dataSource.numberOfSpots(indexPath.row)
-        
-        cell.mySpotsImage.image = UIImage(named: imageName)
+
         cell.mySpotsLabel.text = folderName
         cell.spotsNumLabel.text = "\(spotsNum) Spots"
-        
+
         return cell
     }
     
@@ -110,10 +110,11 @@ extension ViewController: UICollectionViewDataSource{
         let headerView: SectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerViewIdentifier, for: indexPath) as! SectionHeader
         
         headerView.headerLabel.text = "My Spots"
-        
         return headerView
     }
+
 }
+
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
     

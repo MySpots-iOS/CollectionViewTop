@@ -2,6 +2,7 @@
 import Foundation
 import Firebase
 import GoogleMaps
+import GooglePlaces
 
 class DataSource {
     
@@ -28,9 +29,42 @@ class DataSource {
         return folders[index].folderName!
     }
     
-    func getImageNameAtIndex(_ index: Int) -> String{
-        return folders[index].imageName!
+    func getImageNameAtIndex(_ indexPath:IndexPath, _ placesClient:GMSPlacesClient, _ cell:MySpotsCell){
+        
+        let folder = getFolder(folderIndex: indexPath)
+        let firstSpotPlaceID = folder.spots.first?.placeID
+        
+        print("FirstPhotoID: \(String(describing: firstSpotPlaceID))")
+        
+        placesClient.lookUpPhotos(forPlaceID: firstSpotPlaceID!, callback: { (photos, error) -> Void in
+            
+            
+            if let error = error {
+                // TODO: handle the error.
+                print("Error: \(error.localizedDescription)")
+            } else {
+                if let firstPhoto = photos?.results.first {
+                    self.loadImageForMetadata(firstPhoto, cell)
+                }
+            }
+        })
     }
+    
+    func loadImageForMetadata(_ photoMetadata:GMSPlacePhotoMetadata, _ cell:MySpotsCell){
+        
+        
+        GMSPlacesClient.shared().loadPlacePhoto(photoMetadata, callback: {
+            (photo, error) -> Void in
+            if let error = error {
+                // TODO: handle the error.
+                print("Error: \(error.localizedDescription)")
+            } else {
+                cell.update(photo)
+            }
+        })
+        
+    }
+    
     
     func getFolder(folderIndex: IndexPath) -> Folder{
         return folders[folderIndex[1]]
@@ -118,14 +152,12 @@ class DataSource {
         guard let spotName = value!["spotName"] as? String else {
             return nil
         }
-        
         newSpot.spotName  = spotName
         
 
         guard let latitude =  value?["latitude"] as? Double else {
             return nil
         }
-        
         newSpot.latitude = latitude
 
         
@@ -142,9 +174,24 @@ class DataSource {
         
         let newFolder = ["category": "Not set", "folderName": folderName, "imageName":"garragePic", "spotsNum":1, "Spots":0] as [String : Any]
         folderRef.updateChildValues(newFolder)
+        self.addMarker(folderRef, placeInfo)
+    }
+    
+    func addNewSpot(_ placeInfo:PlaceInformation, _ folderName:String){
         
-        print(folderRef.key)
-        
+        let foldersRef = ref.child(firebasePath)
+        foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.exists() {
+                let folderKey = (snapshot.value as AnyObject).allKeys.first!
+                self.addMarker(foldersRef.child(folderKey as! String), placeInfo)
+
+            } else {
+                print("we don't have that, add it to the DB now")
+            }
+        })
+    }
+    
+    func addMarker(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
         let folderKey = folderRef.key
         
         print("latitude:\(placeInfo.marker.position.latitude), longitude:\(placeInfo.marker.position.longitude), placeID:\(placeInfo.placeID), name: \(placeInfo.placeName)")
