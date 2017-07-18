@@ -21,7 +21,7 @@ class MapViewController: UIViewController{
 
     fileprivate var placesClient: GMSPlacesClient!
     var myplaceInfoView: PlaceInformation!
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +71,7 @@ class MapViewController: UIViewController{
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            self.animateShow(placeInfoView)
+            Animation().animateShow(self)
             placeInfoAppear = true
             setGeneralInformation(marker)
         } else{
@@ -83,10 +83,10 @@ class MapViewController: UIViewController{
     func coordinateTapped(){
         
         if !placeInfoAppear{
-            self.animateShow(placeInfoView)
+            Animation().animateShow(self)
             placeInfoAppear = true
         } else {
-            self.animateHide(placeInfoView)
+            Animation().animateHide(self)
             placeInfoAppear = false
         }
     }
@@ -122,20 +122,6 @@ class MapViewController: UIViewController{
         })
         
         self.myplaceInfoView.reloadInputViews()
-    }
-    
-    func animateShow(_ placeInfoView:UIView){
-        UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
-            placeInfoView.center.y -= self.view.bounds.height
-        },completion: nil
-        )
-    }
-    
-    func animateHide(_ placeInfoView:UIView){
-        UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
-            placeInfoView.center.y += self.view.bounds.height
-        },completion: nil
-        )
     }
 
 }

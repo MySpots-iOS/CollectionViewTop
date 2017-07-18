@@ -176,7 +176,7 @@
                                             <constraint firstAttribute="width" constant="343" id="Ihh-LX-h6j"/>
                                         </constraints>
                                         <string key="text"> 3883 Imperial Street, Burnaby, BC V5G 4H7 Stadium that's home to a Major League Soccer franchise &amp; varsity teams for Simon Fraser University.</string>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -250,7 +250,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fhK-wr-CUv">
                                         <rect key="frame" x="88" y="0.0" width="255" height="148"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="11:00-18:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9OM-rz-kOn">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11:00-18:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9OM-rz-kOn">
                                                 <rect key="frame" x="0.0" y="0.0" width="255" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="255" id="yG5-0z-KhV"/>
@@ -259,7 +259,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="000-000-0000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3uF-7X-8Ut">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="000-000-0000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3uF-7X-8Ut">
                                                 <rect key="frame" x="0.0" y="29" width="255" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="255" id="20t-Jr-aOJ"/>
@@ -268,10 +268,11 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="https://www.youtube.com/watch?v=7DieK0XmGAM&amp;index=64&amp;list=PLZcXujs_yA5TeIAw5QdDVbr04GCwZv196" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sS1-Hb-D9T">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="https://www.youtube.com/watch?v=7DieK0XmGAM&amp;index=64&amp;list=PLZcXujs_yA5TeIAw5QdDVbr04GCwZv196" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sS1-Hb-D9T">
                                                 <rect key="frame" x="0.0" y="58" width="255" height="69"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="255" id="pne-nb-c7M"/>
+                                                    <constraint firstAttribute="height" constant="69" id="xZH-FP-4VL"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -282,12 +283,16 @@
                                         <constraints>
                                             <constraint firstItem="sS1-Hb-D9T" firstAttribute="top" secondItem="3uF-7X-8Ut" secondAttribute="bottom" constant="8" id="Eus-E1-ykp"/>
                                             <constraint firstItem="3uF-7X-8Ut" firstAttribute="top" secondItem="9OM-rz-kOn" secondAttribute="bottom" constant="8" id="FJY-0q-bBe"/>
+                                            <constraint firstItem="sS1-Hb-D9T" firstAttribute="leading" secondItem="9OM-rz-kOn" secondAttribute="leading" id="K18-bv-Aro"/>
                                             <constraint firstAttribute="height" constant="148" id="acQ-Li-VFd"/>
                                             <constraint firstAttribute="width" constant="255" id="bAV-Yp-bJI"/>
+                                            <constraint firstItem="sS1-Hb-D9T" firstAttribute="leading" secondItem="fhK-wr-CUv" secondAttribute="leading" id="ijm-Ad-3mv"/>
+                                            <constraint firstAttribute="bottom" secondItem="sS1-Hb-D9T" secondAttribute="bottom" constant="21" id="tZ8-xB-HlB"/>
+                                            <constraint firstItem="sS1-Hb-D9T" firstAttribute="leading" secondItem="3uF-7X-8Ut" secondAttribute="leading" id="xre-JP-Eoi"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fey-t5-eNj">
-                                        <rect key="frame" x="0.0" y="0.0" width="80" height="148"/>
+                                        <rect key="frame" x="0.0" y="-1" width="80" height="148"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hours:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PK7-58-GTj">
                                                 <rect key="frame" x="0.0" y="0.0" width="51" height="21"/>
@@ -321,12 +326,10 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="fhK-wr-CUv" secondAttribute="trailing" id="65e-j5-zkj"/>
-                                    <constraint firstItem="fhK-wr-CUv" firstAttribute="top" secondItem="lD4-Vj-cD5" secondAttribute="top" id="6uV-dJ-66D"/>
                                     <constraint firstItem="fhK-wr-CUv" firstAttribute="leading" secondItem="Fey-t5-eNj" secondAttribute="trailing" constant="8" id="KHi-FG-JHu"/>
-                                    <constraint firstItem="fhK-wr-CUv" firstAttribute="top" secondItem="Fey-t5-eNj" secondAttribute="top" id="RmT-jX-LU3"/>
                                     <constraint firstItem="Fey-t5-eNj" firstAttribute="leading" secondItem="lD4-Vj-cD5" secondAttribute="leading" id="Zoe-fQ-1vX"/>
+                                    <constraint firstItem="fhK-wr-CUv" firstAttribute="top" secondItem="lD4-Vj-cD5" secondAttribute="top" id="d8h-zh-Vq1"/>
                                     <constraint firstAttribute="height" constant="147" id="djM-ek-IDR"/>
-                                    <constraint firstItem="Fey-t5-eNj" firstAttribute="top" secondItem="lD4-Vj-cD5" secondAttribute="top" id="sle-ch-fJA"/>
                                     <constraint firstAttribute="width" constant="343" id="t3v-DQ-2G9"/>
                                     <constraint firstAttribute="bottom" secondItem="Fey-t5-eNj" secondAttribute="bottom" id="u94-Ef-krt"/>
                                 </constraints>
@@ -371,7 +374,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yzi-nJ-lyi" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ouz-kg-fkZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Ouz-kg-fkZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

@@ -73,6 +73,6 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
     // Handle location manager errors.
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         locationManager.stopUpdatingLocation()
-        print("Error: \(error)")
+        print("LocationManagerError: \(error)")
     }
 }

@@ -191,7 +191,6 @@ class DataSource {
         })
     }
     
-    
     func addMarker(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
         let folderKey = folderRef.key
         
