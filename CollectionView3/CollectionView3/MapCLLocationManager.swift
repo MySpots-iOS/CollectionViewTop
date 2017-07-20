@@ -16,11 +16,12 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
     fileprivate var zoomLevel: Float = 15.0
 
     var locationManager = CLLocationManager()
-
+    var markers:[GMSMarker] = []
     
-    init(_ mapView: GMSMapView) {
+    init(_ mapView: GMSMapView, _ markers:[GMSMarker]) {
         super.init()
         self.mapView = mapView
+        self.markers = markers
         
         locationManager.delegate = self
         
@@ -35,7 +36,9 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
         let location: CLLocation = locations.last!
         //print("Location: \(location)")
         
-//        let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude, longitude: location.coordinate.longitude, zoom: zoomLevel)
+        let marker = GMSMarker(position: location.coordinate)
+        markers.append(marker)
+        
         let camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
 
         if mapView.isHidden {
@@ -44,6 +47,12 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
         } else {
             mapView.animate(to: camera)
         }
+        
+        var bounds = GMSCoordinateBounds()
+        for marker in self.markers {
+            bounds = bounds.includingCoordinate(marker.position)
+        }
+        mapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsetsMake(50.0, 100.0 ,50.0 ,50.0)))
 
     }
     

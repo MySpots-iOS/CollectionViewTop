@@ -12,6 +12,7 @@ class MapViewController: UIViewController{
     //These are passed from ViewController by segue
     var folderIndexPath:IndexPath = IndexPath()
     var dataSource:DataSource = DataSource()
+    @IBOutlet weak var tableView: UIView!
     
     var markers: [GMSMarker] = []
     
@@ -29,23 +30,27 @@ class MapViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let mapMaker = MapMaker()
+        let folder = dataSource.getFolder(folderIndex: folderIndexPath)
+        markers = mapMaker.makeMarkers(mapView: mapView, folder: folder)
 
-        locationManager = MapCLLocationManager(mapView)
+        locationManager = MapCLLocationManager(mapView, markers)
         mapViewDelegate = MapViewDelegate(self)
         self.loadTemplate()
 
         mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         mapView.isHidden = true
         
-        let mapMaker = MapMaker()
-        let folder = dataSource.getFolder(folderIndex: folderIndexPath)
-        mapMaker.makeMarkers(mapView: mapView, folder: folder)
+      
         placesClient = GMSPlacesClient.shared()
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        tableView.center.y += view.bounds.height
         
         if !placeInfoAppear{
             placeInfoView.center.y  += view.bounds.height
