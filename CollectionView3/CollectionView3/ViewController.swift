@@ -14,6 +14,11 @@ class ViewController: UIViewController{
     
     var dataSource:DataSource!
     
+    //Search bar on navigation bar
+    var resultsViewController: GMSAutocompleteResultsViewController?
+    var searchController: UISearchController?
+    var resultView: UITextView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,6 +28,8 @@ class ViewController: UIViewController{
 
         cView.delegate = self
         cView.dataSource = self
+        
+        searchBarInit()
     }
     
     
@@ -45,7 +52,6 @@ class ViewController: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -71,7 +77,24 @@ class ViewController: UIViewController{
         }
         return indexPath
     }
+    
+    func searchBarInit(){
+        //Searchbar Init
+        resultsViewController = GMSAutocompleteResultsViewController()
+        resultsViewController?.delegate = self
+        
+        searchController = UISearchController(searchResultsController: resultsViewController)
+        searchController?.searchResultsUpdater = resultsViewController
+        
+        // Put the search bar in the navigation bar.
+        searchController?.searchBar.sizeToFit()
+        navigationItem.titleView = searchController?.searchBar
 
+        definesPresentationContext = true
+        
+        // Prevent the navigation bar from being hidden when searching.
+        searchController?.hidesNavigationBarDuringPresentation = false
+    }
 }
 
 
@@ -123,4 +146,35 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
         let length = (UIScreen.main.bounds.width-15)/2 - 10
         return CGSize(width: length,height: length*2.5/3);
     }
+}
+
+extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
+
+    func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
+                           didAutocompleteWith place: GMSPlace) {
+        searchController?.isActive = false
+        // Do something with the selected place.
+        print("Place name: \(place.name)")
+        print("Place address: \(String(describing: place.formattedAddress))")
+        print("Place attributions: \(String(describing: place.attributions))")
+        
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SearchMap") as! SeachMapViewController
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
+                           didFailAutocompleteWithError error: Error){
+        // TODO: handle the error.
+        print("Error: ", error.localizedDescription)
+    }
+    
+    // Turn the network activity indicator on and off again.
+    func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
+    
+    func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
+
 }

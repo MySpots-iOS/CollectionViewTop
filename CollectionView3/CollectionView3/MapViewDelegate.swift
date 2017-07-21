@@ -12,6 +12,7 @@ import GoogleMaps
 class MapViewDelegate: NSObject, GMSMapViewDelegate{
     
     var vc:MapViewController = MapViewController()
+    var savedMarker:GMSMarker!
     
     init(_ vc:MapViewController) {
         super.init()
@@ -32,6 +33,9 @@ class MapViewDelegate: NSObject, GMSMapViewDelegate{
     }
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        if savedMarker != nil{
+            savedMarker.map = nil
+        }
         vc.coordinateTapped()
     }
     
@@ -42,14 +46,19 @@ class MapViewDelegate: NSObject, GMSMapViewDelegate{
         
         
         let infoMarker = GMSMarker(position: location)
-        infoMarker.snippet = placeID
+//        infoMarker.snippet = placeID
         infoMarker.title = name
-        infoMarker.opacity = 0;
         infoMarker.appearAnimation = .pop
-        infoMarker.infoWindowAnchor.y = 1
+//        infoMarker.infoWindowAnchor.y = 1
         infoMarker.userData = placeID
         infoMarker.map = mapView
         mapView.selectedMarker = infoMarker
+    
+        
+        if savedMarker != nil{
+            savedMarker.map = nil
+        }
+        savedMarker = infoMarker
         
         let isSaved = false
         vc.markerTapped(infoMarker, isSaved)
