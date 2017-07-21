@@ -51,9 +51,11 @@ class MapViewController: UIViewController{
         
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("TableViewNotification"), object: nil)
 
-        let tableViewDelegate = TableViewDataSource(markers, placesClient)
+        let tableViewDelegate = TableViewDataSource(folder)
+//        let tableViewDelegate = TableViewDataSource(markers, placesClient)
         tableView.dataSource = tableViewDelegate
         tableView.delegate = tableViewDelegate
+        tableView.rowHeight = 100
     }
     
     func initCompleted(notification: Notification?) {

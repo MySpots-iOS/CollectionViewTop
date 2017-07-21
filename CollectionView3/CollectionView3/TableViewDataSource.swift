@@ -12,12 +12,18 @@ import GooglePlaces
 
 class TableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate{
     
-    var markers:[GMSMarker]!
-    var placesClient:GMSPlacesClient!
+//    var markers:[GMSMarker]!
+//    var placesClient:GMSPlacesClient!
+//    
+//    init(_ markers:[GMSMarker], _ placesClient:GMSPlacesClient) {
+//        self.markers = markers
+//        self.placesClient = placesClient
+//    }
     
-    init(_ markers:[GMSMarker], _ placesClient:GMSPlacesClient) {
-        self.markers = markers
-        self.placesClient = placesClient
+    var folder:Folder
+    
+    init(_ folder:Folder) {
+        self.folder = folder
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -25,32 +31,35 @@ class TableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return markers.count
+        return folder.spots.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! CustomTableViewCell
         
         cell.placeName.text = "My name is ayako"
-
-
-        placesClient.lookUpPlaceID(markers[indexPath.row].snippet!, callback: { (place, error) -> Void in
-            if let error = error {
-                print("lookup place id query error: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let place = place else {
-                //print("No place details for \(placeID)")
-                return
-            }
-            cell.placeName.text = place.name
-            cell.placeAddress.text = place.formattedAddress
-            //            cell.placeRating.text = String(place.rating)
-            
-            NotificationCenter.default.post(name: Notification.Name(rawValue:"TableViewNotification"), object: nil)
-
-        })
+        
+        let spot = folder.spots[indexPath.row]
+        cell.placeName.text = spot.spotName
+        cell.placeAddress.text = spot.placeID
+        
+//        placesClient.lookUpPlaceID(markers[indexPath.row].snippet!, callback: { (place, error) -> Void in
+//            if let error = error {
+//                print("lookup place id query error: \(error.localizedDescription)")
+//                return
+//            }
+//            
+//            guard let place = place else {
+//                print("No place details for placeID")
+//                return
+//            }
+//            cell.placeName.text = place.name
+//            cell.placeAddress.text = place.formattedAddress
+//            //            cell.placeRating.text = String(place.rating)
+//            
+//            NotificationCenter.default.post(name: Notification.Name(rawValue:"TableViewNotification"), object: nil)
+//
+//        })
         return cell
     }
     

@@ -163,47 +163,50 @@
                                             </connections>
                                         </view>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="customCell" rowHeight="100" id="1Yf-80-zDv" customClass="CustomTableViewCell" customModule="CollectionView3" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="customCell" rowHeight="100" id="1Yf-80-zDv" customClass="CustomTableViewCell" customModule="CollectionView3" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="78" width="375" height="100"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1Yf-80-zDv" id="Ysm-Sk-MgE">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UZt-R3-6Hg">
-                                                            <rect key="frame" x="307" y="8" width="50" height="58"/>
+                                                            <rect key="frame" x="307" y="18" width="50" height="50"/>
+                                                            <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="50" id="2oi-8H-luw"/>
+                                                                <constraint firstAttribute="height" constant="50" id="gms-qf-5mp"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kjU-EV-BZe">
-                                                            <rect key="frame" x="8" y="8" width="276" height="46"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place Name That is Super Long" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kjU-EV-BZe">
+                                                            <rect key="frame" x="18" y="18" width="276" height="19"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="276" id="xIE-VL-y9K"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BoB-0P-fFf">
-                                                            <rect key="frame" x="8" y="53" width="276" height="50"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is the address.This is the address This is the address " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BoB-0P-fFf">
+                                                            <rect key="frame" x="18" y="47" width="276" height="17"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="276" id="XoF-AS-aTJ"/>
+                                                            </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottomMargin" secondItem="BoB-0P-fFf" secondAttribute="bottom" constant="-11.5" id="6Ao-Vm-iTW"/>
-                                                        <constraint firstAttribute="bottomMargin" secondItem="UZt-R3-6Hg" secondAttribute="bottom" constant="25.5" id="6ZA-mw-HEz"/>
-                                                        <constraint firstItem="BoB-0P-fFf" firstAttribute="leading" secondItem="kjU-EV-BZe" secondAttribute="leading" id="7if-hw-bfN"/>
-                                                        <constraint firstItem="UZt-R3-6Hg" firstAttribute="top" secondItem="kjU-EV-BZe" secondAttribute="top" id="8Qb-V3-pzh"/>
-                                                        <constraint firstAttribute="bottomMargin" secondItem="kjU-EV-BZe" secondAttribute="bottom" constant="37.5" id="FZP-ju-Pdv"/>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="UZt-R3-6Hg" secondAttribute="trailing" constant="10" id="GMD-oM-5Jz"/>
-                                                        <constraint firstItem="BoB-0P-fFf" firstAttribute="top" secondItem="Ysm-Sk-MgE" secondAttribute="topMargin" constant="45" id="gif-RB-uqD"/>
-                                                        <constraint firstItem="kjU-EV-BZe" firstAttribute="top" secondItem="Ysm-Sk-MgE" secondAttribute="topMargin" id="hyV-dL-m3h"/>
-                                                        <constraint firstItem="kjU-EV-BZe" firstAttribute="trailing" secondItem="BoB-0P-fFf" secondAttribute="trailing" id="tfD-ug-o5A"/>
-                                                        <constraint firstItem="UZt-R3-6Hg" firstAttribute="leading" secondItem="kjU-EV-BZe" secondAttribute="trailing" constant="23" id="xLL-kD-r4u"/>
-                                                        <constraint firstItem="kjU-EV-BZe" firstAttribute="leading" secondItem="Ysm-Sk-MgE" secondAttribute="leadingMargin" id="yCi-qq-5Fq"/>
+                                                        <constraint firstItem="BoB-0P-fFf" firstAttribute="top" secondItem="kjU-EV-BZe" secondAttribute="bottom" constant="10" id="77Z-VD-AFV"/>
+                                                        <constraint firstItem="BoB-0P-fFf" firstAttribute="leading" secondItem="Ysm-Sk-MgE" secondAttribute="leadingMargin" constant="10" id="9mC-12-2B5"/>
+                                                        <constraint firstItem="kjU-EV-BZe" firstAttribute="top" secondItem="Ysm-Sk-MgE" secondAttribute="topMargin" constant="10" id="PDz-y2-jJI"/>
+                                                        <constraint firstItem="UZt-R3-6Hg" firstAttribute="top" secondItem="Ysm-Sk-MgE" secondAttribute="topMargin" constant="10" id="cnO-rB-FZk"/>
+                                                        <constraint firstItem="kjU-EV-BZe" firstAttribute="leading" secondItem="Ysm-Sk-MgE" secondAttribute="leadingMargin" constant="10" id="nzI-4H-Qkx"/>
+                                                        <constraint firstAttribute="trailingMargin" secondItem="UZt-R3-6Hg" secondAttribute="trailing" constant="10" id="yHS-tm-TiY"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
-                                                <color key="backgroundColor" red="0.69235425326792854" green="1" blue="0.54700796187683531" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <connections>
                                                     <outlet property="imageIcon" destination="UZt-R3-6Hg" id="li6-tF-qad"/>
                                                     <outlet property="placeAddress" destination="BoB-0P-fFf" id="msZ-Bs-LBQ"/>
