@@ -22,14 +22,14 @@ struct AlertControl{
 
         let alert = UIAlertController(title:"Save to Folder", message: "Select a folder to save your spot", preferredStyle: UIAlertControllerStyle.alert)
         
-        let folders = vc.dataSource.getFolders()
+        let folders = vc.dataController.getFolders()
         for folder in folders{
             
             let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
                 (action: UIAlertAction!) in
                 
                 
-                self.vc.dataSource.addNewSpot(self.placeInfo, folder.folderName!)
+                self.vc.dataController.addNewSpot(self.placeInfo, folder.folderName!)
             })
             alert.addAction(action)
         }
@@ -58,7 +58,7 @@ struct AlertControl{
                 // Get 1st TextField's text
                 let textField = alertController.textFields![0]
                 print(textField.text!)
-                self.vc.dataSource.makeNewFolder(textField.text!, self.placeInfo)
+                self.vc.dataController.makeNewFolder(textField.text!, self.placeInfo)
             })
             
             // Cancel button

@@ -52,7 +52,7 @@ class ViewController: UIViewController{
         if getIndexPathForSelectedCell() != nil {
             let newMapView = segue.destination as! MapViewController
             newMapView.folderIndexPath = getIndexPathForSelectedCell()!
-            newMapView.dataSource = self.dataSource
+            newMapView.dataController = self.dataSource
         }
     }
     

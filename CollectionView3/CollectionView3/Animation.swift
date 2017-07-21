@@ -16,7 +16,7 @@ struct Animation {
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
             mapVC.placeInfoView.center.y -= mapVC.view.bounds.height
-            mapVC.showListButton.center.y += mapVC.view.bounds.height
+            mapVC.tabeViewWrapper.center.y += mapVC.view.bounds.height
         },completion: nil
         )
     }
@@ -25,16 +25,26 @@ struct Animation {
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
             mapVC.placeInfoView.center.y += mapVC.view.bounds.height
-            mapVC.showListButton.center.y -= mapVC.view.bounds.height
-
+            mapVC.tabeViewWrapper.center.y -= mapVC.view.bounds.height
         },completion: nil
         )
     }
     
     func animateShowList(_ mapVC:MapViewController){
-        UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
-            mapVC.showListButton.center.y -= mapVC.view.bounds.height
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,animations: {
+            mapVC.tabeViewWrapper.center.y -= mapVC.tabeViewWrapper.bounds.height - mapVC.tableViewHeader.bounds.height
+            mapVC.tableViewHeaderLabel.text = "Hide List"
         },completion: nil
         )
     }
+    
+    func animateHideList(_ mapVC:MapViewController){
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,animations: {
+            mapVC.tabeViewWrapper.center.y += mapVC.tabeViewWrapper.bounds.height - mapVC.tableViewHeader.bounds.height
+            mapVC.tableViewHeaderLabel.text = "Show List"
+        },completion: nil
+        )
+    }
+    
+    
 }
