@@ -16,23 +16,25 @@ class CategoryRow : UITableViewCell, UICollectionViewDataSource, UICollectionVie
     
     @IBOutlet weak var cView: UICollectionView!
 
-    
+    var cellNum = ["Beach", "FriendsHouse", "Party", "Drinking", "Cities"]
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return cellNum.count
     }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "folderCell", for: indexPath) as! FolderCell
-        print("This is seg1!")
-        
-        
+        cell.folderName.text = cellNum[indexPath.row]
+
         return cell
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "mySpotsMap") as? MySpotsMapVC else {
+        
+
+        guard UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "mySpotsMapVC") is MySpotsMapVC else {
             print("Could not instantiate view controller with identifier of type SecondViewController")
             return
         }

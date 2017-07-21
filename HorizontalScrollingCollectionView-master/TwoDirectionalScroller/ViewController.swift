@@ -1,27 +1,12 @@
-//
-//  ViewController.swift
-//  CollectionView2
-//
-//  Created by ayako_sayama on 2017-06-17.
-//  Copyright © 2017 ayako_sayama. All rights reserved.
-//
-
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    @IBOutlet weak var tableView: UITableView!
-    
-    var segIdentifier = "mySpotsMap"
-    
-    
-    override func viewDidLoad() {
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
-    var categories = ["MySpots", "Explore", "Near You"]    
-    
+class ViewController: UIViewController {
+    var categories = ["Action", "Drama", "Science Fiction", "Kids", "Horror"]
+}
+
+extension ViewController : UITableViewDelegate { }
+
+extension ViewController : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return categories[section]
@@ -44,5 +29,3 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
 }
-
-
