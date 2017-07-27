@@ -65,7 +65,6 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
         case .denied:
             print("User denied access to location.")
             // Display the map using the default location.
-//            mapView.isHidden = false
         case .notDetermined:
             print("Location status not determined.")
         case .authorizedAlways:

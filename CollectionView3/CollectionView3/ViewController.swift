@@ -54,18 +54,17 @@ class ViewController: UIViewController{
     }
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if getIndexPathForSelectedCell() != nil {
-            let newMapView = segue.destination as! MapViewController
-            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
-            newMapView.dataController = self.dataSource
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if getIndexPathForSelectedCell() != nil {
+//            let newMapView = segue.destination as! MapViewController
+//            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
+//            newMapView.dataController = self.dataSource
+//        }
+//    }
     
-    
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return !isEditing
-    }
+//    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+//        return !isEditing
+//    }
     
     
     func getIndexPathForSelectedCell() -> IndexPath? {
@@ -89,11 +88,17 @@ class ViewController: UIViewController{
         // Put the search bar in the navigation bar.
         searchController?.searchBar.sizeToFit()
         navigationItem.titleView = searchController?.searchBar
+        navigationItem.leftBarButtonItem? = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(goBack))
 
         definesPresentationContext = true
         
         // Prevent the navigation bar from being hidden when searching.
         searchController?.hidesNavigationBarDuringPresentation = false
+    }
+    
+    
+    func goBack(){
+        self.dismiss(animated: true)
     }
 }
 
@@ -148,6 +153,25 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension ViewController: UICollectionViewDelegate{
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView.cellForItem(at: indexPath) != nil {
+            
+            let newMapView = self.storyboard?.instantiateViewController(withIdentifier: "MapView") as! MapViewController
+            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
+            newMapView.dataController = self.dataSource
+            
+            navigationController?.pushViewController(newMapView, animated: true)
+//            performSegue(withIdentifier: "showDetail", sender: cell)
+        } else {
+            // Error indexPath is not on screen: this should never happen.
+        }
+    }
+
+}
+
+
 extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
 
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
@@ -157,9 +181,14 @@ extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
         print("Place name: \(place.name)")
         print("Place address: \(String(describing: place.formattedAddress))")
         print("Place attributions: \(String(describing: place.attributions))")
+
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SearchMap") as! UINavigationController
         
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SearchMap") as! SeachMapViewController
+        let tableVC = vc.viewControllers.first as! SearchMapViewController
+        tableVC.place = place
+        
         self.present(vc, animated: true, completion: nil)
+
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
