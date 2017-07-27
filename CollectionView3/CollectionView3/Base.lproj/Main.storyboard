@@ -224,7 +224,6 @@
         <!--Search Map View Controller-->
         <scene sceneID="hXY-5Y-ePW">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Rej-7L-WoC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="uU2-mJ-T6i" customClass="SearchMapViewController" customModule="CollectionView3" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fsC-wQ-Fdh"/>
@@ -251,9 +250,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="searchMapView" destination="GQY-HC-jfN" id="Xj0-Jc-gEz"/>
+                        <outlet property="mapView" destination="GQY-HC-jfN" id="1ZL-Uz-KcQ"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rej-7L-WoC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2767.1999999999998" y="1519.7901049475263"/>
         </scene>
