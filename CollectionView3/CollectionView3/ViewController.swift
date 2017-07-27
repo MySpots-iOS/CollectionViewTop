@@ -14,6 +14,11 @@ class ViewController: UIViewController{
     
     var dataSource:DataSource!
     
+    //Search bar on navigation bar
+    var resultsViewController: GMSAutocompleteResultsViewController?
+    var searchController: UISearchController?
+    var resultView: UITextView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,6 +28,8 @@ class ViewController: UIViewController{
 
         cView.delegate = self
         cView.dataSource = self
+        
+        searchBarInit()
     }
     
     
@@ -47,19 +54,17 @@ class ViewController: UIViewController{
     }
     
     
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if getIndexPathForSelectedCell() != nil {
+//            let newMapView = segue.destination as! MapViewController
+//            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
+//            newMapView.dataController = self.dataSource
+//        }
+//    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if getIndexPathForSelectedCell() != nil {
-            let newMapView = segue.destination as! MapViewController
-            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
-            newMapView.dataController = self.dataSource
-        }
-    }
-    
-    
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return !isEditing
-    }
+//    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+//        return !isEditing
+//    }
     
     
     func getIndexPathForSelectedCell() -> IndexPath? {
@@ -71,7 +76,30 @@ class ViewController: UIViewController{
         }
         return indexPath
     }
+    
+    func searchBarInit(){
+        //Searchbar Init
+        resultsViewController = GMSAutocompleteResultsViewController()
+        resultsViewController?.delegate = self
+        
+        searchController = UISearchController(searchResultsController: resultsViewController)
+        searchController?.searchResultsUpdater = resultsViewController
+        
+        // Put the search bar in the navigation bar.
+        searchController?.searchBar.sizeToFit()
+        navigationItem.titleView = searchController?.searchBar
+        navigationItem.leftBarButtonItem? = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(goBack))
 
+        definesPresentationContext = true
+        
+        // Prevent the navigation bar from being hidden when searching.
+        searchController?.hidesNavigationBarDuringPresentation = false
+    }
+    
+    
+    func goBack(){
+        self.dismiss(animated: true)
+    }
 }
 
 
@@ -123,4 +151,59 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
         let length = (UIScreen.main.bounds.width-15)/2 - 10
         return CGSize(width: length,height: length*2.5/3);
     }
+}
+
+extension ViewController: UICollectionViewDelegate{
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView.cellForItem(at: indexPath) != nil {
+            
+            let newMapView = self.storyboard?.instantiateViewController(withIdentifier: "MapView") as! MapViewController
+            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
+            newMapView.dataController = self.dataSource
+            
+            navigationController?.pushViewController(newMapView, animated: true)
+//            performSegue(withIdentifier: "showDetail", sender: cell)
+        } else {
+            // Error indexPath is not on screen: this should never happen.
+        }
+    }
+
+}
+
+
+extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
+
+    func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
+                           didAutocompleteWith place: GMSPlace) {
+        searchController?.isActive = false
+        // Do something with the selected place.
+        print("Place name: \(place.name)")
+        print("Place address: \(String(describing: place.formattedAddress))")
+        print("Place attributions: \(String(describing: place.attributions))")
+
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SearchMap") as! UINavigationController
+        
+        let tableVC = vc.viewControllers.first as! SearchMapViewController
+        tableVC.place = place
+        
+        self.present(vc, animated: true, completion: nil)
+
+    }
+    
+    func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
+                           didFailAutocompleteWithError error: Error){
+        // TODO: handle the error.
+        print("Error: ", error.localizedDescription)
+    }
+    
+    // Turn the network activity indicator on and off again.
+    func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
+    
+    func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
+
 }

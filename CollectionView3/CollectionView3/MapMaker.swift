@@ -32,7 +32,7 @@ class MapMaker {
         let map = CLLocationCoordinate2D.init(latitude: spot.latitude!, longitude: spot.longitude!)
         let marker = GMSMarker(position: map)
         marker.snippet = spot.spotName!
-        marker.icon = GMSMarker.markerImage(with: UIColor.red)
+        marker.icon = GMSMarker.markerImage(with: UIColor.green)
         marker.userData = spot.placeID
         
         return marker
