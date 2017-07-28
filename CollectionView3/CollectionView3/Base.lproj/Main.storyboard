@@ -94,7 +94,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="7YD-f7-wDM"/>
                     <connections>
-                        <outlet property="cView" destination="2aF-9P-Ujw" id="HCu-5h-WZa"/>
+                        <outlet property="cView" destination="2aF-9P-Ujw" id="gFW-jx-crp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -238,6 +238,11 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fP9-t2-fnK">
+                                <rect key="frame" x="0.0" y="567" width="375" height="100"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="0.006335476021" green="0.75909524269999995" blue="0.82814482869999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.60000002384185791" green="0.40000000596046448" blue="0.20000000298023224" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
@@ -251,6 +256,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="GQY-HC-jfN" id="1ZL-Uz-KcQ"/>
+                        <outlet property="placeInfoView" destination="fP9-t2-fnK" id="zJl-1T-KAo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rej-7L-WoC" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -11,7 +11,7 @@ import GoogleMaps
 
 class MapViewDelegate: NSObject, GMSMapViewDelegate{
     
-    var vc:MapViewController = MapViewController()
+    var vc:MapViewController!
     var savedMarker:GMSMarker!
     
     init(_ vc:MapViewController) {

@@ -4,7 +4,7 @@ import Firebase
 import GoogleMaps
 import GooglePlaces
 
-class DataSource {
+class DataController {
     
     let ref = Database.database().reference()
     let firebasePath: String = "MySpotsFolder"

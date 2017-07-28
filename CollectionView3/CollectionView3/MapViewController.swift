@@ -3,16 +3,10 @@ import GoogleMaps
 import GooglePlacePicker
 
 
-class MapViewController: UIViewController{
+class MapViewController: CommonViewController{
     
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
-    
-    //These are passed from ViewController by segue
-    var folderIndexPath:IndexPath = IndexPath()
-
-    var dataController:DataSource = DataSource()
-    
     
     @IBOutlet weak var tabeViewWrapper: UIView!
     @IBOutlet weak var tableViewHeader: UIView!
@@ -29,8 +23,8 @@ class MapViewController: UIViewController{
     var placeInfoAppear = false
 
     fileprivate var placesClient: GMSPlacesClient!
-    var myplaceInfoView: PlaceInformation!
     var nc = NotificationCenter.default
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +46,6 @@ class MapViewController: UIViewController{
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("TableViewNotification"), object: nil)
 
         let tableViewDelegate = TableViewDataSource(folder)
-//        let tableViewDelegate = TableViewDataSource(markers, placesClient)
         tableView.dataSource = tableViewDelegate
         tableView.delegate = tableViewDelegate
         tableView.rowHeight = 100
@@ -95,9 +88,8 @@ class MapViewController: UIViewController{
     
 
     func loadTemplate(){
-        myplaceInfoView = PlaceInformation(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
         myplaceInfoView.vc = self
-
         placeInfoView.addSubview(myplaceInfoView)
     }
     

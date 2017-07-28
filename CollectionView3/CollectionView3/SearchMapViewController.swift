@@ -10,44 +10,40 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-class SearchMapViewController: UIViewController, CLLocationManagerDelegate {
+class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
-
-
-    @IBAction func backPushed(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
-//    @IBOutlet weak var navBarTitle: UINavigationItem!
-//    @IBOutlet weak var navBar: UINavigationBar!
-    var place:GMSPlace!
     @IBOutlet weak var mapView: GMSMapView!
-    var locationManager = CLLocationManager()
-
+    @IBOutlet weak var placeInfoView: UIView!
     
+    
+    var place:GMSPlace!
+    var locationManager = CLLocationManager()
     
     //Search bar on navigation bar
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
-
+    
+    
+    @IBAction func backPushed(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
         //Your map initiation code
         self.mapView?.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
-
         
         //Location Manager code to fetch current location
         self.locationManager.delegate = self
         self.locationManager.startUpdatingLocation()
         
         
-//        self.navBar.backgroundColor = UIColor.clear
-        
         searchBarInit()
+        loadTemplate()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,7 +59,6 @@ class SearchMapViewController: UIViewController, CLLocationManagerDelegate {
         searchController?.searchResultsUpdater = resultsViewController
         
         // Put the search bar in the navigation bar.
-//        searchController?.searchBar.sizeToFit()
         navigationItem.titleView = searchController?.searchBar
         
         definesPresentationContext = true
@@ -73,6 +68,13 @@ class SearchMapViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    
+    func loadTemplate(){
+        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        myplaceInfoView.vc = self
+        placeInfoView.addSubview(myplaceInfoView)
+    }
+
 
     func makeMarkerSearched(){
         

@@ -12,7 +12,7 @@ class ViewController: UIViewController{
     let headerViewIdentifier = "HeaderView"
     let segIdentifier = "mapSeg"
     
-    var dataSource:DataSource!
+    var dataSource:DataController!
     
     //Search bar on navigation bar
     var resultsViewController: GMSAutocompleteResultsViewController?
@@ -22,7 +22,7 @@ class ViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataSource = DataSource()
+        dataSource = DataController()
 
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("FirebaseNotification"), object: nil)
 

@@ -11,12 +11,15 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     
     var placeID: String = ""
     var saved: Bool = false
-    var vc = MapViewController()
+    var vc:CommonViewController!
     var marker = GMSMarker()
     
     @IBOutlet var gestureR: UITapGestureRecognizer!
-    override init(frame: CGRect) {
+    
+    init(_ vc:CommonViewController, frame: CGRect) {
         super.init(frame: frame)
+        
+        self.vc = vc
         autoresizesSubviews = false
  
         loadXibView()

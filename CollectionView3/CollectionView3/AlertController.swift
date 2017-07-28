@@ -10,10 +10,10 @@ import UIKit
 
 struct AlertControl{
     
-    var vc:MapViewController!
+    var vc:CommonViewController!
     var placeInfo:PlaceInformation!
     
-    init(_ vc:MapViewController, _ placeInfo:PlaceInformation) {
+    init(_ vc:CommonViewController, _ placeInfo:PlaceInformation) {
         self.vc = vc
         self.placeInfo = placeInfo
     }
