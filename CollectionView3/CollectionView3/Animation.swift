@@ -11,37 +11,39 @@ import UIKit
 
 
 struct Animation {
+    
 
-    func animateShow(_ mapVC:MapViewController){
+    func animateShow(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ boundsHeight:CGFloat, _ vcFlag:ViewControllerFlag){
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
-            mapVC.placeInfoView.center.y -= mapVC.view.bounds.height
-            mapVC.tabeViewWrapper.center.y += mapVC.view.bounds.height
+            placeInfoView.center.y -= boundsHeight
+            tableViewWrapper.center.y += boundsHeight
         },completion: nil
         )
     }
     
-    func animateHide(_ mapVC:MapViewController){
+    func animateHide(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ boundsHeight:CGFloat, _ vcFlag:ViewControllerFlag){
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
-            mapVC.placeInfoView.center.y += mapVC.view.bounds.height
-            mapVC.tabeViewWrapper.center.y -= mapVC.view.bounds.height
+            placeInfoView.center.y += boundsHeight
+            tableViewWrapper.center.y -= boundsHeight
         },completion: nil
         )
     }
     
-    func animateShowList(_ mapVC:MapViewController){
+    func animateShowList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
+        
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,animations: {
-            mapVC.tabeViewWrapper.center.y -= mapVC.tabeViewWrapper.bounds.height - mapVC.tableViewHeader.bounds.height
-            mapVC.tableViewHeaderLabel.text = "Hide List"
+            tableViewWrapper.center.y -= boundsHeight - boundsHeight
+            tableViewHeader.text = "Hide List"
         },completion: nil
         )
     }
     
-    func animateHideList(_ mapVC:MapViewController){
+    func animateHideList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,animations: {
-            mapVC.tabeViewWrapper.center.y += mapVC.tabeViewWrapper.bounds.height - mapVC.tableViewHeader.bounds.height
-            mapVC.tableViewHeaderLabel.text = "Show List"
+            tableViewWrapper.center.y += boundsHeight - boundsHeight
+            tableViewHeader.text = "Show List"
         },completion: nil
         )
     }

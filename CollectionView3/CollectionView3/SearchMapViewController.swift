@@ -15,19 +15,44 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
     
+    @IBOutlet weak var tableViewWrapper: UIView!
+    
+    @IBOutlet weak var tableViewHeader: UIView!
+    @IBOutlet weak var tableViewHeaderLabel: UILabel!
     
     var place:GMSPlace!
-    var locationManager = CLLocationManager()
     
     //Search bar on navigation bar
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
     
+    var tableViewAppear = false
+    var placeInfoAppear = true
+
+    
     
     @IBAction func backPushed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+//        refreshTableView()
+        
+
+        tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
+        
+        if !placeInfoAppear{
+            placeInfoView.center.y  += view.bounds.height
+        }
+        
+        if placeInfoAppear{
+            tableViewWrapper.center.y += self.view.bounds.height
+        }
+    }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,10 +61,13 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         self.mapView?.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
         
-        //Location Manager code to fetch current location
-        self.locationManager.delegate = self
-        self.locationManager.startUpdatingLocation()
+        var markers = makeMarkerSearched()
+        locationManager = MapCLLocationManager(mapView, markers)
         
+        mapView.delegate = MapViewDelegate(self)
+        mapView.isUserInteractionEnabled = true
+        mapView.settings.setAllGesturesEnabled(true)
+        mapView.settings.consumesGesturesInView = true
         
         searchBarInit()
         loadTemplate()
@@ -76,59 +104,121 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     }
 
 
-    func makeMarkerSearched(){
+    func makeMarkerSearched() -> [GMSMarker]{
+        
+        var markers:[GMSMarker] = []
         
         print(place.name)
         let marker = GMSMarker(position: place.coordinate)
         marker.appearAnimation = .pop
         marker.map = mapView
+        markers.append(marker)
         
-        let camera = GMSCameraPosition(target: place.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
-        mapView.animate(to: camera)
+        return markers
+//        let camera = GMSCameraPosition(target: place.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
+//        mapView.animate(to: camera)
     }
     
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    override func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
         
-        let location = locations.last
+        myplaceInfoView.saved = isSaved
         
-        let camera = GMSCameraPosition.camera(withLatitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, zoom: 15.0)
-        mapView.animate(to: camera)
+        if !placeInfoAppear {
+            Animation().animateShow(placeInfoView, tableViewWrapper, tableViewWrapper.bounds.height, ViewControllerFlag.searchVC)
+            placeInfoAppear = true
+            setGeneralInformation(marker)
+        } else{
+            setGeneralInformation(marker)
+        }
         
-        //Finally stop updating location otherwise it will come again and again in this delegate
-        self.locationManager.stopUpdatingLocation()
-        
-        makeMarkerSearched()
     }
     
-    
-    // Handle authorization for the location manager.
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    override func coordinateTapped(){
         
-        switch status {
-        case .restricted:
-            print("Location access was restricted.")
-        case .denied:
-            print("User denied access to location.")
-            // Display the map using the default location.
-        //            mapView.isHidden = false
-        case .notDetermined:
-            print("Location status not determined.")
-        case .authorizedAlways:
-            fallthrough
-        case .authorizedWhenInUse:
-            print("Location status is OK.")
+        if !placeInfoAppear{
+            Animation().animateShow(placeInfoView, tableViewWrapper, self.view.bounds.height, ViewControllerFlag.searchVC)
+            placeInfoAppear = true
+        } else {
+            Animation().animateHide(placeInfoView, tableViewWrapper, self.view.bounds.height, ViewControllerFlag.searchVC)
+            placeInfoAppear = false
         }
     }
     
-    // Handle location manager errors.
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        locationManager.stopUpdatingLocation()
-        print("LocationManagerError: \(error)")
+    
+    func setGeneralInformation(_ marker: GMSMarker) {
+        
+        myplaceInfoView.marker = marker
+        
+        let userData = marker.userData
+        
+        if myplaceInfoView.saved == true{
+            self.myplaceInfoView.setSavedIcon()
+        } else {
+            self.myplaceInfoView?.setUnSavedIcon()
+        }
+        
+        placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
+            if let error = error {
+                print("lookup place id query error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let place = place else {
+                print("No place details for \(userData ?? "no placeID")")
+                return
+            }
+            
+            self.myplaceInfoView?.setSelectedPlaceName(place.name)
+            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
+            self.myplaceInfoView?.setPlaceRate(place.rating)
+        })
+        
+        self.myplaceInfoView.reloadInputViews()
     }
+    
 }
-
-
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        
+//        let location = locations.last
+//        
+//        let camera = GMSCameraPosition.camera(withLatitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, zoom: 15.0)
+//        mapView.animate(to: camera)
+//        
+//        //Finally stop updating location otherwise it will come again and again in this delegate
+//        self.locationManager.stopUpdatingLocation()
+//        
+//        makeMarkerSearched()
+//    }
+//    
+//    
+//    // Handle authorization for the location manager.
+//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+//        
+//        switch status {
+//        case .restricted:
+//            print("Location access was restricted.")
+//        case .denied:
+//            print("User denied access to location.")
+//            // Display the map using the default location.
+//        //            mapView.isHidden = false
+//        case .notDetermined:
+//            print("Location status not determined.")
+//        case .authorizedAlways:
+//            fallthrough
+//        case .authorizedWhenInUse:
+//            print("Location status is OK.")
+//        }
+//    }
+//    
+//    // Handle location manager errors.
+//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+//        locationManager.stopUpdatingLocation()
+//        print("LocationManagerError: \(error)")
+//    }
+//}
+//
+//
 extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,

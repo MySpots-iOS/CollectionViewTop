@@ -7,6 +7,13 @@
 //
 
 import UIKit
+import GoogleMaps
+import GooglePlaces
+
+enum ViewControllerFlag {
+    case mapVC
+    case searchVC
+}
 
 class CommonViewController: UIViewController {
     
@@ -16,16 +23,27 @@ class CommonViewController: UIViewController {
 
     
     var myplaceInfoView: PlaceInformation!
+    var locationManager:MapCLLocationManager!
+    var placesClient = GMSPlacesClient.shared()
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
         // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
+        print("markerTapped!")
+    }
+    
+    func coordinateTapped() {
+        print("coorinator tapped!")
     }
     
 

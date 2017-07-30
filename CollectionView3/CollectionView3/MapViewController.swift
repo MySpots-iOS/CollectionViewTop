@@ -8,13 +8,12 @@ class MapViewController: CommonViewController{
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
     
-    @IBOutlet weak var tabeViewWrapper: UIView!
+    @IBOutlet weak var tableViewWrapper: UIView!
     @IBOutlet weak var tableViewHeader: UIView!
     @IBOutlet weak var tableViewHeaderLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var markers: [GMSMarker] = []
     
-    var locationManager:MapCLLocationManager!
     var mapViewDelegate:MapViewDelegate!
     
 
@@ -22,7 +21,6 @@ class MapViewController: CommonViewController{
     var tableViewAppear = false
     var placeInfoAppear = false
 
-    fileprivate var placesClient: GMSPlacesClient!
     var nc = NotificationCenter.default
     
     
@@ -36,12 +34,17 @@ class MapViewController: CommonViewController{
         locationManager = MapCLLocationManager(mapView, markers)
         mapViewDelegate = MapViewDelegate(self)
         
+        
+        mapView.delegate = mapViewDelegate
+        mapView.isUserInteractionEnabled = true
+        mapView.settings.setAllGesturesEnabled(true)
+        mapView.settings.consumesGesturesInView = true
+        
         self.loadTemplate()
         
         mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         mapView.isHidden = true
         
-        placesClient = GMSPlacesClient.shared()
         
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("TableViewNotification"), object: nil)
 
@@ -65,7 +68,7 @@ class MapViewController: CommonViewController{
         refreshTableView()
         
         if !tableViewAppear && !placeInfoAppear {
-            tabeViewWrapper.center.y += tabeViewWrapper.bounds.height - tableViewHeader.bounds.height
+            tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
         }
 
         if !placeInfoAppear{
@@ -97,20 +100,20 @@ class MapViewController: CommonViewController{
     @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
         
         if !tableViewAppear {
-            Animation().animateShowList(self)
+            Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = true
         } else{
-            Animation().animateHideList(self)
+            Animation().animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = false
         }
     }
     
-    func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
+    override func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
         
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            Animation().animateShow(self)
+            Animation().animateShow(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = true
             setGeneralInformation(marker)
         } else{
@@ -119,16 +122,17 @@ class MapViewController: CommonViewController{
         
     }
     
-    func coordinateTapped(){
+    override func coordinateTapped(){
         
         if !placeInfoAppear{
-            Animation().animateShow(self)
+            Animation().animateShow(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = true
         } else {
-            Animation().animateHide(self)
+            Animation().animateHide(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = false
         }
     }
+    
 
     
     func setGeneralInformation(_ marker: GMSMarker) {
