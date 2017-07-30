@@ -62,7 +62,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         mapView.settings.myLocationButton = true
         
         var markers = makeMarkerSearched()
-        locationManager = MapCLLocationManager(mapView, markers)
+        locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.searchVC)
         
         mapView.delegate = MapViewDelegate(self)
         mapView.isUserInteractionEnabled = true
@@ -115,8 +115,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         markers.append(marker)
         
         return markers
-//        let camera = GMSCameraPosition(target: place.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
-//        mapView.animate(to: camera)
+
     }
     
     override func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
