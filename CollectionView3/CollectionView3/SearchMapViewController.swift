@@ -30,7 +30,8 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     var tableViewAppear = false
     var placeInfoAppear = true
 
-    
+    let polyLine: GMSPolyline = GMSPolyline()
+    var savedMarker:GMSMarker!
     
     @IBAction func backPushed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -64,11 +65,14 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         var markers = makeMarkerSearched()
         locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.searchVC)
         
-        mapView.delegate = MapViewDelegate(self)
+        mapView.delegate = self
         mapView.isUserInteractionEnabled = true
         mapView.settings.setAllGesturesEnabled(true)
         mapView.settings.consumesGesturesInView = true
         
+        
+        polyLine.isTappable = true
+        savedMarker = markers.first!
         searchBarInit()
         loadTemplate()
 
@@ -134,6 +138,8 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
     override func coordinateTapped(){
         
+        print("tapped!!")
+        
         if !placeInfoAppear{
             Animation().animateShow(placeInfoView, tableViewWrapper, self.view.bounds.height, ViewControllerFlag.searchVC)
             placeInfoAppear = true
@@ -177,47 +183,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     }
     
 }
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        
-//        let location = locations.last
-//        
-//        let camera = GMSCameraPosition.camera(withLatitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, zoom: 15.0)
-//        mapView.animate(to: camera)
-//        
-//        //Finally stop updating location otherwise it will come again and again in this delegate
-//        self.locationManager.stopUpdatingLocation()
-//        
-//        makeMarkerSearched()
-//    }
-//    
-//    
-//    // Handle authorization for the location manager.
-//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-//        
-//        switch status {
-//        case .restricted:
-//            print("Location access was restricted.")
-//        case .denied:
-//            print("User denied access to location.")
-//            // Display the map using the default location.
-//        //            mapView.isHidden = false
-//        case .notDetermined:
-//            print("Location status not determined.")
-//        case .authorizedAlways:
-//            fallthrough
-//        case .authorizedWhenInUse:
-//            print("Location status is OK.")
-//        }
-//    }
-//    
-//    // Handle location manager errors.
-//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-//        locationManager.stopUpdatingLocation()
-//        print("LocationManagerError: \(error)")
-//    }
-//}
-//
-//
+
 extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
@@ -246,5 +212,67 @@ extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
     
+}
+
+
+extension SearchMapViewController:GMSMapViewDelegate{
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        
+        let isSaved = true
+        self.markerTapped(marker, isSaved)
+        return true
+    }
+    
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        if savedMarker != nil{
+            savedMarker.map = nil
+        }
+        
+        
+        
+        self.coordinateTapped()
+    }
+    
+    
+    func mapView(_ mapView:GMSMapView, didTapPOIWithPlaceID placeID:String,
+                 name:String, location:CLLocationCoordinate2D) {
+        print("You tapped \(name): \(placeID), \(location.latitude)/\(location.longitude)")
+        
+        
+        let infoMarker = GMSMarker(position: location)
+        //        infoMarker.snippet = placeID
+        infoMarker.title = name
+        infoMarker.appearAnimation = .pop
+        //        infoMarker.infoWindowAnchor.y = 1
+        infoMarker.userData = placeID
+        infoMarker.map = mapView
+        mapView.selectedMarker = infoMarker
+        
+        
+        if savedMarker != nil{
+            savedMarker.map = nil
+        }
+        savedMarker = infoMarker
+        
+        let isSaved = false
+        self.markerTapped(infoMarker, isSaved)
+    }
+    
+    func reverseGeocodeCoordinate(coordinate: CLLocationCoordinate2D, marker: GMSMarker) {
+        
+        let geocoder = GMSGeocoder()
+        geocoder.reverseGeocodeCoordinate(coordinate) { response, error in
+            if let address = response?.firstResult() {
+                
+                let title = address.lines as [String]?
+                marker.title = title?.first
+                
+                UIView.animate(withDuration: 0.25) {
+                }
+            }
+        }
+    }
+    
+
 }
 

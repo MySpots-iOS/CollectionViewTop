@@ -100,6 +100,18 @@ class ViewController: UIViewController{
     func goBack(){
         self.dismiss(animated: true)
     }
+    
+    
+    func gotoMapView(){
+        let newMapView = self.storyboard?.instantiateViewController(withIdentifier: "MapView") as! MapViewController
+        
+        if getIndexPathForSelectedCell() != nil {
+            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
+        }
+        newMapView.dataController = self.dataSource
+        
+        navigationController?.pushViewController(newMapView, animated: true)
+    }
 }
 
 
@@ -157,13 +169,7 @@ extension ViewController: UICollectionViewDelegate{
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView.cellForItem(at: indexPath) != nil {
-            
-            let newMapView = self.storyboard?.instantiateViewController(withIdentifier: "MapView") as! MapViewController
-            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
-            newMapView.dataController = self.dataSource
-            
-            navigationController?.pushViewController(newMapView, animated: true)
-//            performSegue(withIdentifier: "showDetail", sender: cell)
+            gotoMapView()
         } else {
             // Error indexPath is not on screen: this should never happen.
         }
@@ -186,8 +192,8 @@ extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
         
         let tableVC = vc.viewControllers.first as! SearchMapViewController
         tableVC.place = place
-        
         self.present(vc, animated: true, completion: nil)
+//        gotoMapView()
 
     }
     
