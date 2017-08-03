@@ -123,7 +123,7 @@ extension ViewController: UICollectionViewDataSource{
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataSource.folders.count
+        return DataController.folders.count
     }
     
     
@@ -192,6 +192,7 @@ extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
         
         let tableVC = vc.viewControllers.first as! SearchMapViewController
         tableVC.place = place
+        tableVC.dataSource = self.dataSource
         self.present(vc, animated: true, completion: nil)
 //        gotoMapView()
 

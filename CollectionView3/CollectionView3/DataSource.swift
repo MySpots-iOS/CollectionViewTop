@@ -9,7 +9,7 @@ class DataController {
     let ref = Database.database().reference()
     let firebasePath: String = "MySpotsFolder"
     
-    var folders:[Folder] = []
+    static var folders:[Folder] = []
     
     
     init() {
@@ -17,21 +17,21 @@ class DataController {
     }
     
     func numberOfFolders() -> Int {
-        return folders.count
+        return DataController.folders.count
     }
     
     func numberOfSpots(_ index: Int) -> Int{
         
-        return folders[index].spots.count
+        return DataController.folders[index].spots.count
     }
 
     func getFolderLabelAtIndex(_ index: Int) -> String {
-        return folders[index].folderName!
+        return DataController.folders[index].folderName!
     }
     
     func getImageNameAtIndex(_ indexPath:IndexPath, _ placesClient:GMSPlacesClient, _ cell:MySpotsCell){
         
-        let folder = getFolder(folderIndex: indexPath)
+        let folder = DataController.getFolder(folderIndex: indexPath)
         let firstSpotPlaceID = folder.spots.first?.placeID
         
         print("FirstPhotoID: \(String(describing: firstSpotPlaceID))")
@@ -66,12 +66,12 @@ class DataController {
     }
     
     
-    func getFolder(folderIndex: IndexPath) -> Folder{
-        return folders[folderIndex[1]]
+    static func getFolder(folderIndex: IndexPath) -> Folder{
+        return DataController.folders[folderIndex[1]]
     }
     
-    func getFolders() -> [Folder]{
-        return self.folders
+    static func getFolders() -> [Folder]{
+        return DataController.folders
     }
     
     
@@ -80,14 +80,14 @@ class DataController {
         self.ref.child(firebasePath).observe(.value, with: { (snapshot) in
 //        self.ref.child(firebasePath).observeSingleEvent(of: .value, with: { (snapshot) in
         
-            self.folders.removeAll()
+            DataController.folders.removeAll()
             
             for folder in snapshot.children{
                 let newFolder: Folder?
         
                 if let snap = folder as? DataSnapshot {
                     newFolder = self.makeFolder(folder: snap)
-                    self.folders.append(newFolder!)
+                    DataController.folders.append(newFolder!)
                 }
             }
             

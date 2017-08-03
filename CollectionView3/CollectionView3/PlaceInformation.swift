@@ -32,7 +32,12 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
 
     @IBAction func savedIconTapped(_ sender: Any?) {
         let alert = AlertControl.init(vc, self)
-        alert.saveToFolder()
+        
+        if !saved{
+            alert.saveToFolder()
+        } else {
+            alert.deleteFromFolder()
+        }
     }
     
     
@@ -48,7 +53,7 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
         
         let view = Bundle.main.loadNibNamed( "PlaceInformation", owner: self, options: nil)?.first as! UIView
         view.frame = self.bounds
-        self.placeName.textColor = UIColor.green
+        self.placeName.textColor = UIColor.mainDarkGreen()
         self.distanceIcon.isUserInteractionEnabled = true
         self.addSubview(view)
     }

@@ -28,7 +28,7 @@ class MapViewController: CommonViewController{
         super.viewDidLoad()
         
         let mapMaker = MapMaker()
-        let folder = dataController.getFolder(folderIndex: folderIndexPath)
+        let folder = DataController.getFolder(folderIndex: folderIndexPath)
         markers = mapMaker.makeMarkers(mapView: mapView, folder: folder)
 
         locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.mapVC)
@@ -80,6 +80,12 @@ class MapViewController: CommonViewController{
         super.didReceiveMemoryWarning()
     }
     
+    func loadTemplate(){
+        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        myplaceInfoView.vc = self
+        placeInfoView.addSubview(myplaceInfoView)
+    }
+    
     
     @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
@@ -89,21 +95,14 @@ class MapViewController: CommonViewController{
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-
-    func loadTemplate(){
-        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
-        myplaceInfoView.vc = self
-        placeInfoView.addSubview(myplaceInfoView)
-    }
-    
     
     @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
         
         if !tableViewAppear {
-            Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
+            Animation.animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = true
         } else{
-            Animation().animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
+            Animation.animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = false
         }
     }
@@ -113,7 +112,7 @@ class MapViewController: CommonViewController{
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            Animation().animateShow(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
+            Animation.animateShow(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = true
             setGeneralInformation(marker)
         } else{
@@ -125,10 +124,10 @@ class MapViewController: CommonViewController{
     override func coordinateTapped(){
         
         if !placeInfoAppear{
-            Animation().animateShow(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
+            Animation.animateShow(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = true
         } else {
-            Animation().animateHide(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
+            Animation.animateHide(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = false
         }
     }

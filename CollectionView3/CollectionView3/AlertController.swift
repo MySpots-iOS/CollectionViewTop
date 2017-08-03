@@ -22,7 +22,8 @@ struct AlertControl{
 
         let alert = UIAlertController(title:"Save to Folder", message: "Select a folder to save your spot", preferredStyle: UIAlertControllerStyle.alert)
         
-        let folders = vc.dataController.getFolders()
+        
+        let folders = DataController.getFolders()
         for folder in folders{
             
             let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
@@ -78,6 +79,12 @@ struct AlertControl{
         alert.addAction(cancel)
         
         vc.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func deleteFromFolder(){
+        
+        print("delete from Folder: AlertController")
     }
 
 }

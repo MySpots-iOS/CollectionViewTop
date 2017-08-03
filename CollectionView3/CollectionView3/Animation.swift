@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 
 
-struct Animation {
+class Animation {
     
 
-    func animateShow(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ boundsHeight:CGFloat, _ vcFlag:ViewControllerFlag){
+    static func animateShow(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ boundsHeight:CGFloat, _ vcFlag:ViewControllerFlag){
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
             placeInfoView.center.y -= boundsHeight
@@ -22,7 +22,7 @@ struct Animation {
         )
     }
     
-    func animateHide(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ boundsHeight:CGFloat, _ vcFlag:ViewControllerFlag){
+    static func animateHide(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ boundsHeight:CGFloat, _ vcFlag:ViewControllerFlag){
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
             placeInfoView.center.y += boundsHeight
@@ -31,18 +31,18 @@ struct Animation {
         )
     }
     
-    func animateShowList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
+    static func animateShowList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
         
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,animations: {
-            tableViewWrapper.center.y -= boundsHeight - boundsHeight
+            tableViewWrapper.center.y -= boundsHeight - tableViewHeader.bounds.height
             tableViewHeader.text = "Hide List"
         },completion: nil
         )
     }
     
-    func animateHideList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
+    static func animateHideList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,animations: {
-            tableViewWrapper.center.y += boundsHeight - boundsHeight
+            tableViewWrapper.center.y += boundsHeight - tableViewHeader.bounds.height
             tableViewHeader.text = "Show List"
         },completion: nil
         )
