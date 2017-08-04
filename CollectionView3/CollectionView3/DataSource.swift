@@ -47,6 +47,14 @@ class DataController {
         DataController.folders.remove(at: index)
     }
     
+    
+    func addFolder(_ folderName:String){
+        
+        let newfolder = Folder()
+        newfolder.folderName = folderName
+        DataController.folders.append(newfolder)
+    }
+    
     func numberOfSpots(_ index: Int) -> Int{
         
         return DataController.folders[index].spots.count
@@ -104,8 +112,6 @@ class DataController {
     func getFolders() -> [Folder]{
         return DataController.folders
     }
-    
-
 
 
     func makeFolder(folder:DataSnapshot) -> Folder {
@@ -142,7 +148,46 @@ class DataController {
         return newFolder
     }
     
-    func deleteFolderDatabase(_ index:Int){
+    
+    func deleteMarkerDatabase(_ folderName:String, _ placeInfo:PlaceInformation){
+        let foldersRef = self.ref.child(firebasePath)
+        foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.exists() {
+                let folderKey = (snapshot.value as AnyObject).allKeys.first!
+                self.deleteSpot(foldersRef.child(folderKey as! String), placeInfo)
+            } else {
+                print("Error: we can't delete the spot")
+            }
+        })
+    }
+    
+    func deleteSpot(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
+        
+        
+        
+        folderRef.child("Spots").queryOrdered(byChild: "placeID").queryEqual(toValue: placeInfo.placeID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.exists() {
+                let folderKey = (snapshot.value as AnyObject).allKeys.first!
+
+                folderRef.child(folderKey as! String).removeValue { (error, ref) in
+                    if error != nil {
+                        print("error \(String(describing: error))")
+                    }
+                    DispatchQueue.main.async {
+                        print("deleeted!")
+//                        self.deleteFolder(index)
+
+                    }
+                }
+                
+            } else {
+                print("we don't have that, add it to the DB now")
+            }
+        })
+        
+    }
+    
+    func deleteFolderDatabase(_ index:Int, _ cView:UICollectionView){
         let foldersRef = ref.child(firebasePath)
         
         let folderName = DataController.folders[index].folderName
@@ -154,8 +199,11 @@ class DataController {
                     if error != nil {
                         print("error \(String(describing: error))")
                     }
-                    
-                    self.deleteFolder(index)
+                    DispatchQueue.main.async {
+                        print("deleeted!")
+//                        cView.reloadData()
+                    }
+//                    self.deleteFolder(index)
                 }
                 
                 
@@ -215,7 +263,7 @@ class DataController {
         
         let newFolder = ["category": "Not set", "folderName": folderName, "imageName":"garragePic", "spotsNum":0, "Spots":0] as [String : Any]
         folderRef.updateChildValues(newFolder)
-//        self.addMarker(folderRef, placeInfo)
+        
     }
     
     

@@ -12,7 +12,7 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     var placeID: String = ""
     var saved: Bool = false
     var vc:CommonViewController!
-    var marker = GMSMarker()
+    var marker:GMSMarker!
     
     @IBOutlet var gestureR: UITapGestureRecognizer!
     
@@ -36,7 +36,7 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
         if !saved{
             AlertControl.saveToFolder(vc, self)
         } else {
-            AlertControl.deleteFromFolder()
+            AlertControl.deleteFromFolder(vc, vc.folder, self)
         }
     }
     

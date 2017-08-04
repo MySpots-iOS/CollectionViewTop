@@ -9,15 +9,7 @@
 import UIKit
 
 class AlertControl{
-    
-//    var vc:CommonViewController!
-//    var placeInfo:PlaceInformation!
-//    
-//    init(_ vc:CommonViewController, _ placeInfo:PlaceInformation) {
-//        self.vc = vc
-//        self.placeInfo = placeInfo
-//    }
-//    
+
     static func saveToFolder(_ vc:CommonViewController, _ placeInfo:PlaceInformation){
 
         let alert = UIAlertController(title:"Save to Folder", message: "Select a folder to save your spot", preferredStyle: UIAlertControllerStyle.alert)
@@ -29,7 +21,7 @@ class AlertControl{
             let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
                 (action: UIAlertAction!) in
                 
-                print(folder.folderName)
+                print(folder.folderName!)
                  print(placeInfo.addressName)
                 
                 vc.dataController.addNewSpot(placeInfo, folder.folderName!)
@@ -84,14 +76,38 @@ class AlertControl{
     }
     
     
-    static func deleteFromFolder(){
+    static func deleteFromFolder(_ vc:CommonViewController, _ folder:Folder, _ placeInfo:PlaceInformation){
         
-        print("delete from Folder: AlertController")
+        
+        let alertController = UIAlertController(title: "Delete Spot?",
+                                                message: " ",
+                                                preferredStyle: .alert)
+        
+        // Submit button
+        let submitAction = UIAlertAction(title: "Delete", style:.destructive , handler: { (action) -> Void in
+            
+            placeInfo.marker.map = nil
+            placeInfo.setUnSavedIcon()
+            placeInfo.saved = false
+
+            
+            
+            vc.dataController.deleteMarkerDatabase(folder.folderName!, placeInfo)
+        })
+        
+        // Cancel button
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: { (action) -> Void in })
+        
+        // Add action buttons and present the Alert
+        alertController.addAction(cancel)
+        alertController.addAction(submitAction)
+        vc.present(alertController, animated: true, completion: nil)
     }
+
     
     
     static func addToNewFolder(_ vc:ViewController){
-        let alertController = UIAlertController(title: "Add to New Folder",
+        let alertController = UIAlertController(title: "Add New Folder",
                                                 message: "Input new folder name",
                                                 preferredStyle: .alert)
         
@@ -105,11 +121,16 @@ class AlertControl{
         }
         
         // Submit button
-        let submitAction = UIAlertAction(title: "Submit", style:.destructive , handler: { (action) -> Void in
+        let submitAction = UIAlertAction(title: "Add", style:.destructive , handler: { (action) -> Void in
             // Get 1st TextField's text
             let textField = alertController.textFields![0]
             print(textField.text!)
+            
+            vc.dataController.addFolder(textField.text!)
+            vc.cView.reloadData()
+            
             vc.dataController.makeEmptyNewFolder(textField.text!)
+            
         })
         
         // Cancel button

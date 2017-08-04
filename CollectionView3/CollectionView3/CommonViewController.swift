@@ -20,6 +20,7 @@ class CommonViewController: UIViewController {
     //These are passed from ViewController by segue
     var dataController:DataController!
     var folderIndexPath:IndexPath!
+    var folder:Folder!
 
     
     var myplaceInfoView: PlaceInformation!
@@ -39,12 +40,17 @@ class CommonViewController: UIViewController {
     }
     
     func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
-        print("markerTapped!")
+        print("CommonCV: markerTapped!")
     }
     
     func coordinateTapped() {
-        print("coorinator tapped!")
+        print("CommonCV: coorinator tapped!")
     }
     
+    func instantiateDetailView(_ spot:Spot){
+        print("CommonCV: tableViewTapped")
+    }
 
 }
+
+

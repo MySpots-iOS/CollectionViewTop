@@ -14,9 +14,11 @@ class TableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate{
     
     
     var folder:Folder
+    var vc:CommonViewController!
     
-    init(_ folder:Folder) {
+    init(_ folder:Folder, _ vc:CommonViewController) {
         self.folder = folder
+        self.vc = vc
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -38,5 +40,20 @@ class TableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate{
         
         return cell
     }
+    
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if tableView.cellForRow(at: indexPath) != nil{
+            
+            vc.instantiateDetailView(vc.folder.spots[indexPath.row])
+            
+        } else {
+            // Error indexPath is not on screen: this should never happen.
+        }
+    }
+    
+
 
 }

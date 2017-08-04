@@ -28,7 +28,7 @@ class MapViewController: CommonViewController{
         super.viewDidLoad()
         
         let mapMaker = MapMaker()
-        let folder = dataController.getFolder(folderIndex: folderIndexPath)
+        folder = dataController.getFolder(folderIndex: folderIndexPath)
         markers = mapMaker.makeMarkers(mapView: mapView, folder: folder)
 
         locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.mapVC)
@@ -48,7 +48,7 @@ class MapViewController: CommonViewController{
         
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("TableViewNotification"), object: nil)
 
-        let tableViewDelegate = TableViewDataSource(folder)
+        let tableViewDelegate = TableViewDataSource(folder,self)
         tableView.dataSource = tableViewDelegate
         tableView.delegate = tableViewDelegate
         tableView.rowHeight = 100
@@ -65,6 +65,11 @@ class MapViewController: CommonViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        
+        folder = dataController.getFolder(folderIndex: folderIndexPath)
+        refreshTableView()
+
         refreshTableView()
         
         if !tableViewAppear && !placeInfoAppear{
@@ -94,6 +99,15 @@ class MapViewController: CommonViewController{
         //set placeID
         vc.placeID = myplaceInfoView.getGooglePlaceID()
         vc.saved = myplaceInfoView.getSavedBool()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+    override func instantiateDetailView(_ spot:Spot){
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
+        //set placeID
+        vc.placeID = spot.placeID!
+        vc.saved = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -168,6 +182,8 @@ class MapViewController: CommonViewController{
         
         self.myplaceInfoView.reloadInputViews()
     }
+
+    
 
 }
 

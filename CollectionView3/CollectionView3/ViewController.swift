@@ -36,6 +36,7 @@ class ViewController: UIViewController{
     
 
     @IBAction func addNewFolder(_ sender: UIButton) {
+        
         AlertControl.addToNewFolder(self)
     }
     
@@ -61,20 +62,7 @@ class ViewController: UIViewController{
     }
     
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if getIndexPathForSelectedCell() != nil {
-//            let newMapView = segue.destination as! MapViewController
-//            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
-//            newMapView.dataController = self.dataSource
-//        }
-//    }
-    
-//    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-//        return !isEditing
-//    }
-    
     @IBAction func editFolders(_ sender: Any) {
-        
         
         if(editModeEnabled == false) {
             // Put the collection view in edit mode
@@ -208,15 +196,14 @@ extension ViewController: UICollectionViewDataSource{
     func deleteMySpotsFolder(sender:UIButton) {
         //        // Put the index number of the delete button the use tapped in a variable
         let i: Int = (sender.layer.value(forKey: "index")) as! Int
-        
+        dataController.deleteFolderDatabase(i, cView)
 
-        dataController.deleteFolderDatabase(i)
+        
+        // Remove an object from the collection view's dataSource
+        dataController.deleteFolder(i)
         
         // Refresh the collection view
-        
-        self.cView!.reloadData()
-        
-        print("hi!")
+        cView!.reloadData()
     }
 
 }
