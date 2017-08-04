@@ -4,32 +4,40 @@ import GooglePlaces
 class ViewController: UIViewController{
     
 
+    @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var cView: UICollectionView!
     private let nc = NotificationCenter.default
 
-    
+    var editModeEnabled = false
+
     let identifier = "CellIdentifier"
     let headerViewIdentifier = "HeaderView"
     let segIdentifier = "mapSeg"
     
-    var dataSource:DataSource!
+    var dataController:DataController!
     
     //Search bar on navigation bar
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataSource = DataSource()
-
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("FirebaseNotification"), object: nil)
 
         cView.delegate = self
         cView.dataSource = self
         
         searchBarInit()
+        
+    }
+    
+
+    @IBAction func addNewFolder(_ sender: UIButton) {
+        
+        AlertControl.addToNewFolder(self)
     }
     
     
@@ -54,17 +62,36 @@ class ViewController: UIViewController{
     }
     
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if getIndexPathForSelectedCell() != nil {
-//            let newMapView = segue.destination as! MapViewController
-//            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
-//            newMapView.dataController = self.dataSource
-//        }
-//    }
+    @IBAction func editFolders(_ sender: Any) {
+        
+        if(editModeEnabled == false) {
+            // Put the collection view in edit mode
+            editButton.style = .plain
+            editButton.title = "Done"
+            editModeEnabled = true
+            
+           //  Loop through the collectionView's visible cells
+            for item in self.cView!.visibleCells as! [MySpotsCell] {
+                let indexPath: NSIndexPath = self.cView!.indexPath(for: item as MySpotsCell)! as NSIndexPath
+                let cell: MySpotsCell = self.cView.cellForItem(at: indexPath as IndexPath) as! MySpotsCell!
+                cell.deleteButton.isHidden = false // Hide all of the delete buttons
+            }
+        } else {
+            // Take the collection view out of edit mode
+            editButton.style = .plain
+            editButton.title = "Edit"
+            editModeEnabled = false
+            
+            // Loop through the collectionView's visible cells
+            for item in self.cView!.visibleCells as! [MySpotsCell] {
+                let indexPath: NSIndexPath = self.cView.indexPath(for: item as MySpotsCell)! as NSIndexPath
+                let cell = self.cView!.cellForItem(at: indexPath as IndexPath) as! MySpotsCell!
+                cell?.deleteButton.isHidden = true  // Hide all of the delete buttons
+            }
+        }
+    }
     
-//    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-//        return !isEditing
-//    }
+
     
     
     func getIndexPathForSelectedCell() -> IndexPath? {
@@ -100,6 +127,18 @@ class ViewController: UIViewController{
     func goBack(){
         self.dismiss(animated: true)
     }
+    
+    
+    func gotoMapView(){
+        let newMapView = self.storyboard?.instantiateViewController(withIdentifier: "MapView") as! MapViewController
+        
+        if getIndexPathForSelectedCell() != nil {
+            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
+        }
+        newMapView.dataController = self.dataController
+        
+        navigationController?.pushViewController(newMapView, animated: true)
+    }
 }
 
 
@@ -111,7 +150,7 @@ extension ViewController: UICollectionViewDataSource{
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataSource.folders.count
+        return dataController.numberOfFolders()
     }
     
     
@@ -121,14 +160,26 @@ extension ViewController: UICollectionViewDataSource{
 
 
         let placesClient:GMSPlacesClient = GMSPlacesClient.shared()
-        dataSource.getImageNameAtIndex(indexPath, placesClient, cell)
+        dataController.getImageNameAtIndex(indexPath, placesClient, cell)
 
-        let folderName = dataSource.getFolderLabelAtIndex(indexPath.row)
-        let spotsNum = dataSource.numberOfSpots(indexPath.row)
+        let folderName = dataController.getFolderLabelAtIndex(indexPath.row)
+        let spotsNum = dataController.numberOfSpots(indexPath.row)
 
         cell.mySpotsLabel.text = folderName
         cell.spotsNumLabel.text = "\(spotsNum) Spots"
-
+        
+        if self.navigationItem.rightBarButtonItem!.title == "Edit" {
+            cell.deleteButton.isHidden = true
+        } else {
+            cell.deleteButton.isHidden = false
+        }
+        
+        // Give the delete button an index number
+        cell.deleteButton.layer.setValue(indexPath.row, forKey: "index")
+        
+        // Add an action function to the delete button]
+        cell.deleteButton.addTarget(self, action: #selector(deleteMySpotsFolder), for: .touchUpInside)
+ 
         return cell
     }
     
@@ -139,6 +190,20 @@ extension ViewController: UICollectionViewDataSource{
         
         headerView.headerLabel.text = "My Spots"
         return headerView
+    }
+    
+    
+    func deleteMySpotsFolder(sender:UIButton) {
+        //        // Put the index number of the delete button the use tapped in a variable
+        let i: Int = (sender.layer.value(forKey: "index")) as! Int
+        dataController.deleteFolderDatabase(i, cView)
+
+        
+        // Remove an object from the collection view's dataSource
+        dataController.deleteFolder(i)
+        
+        // Refresh the collection view
+        cView!.reloadData()
     }
 
 }
@@ -157,13 +222,7 @@ extension ViewController: UICollectionViewDelegate{
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView.cellForItem(at: indexPath) != nil {
-            
-            let newMapView = self.storyboard?.instantiateViewController(withIdentifier: "MapView") as! MapViewController
-            newMapView.folderIndexPath = getIndexPathForSelectedCell()!
-            newMapView.dataController = self.dataSource
-            
-            navigationController?.pushViewController(newMapView, animated: true)
-//            performSegue(withIdentifier: "showDetail", sender: cell)
+            gotoMapView()
         } else {
             // Error indexPath is not on screen: this should never happen.
         }
@@ -186,8 +245,9 @@ extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
         
         let tableVC = vc.viewControllers.first as! SearchMapViewController
         tableVC.place = place
-        
+        tableVC.dataController = self.dataController
         self.present(vc, animated: true, completion: nil)
+//        gotoMapView()
 
     }
     

@@ -10,20 +10,19 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-class SearchMapViewController: UIViewController, CLLocationManagerDelegate {
+class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
-
-
-    @IBAction func backPushed(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
-//    @IBOutlet weak var navBarTitle: UINavigationItem!
-//    @IBOutlet weak var navBar: UINavigationBar!
-    var place:GMSPlace!
     @IBOutlet weak var mapView: GMSMapView!
-    var locationManager = CLLocationManager()
-
+    @IBOutlet weak var placeInfoView: UIView!
     
+    @IBOutlet weak var tableViewWrapper: UIView!
+    
+    @IBOutlet weak var tableViewHeader: UIView!
+    @IBOutlet weak var tableViewHeaderLabel: UILabel!
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    var place:GMSPlace!
     
     //Search bar on navigation bar
     var resultsViewController: GMSAutocompleteResultsViewController?
@@ -31,28 +30,104 @@ class SearchMapViewController: UIViewController, CLLocationManagerDelegate {
     var resultView: UITextView?
 
     
+    var tableViewAppear = false
+    var placeInfoAppear = true
+
+    let polyLine: GMSPolyline = GMSPolyline()
+    var savedMarker:GMSMarker!
+    
+    @IBAction func backPushed(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        
+//        if !tableViewAppear && !placeInfoAppear{
+//            tableViewWrapper.center.y += tableViewWrapper.bounds.height
+//        }
+//        
+//        if !placeInfoAppear{
+//            tableViewWrapper.center.y -= tableViewHeader.bounds.height
+//            placeInfoView.center.y += placeInfoView.bounds.height
+//        }
+        
+        
+//        if !placeInfoAppear{
+//            placeInfoView.center.y  += view.bounds.height
+//        }
+//        
+//        if !tableViewAppear{
+//            tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
+//            
+//            if placeInfoAppear{
+//                if placeInfoAppear{
+//                    tableViewWrapper.center.y += tableViewWrapper.bounds.height
+//                }
+//            }
+//        }
+
+    }
+    
+    func refreshTableView(){
+        tableView.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
 
         //Your map initiation code
         self.mapView?.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
-
         
-        //Location Manager code to fetch current location
-        self.locationManager.delegate = self
-        self.locationManager.startUpdatingLocation()
+        let markers = makeMarkerSearched()
+        locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.searchVC)
+        
+        mapView.delegate = self
+        mapView.isUserInteractionEnabled = true
+        mapView.settings.setAllGesturesEnabled(true)
+        mapView.settings.consumesGesturesInView = true
         
         
-//        self.navBar.backgroundColor = UIColor.clear
-        
+        polyLine.isTappable = true
+        savedMarker = markers.first!
         searchBarInit()
+        loadTemplate()
+        
+        
+        let tableViewDelegate = SearchTableViewDataSource(dataController)
+        tableView.dataSource = tableViewDelegate
+        tableView.delegate = tableViewDelegate
+        tableView.rowHeight = 100
+
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    
+    @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
+        //set placeID
+        vc.placeID = myplaceInfoView.getGooglePlaceID()
+        vc.saved = myplaceInfoView.getSavedBool()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+    @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
+        
+        if !tableViewAppear {
+            Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
+            tableViewAppear = true
+        } else{
+            Animation().animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
+            tableViewAppear = false
+        }
+    }
+
     
     func searchBarInit(){
         //Searchbar Init
@@ -63,7 +138,6 @@ class SearchMapViewController: UIViewController, CLLocationManagerDelegate {
         searchController?.searchResultsUpdater = resultsViewController
         
         // Put the search bar in the navigation bar.
-//        searchController?.searchBar.sizeToFit()
         navigationItem.titleView = searchController?.searchBar
         
         definesPresentationContext = true
@@ -73,59 +147,91 @@ class SearchMapViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    
+    func loadTemplate(){
+        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        myplaceInfoView.vc = self
+        placeInfoView.addSubview(myplaceInfoView)
+    }
 
-    func makeMarkerSearched(){
+
+    func makeMarkerSearched() -> [GMSMarker]{
+        
+        var markers:[GMSMarker] = []
         
         print(place.name)
         let marker = GMSMarker(position: place.coordinate)
         marker.appearAnimation = .pop
         marker.map = mapView
+        markers.append(marker)
         
-        let camera = GMSCameraPosition(target: place.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
-        mapView.animate(to: camera)
+        return markers
+
     }
     
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    override func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
         
-        let location = locations.last
+        myplaceInfoView.saved = isSaved
         
-        let camera = GMSCameraPosition.camera(withLatitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, zoom: 15.0)
-        mapView.animate(to: camera)
+        if !placeInfoAppear {
+            Animation().animateShow(tableViewWrapper, placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
+            placeInfoAppear = true
+            setGeneralInformation(marker)
+        } else{
+            setGeneralInformation(marker)
+        }
         
-        //Finally stop updating location otherwise it will come again and again in this delegate
-        self.locationManager.stopUpdatingLocation()
-        
-        makeMarkerSearched()
     }
     
-    
-    // Handle authorization for the location manager.
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    override func coordinateTapped(){
         
-        switch status {
-        case .restricted:
-            print("Location access was restricted.")
-        case .denied:
-            print("User denied access to location.")
-            // Display the map using the default location.
-        //            mapView.isHidden = false
-        case .notDetermined:
-            print("Location status not determined.")
-        case .authorizedAlways:
-            fallthrough
-        case .authorizedWhenInUse:
-            print("Location status is OK.")
+        print("tapped!!")
+        
+        if !placeInfoAppear{
+            Animation().animateShow(self.tableViewWrapper, self.placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
+            placeInfoAppear = true
+        } else{
+            
+            Animation().animateHide(self.tableViewWrapper, self.placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
+            placeInfoAppear = false
+            
         }
     }
     
-    // Handle location manager errors.
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        locationManager.stopUpdatingLocation()
-        print("LocationManagerError: \(error)")
+    
+    func setGeneralInformation(_ marker: GMSMarker) {
+        
+        myplaceInfoView.marker = marker
+        
+        let userData = marker.userData
+        
+        if myplaceInfoView.saved == true{
+            self.myplaceInfoView.setSavedIcon()
+        } else {
+            self.myplaceInfoView?.setUnSavedIcon()
+        }
+        
+        placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
+            if let error = error {
+                print("lookup place id query error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let place = place else {
+                print("No place details for \(userData ?? "no placeID")")
+                return
+            }
+            
+            self.myplaceInfoView?.setSelectedPlaceName(place.name)
+            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
+            self.myplaceInfoView?.setPlaceRate(place.rating)
+        })
+        
+        self.myplaceInfoView.reloadInputViews()
     }
+    
 }
-
 
 extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
     
@@ -155,5 +261,65 @@ extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
     
+}
+
+
+extension SearchMapViewController:GMSMapViewDelegate{
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        
+        let isSaved = true
+        self.markerTapped(marker, isSaved)
+        return true
+    }
+    
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        if savedMarker != nil{
+            savedMarker.map = nil
+        }
+
+        self.coordinateTapped()
+    }
+    
+    
+    func mapView(_ mapView:GMSMapView, didTapPOIWithPlaceID placeID:String,
+                 name:String, location:CLLocationCoordinate2D) {
+        print("You tapped \(name): \(placeID), \(location.latitude)/\(location.longitude)")
+        
+        
+        let infoMarker = GMSMarker(position: location)
+        //        infoMarker.snippet = placeID
+        infoMarker.title = name
+        infoMarker.appearAnimation = .pop
+        //        infoMarker.infoWindowAnchor.y = 1
+        infoMarker.userData = placeID
+        infoMarker.map = mapView
+        mapView.selectedMarker = infoMarker
+        
+        
+        if savedMarker != nil{
+            savedMarker.map = nil
+        }
+        savedMarker = infoMarker
+        
+        let isSaved = false
+        self.markerTapped(infoMarker, isSaved)
+    }
+    
+    func reverseGeocodeCoordinate(coordinate: CLLocationCoordinate2D, marker: GMSMarker) {
+        
+        let geocoder = GMSGeocoder()
+        geocoder.reverseGeocodeCoordinate(coordinate) { response, error in
+            if let address = response?.firstResult() {
+                
+                let title = address.lines as [String]?
+                marker.title = title?.first
+                
+                UIView.animate(withDuration: 0.25) {
+                }
+            }
+        }
+    }
+    
+
 }
 

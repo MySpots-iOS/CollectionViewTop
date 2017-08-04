@@ -11,18 +11,18 @@ import GoogleMaps
 
 class MapViewDelegate: NSObject, GMSMapViewDelegate{
     
-    var vc:MapViewController = MapViewController()
+    var vc:CommonViewController!
     var savedMarker:GMSMarker!
     
-    init(_ vc:MapViewController) {
+    init(_ vc:CommonViewController) {
         super.init()
         self.vc = vc
         let polyLine: GMSPolyline = GMSPolyline()
         polyLine.isTappable = true
-        vc.mapView.delegate = self
-        vc.mapView.isUserInteractionEnabled = true
-        vc.mapView.settings.setAllGesturesEnabled(true)
-        vc.mapView.settings.consumesGesturesInView = true
+//        vc.mapView.delegate = self
+//        vc.mapView.isUserInteractionEnabled = true
+//        vc.mapView.settings.setAllGesturesEnabled(true)
+//        vc.mapView.settings.consumesGesturesInView = true
     }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {

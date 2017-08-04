@@ -11,10 +11,29 @@ import UIKit
 class MySpotsCell: UICollectionViewCell {
     
     
+    @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var spotsNumLabel: UILabel!
     @IBOutlet weak var mySpotsImage: UIImageView!
     @IBOutlet weak var mySpotsLabel: UILabel!
     
+
+    
+//    @IBAction func deleteCell(_ sender: Any) {
+//        
+//        //    func deleteMySpotsFolder(sender:UIButton) {
+//        ////        // Put the index number of the delete button the use tapped in a variable
+//        let i: Int = (sender.layer.value(forKey: "index")) as! Int
+//        ////        // Remove an object from the collection view's dataSource
+//        dataSource.deleteFolder(i)
+//        //
+//        //        // Refresh the collection view
+//        //        self.cView!.reloadData()
+//        //        
+//        //        print("hi!")
+//        //    }
+//        //    
+//
+//    }
     
     var folder: Folder?{
         didSet{
@@ -31,6 +50,8 @@ class MySpotsCell: UICollectionViewCell {
 //            }
         }
     }
+    
+
     
     
     func update(_ image:UIImage?){

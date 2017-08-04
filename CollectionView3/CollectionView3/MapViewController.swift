@@ -3,24 +3,17 @@ import GoogleMaps
 import GooglePlacePicker
 
 
-class MapViewController: UIViewController{
+class MapViewController: CommonViewController{
     
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
     
-    //These are passed from ViewController by segue
-    var folderIndexPath:IndexPath = IndexPath()
-
-    var dataController:DataSource = DataSource()
-    
-    
-    @IBOutlet weak var tabeViewWrapper: UIView!
+    @IBOutlet weak var tableViewWrapper: UIView!
     @IBOutlet weak var tableViewHeader: UIView!
     @IBOutlet weak var tableViewHeaderLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var markers: [GMSMarker] = []
     
-    var locationManager:MapCLLocationManager!
     var mapViewDelegate:MapViewDelegate!
     
 
@@ -28,31 +21,34 @@ class MapViewController: UIViewController{
     var tableViewAppear = false
     var placeInfoAppear = false
 
-    fileprivate var placesClient: GMSPlacesClient!
-    var myplaceInfoView: PlaceInformation!
     var nc = NotificationCenter.default
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let mapMaker = MapMaker()
-        let folder = dataController.getFolder(folderIndex: folderIndexPath)
+        folder = dataController.getFolder(folderIndex: folderIndexPath)
         markers = mapMaker.makeMarkers(mapView: mapView, folder: folder)
 
-        locationManager = MapCLLocationManager(mapView, markers)
+        locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.mapVC)
         mapViewDelegate = MapViewDelegate(self)
+        
+        
+        mapView.delegate = mapViewDelegate
+        mapView.isUserInteractionEnabled = true
+        mapView.settings.setAllGesturesEnabled(true)
+        mapView.settings.consumesGesturesInView = true
         
         self.loadTemplate()
         
         mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         mapView.isHidden = true
         
-        placesClient = GMSPlacesClient.shared()
         
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("TableViewNotification"), object: nil)
 
-        let tableViewDelegate = TableViewDataSource(folder)
-//        let tableViewDelegate = TableViewDataSource(markers, placesClient)
+        let tableViewDelegate = TableViewDataSource(folder,self)
         tableView.dataSource = tableViewDelegate
         tableView.delegate = tableViewDelegate
         tableView.rowHeight = 100
@@ -69,19 +65,32 @@ class MapViewController: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        
+        folder = dataController.getFolder(folderIndex: folderIndexPath)
+        refreshTableView()
+
         refreshTableView()
         
-        if !tableViewAppear && !placeInfoAppear {
-            tabeViewWrapper.center.y += tabeViewWrapper.bounds.height - tableViewHeader.bounds.height
+        if !tableViewAppear && !placeInfoAppear{
+            tableViewWrapper.center.y += tableViewWrapper.bounds.height
         }
-
+        
         if !placeInfoAppear{
-            placeInfoView.center.y  += view.bounds.height
+           tableViewWrapper.center.y -= tableViewHeader.bounds.height
+            placeInfoView.center.y += placeInfoView.bounds.height
         }
+        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func loadTemplate(){
+        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        myplaceInfoView.vc = self
+        placeInfoView.addSubview(myplaceInfoView)
     }
     
     
@@ -93,32 +102,34 @@ class MapViewController: UIViewController{
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-
-    func loadTemplate(){
-        myplaceInfoView = PlaceInformation(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
-        myplaceInfoView.vc = self
-
-        placeInfoView.addSubview(myplaceInfoView)
+    
+    override func instantiateDetailView(_ spot:Spot){
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
+        //set placeID
+        vc.placeID = spot.placeID!
+        vc.saved = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     
     @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
         
+        
         if !tableViewAppear {
-            Animation().animateShowList(self)
+            Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = true
         } else{
-            Animation().animateHideList(self)
+            Animation().animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = false
         }
     }
     
-    func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
+    override func markerTapped(_ marker:GMSMarker, _ isSaved:Bool){
         
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            Animation().animateShow(self)
+            Animation().animateShow(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = true
             setGeneralInformation(marker)
         } else{
@@ -127,16 +138,17 @@ class MapViewController: UIViewController{
         
     }
     
-    func coordinateTapped(){
+    override func coordinateTapped(){
         
         if !placeInfoAppear{
-            Animation().animateShow(self)
+            Animation().animateShow(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = true
         } else {
-            Animation().animateHide(self)
+            Animation().animateHide(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = false
         }
     }
+    
 
     
     func setGeneralInformation(_ marker: GMSMarker) {
@@ -170,6 +182,8 @@ class MapViewController: UIViewController{
         
         self.myplaceInfoView.reloadInputViews()
     }
+
+    
 
 }
 

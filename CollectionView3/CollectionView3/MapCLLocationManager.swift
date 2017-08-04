@@ -17,11 +17,13 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
 
     var locationManager = CLLocationManager()
     var markers:[GMSMarker] = []
+    var vcFlag:ViewControllerFlag!
     
-    init(_ mapView: GMSMapView, _ markers:[GMSMarker]) {
+    init(_ mapView: GMSMapView, _ markers:[GMSMarker], _ vcFlag:ViewControllerFlag) {
         super.init()
         self.mapView = mapView
         self.markers = markers
+        self.vcFlag = vcFlag
         
         locationManager.delegate = self
         
@@ -48,12 +50,18 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
             mapView.animate(to: camera)
         }
         
-        var bounds = GMSCoordinateBounds()
-        for marker in self.markers {
-            bounds = bounds.includingCoordinate(marker.position)
-        }
-        mapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsetsMake(50.0, 100.0 ,50.0 ,50.0)))
 
+            if vcFlag == .mapVC{
+                var bounds = GMSCoordinateBounds()
+                for marker in self.markers {
+                    bounds = bounds.includingCoordinate(marker.position)
+                }
+                mapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsetsMake(50.0, 100.0 ,50.0 ,50.0)))
+            } else{
+                let camera = GMSCameraPosition(target: (markers.first?.position)!, zoom: 15, bearing: 0, viewingAngle: 0)
+                mapView.animate(to: camera)
+            }
+        
     }
     
     // Handle authorization for the location manager.

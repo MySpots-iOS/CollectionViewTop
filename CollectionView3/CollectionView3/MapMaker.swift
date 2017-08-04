@@ -37,13 +37,5 @@ class MapMaker {
         
         return marker
     }
-    
-
 }
 
-//extension GMSMarker{
-//    var isSaved:Bool = false
-//    func getSaved() -> Bool {
-//            return isSaved
-//        }
-//}

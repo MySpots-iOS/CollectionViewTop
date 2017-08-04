@@ -11,12 +11,15 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     
     var placeID: String = ""
     var saved: Bool = false
-    var vc = MapViewController()
-    var marker = GMSMarker()
+    var vc:CommonViewController!
+    var marker:GMSMarker!
     
     @IBOutlet var gestureR: UITapGestureRecognizer!
-    override init(frame: CGRect) {
+    
+    init(_ vc:CommonViewController, frame: CGRect) {
         super.init(frame: frame)
+        
+        self.vc = vc
         autoresizesSubviews = false
  
         loadXibView()
@@ -28,8 +31,13 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     }
 
     @IBAction func savedIconTapped(_ sender: Any?) {
-        let alert = AlertControl.init(vc, self)
-        alert.saveToFolder()
+//        let alert = AlertControl.init(vc, self)
+        
+        if !saved{
+            AlertControl.saveToFolder(vc, self)
+        } else {
+            AlertControl.deleteFromFolder(vc, vc.folder, self)
+        }
     }
     
     
@@ -45,7 +53,7 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
         
         let view = Bundle.main.loadNibNamed( "PlaceInformation", owner: self, options: nil)?.first as! UIView
         view.frame = self.bounds
-        self.placeName.textColor = UIColor.green
+        self.placeName.textColor = UIColor.mainDarkGreen()
         self.distanceIcon.isUserInteractionEnabled = true
         self.addSubview(view)
     }

@@ -12,18 +12,13 @@ import GooglePlaces
 
 class TableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate{
     
-//    var markers:[GMSMarker]!
-//    var placesClient:GMSPlacesClient!
-//    
-//    init(_ markers:[GMSMarker], _ placesClient:GMSPlacesClient) {
-//        self.markers = markers
-//        self.placesClient = placesClient
-//    }
     
     var folder:Folder
+    var vc:CommonViewController!
     
-    init(_ folder:Folder) {
+    init(_ folder:Folder, _ vc:CommonViewController) {
         self.folder = folder
+        self.vc = vc
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -43,31 +38,22 @@ class TableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate{
         cell.placeName.text = spot.spotName
         cell.placeAddress.text = spot.placeID
         
-//        placesClient.lookUpPlaceID(markers[indexPath.row].snippet!, callback: { (place, error) -> Void in
-//            if let error = error {
-//                print("lookup place id query error: \(error.localizedDescription)")
-//                return
-//            }
-//            
-//            guard let place = place else {
-//                print("No place details for placeID")
-//                return
-//            }
-//            cell.placeName.text = place.name
-//            cell.placeAddress.text = place.formattedAddress
-//            //            cell.placeRating.text = String(place.rating)
-//            
-//            NotificationCenter.default.post(name: Notification.Name(rawValue:"TableViewNotification"), object: nil)
-//
-//        })
         return cell
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print("cell tapped: \(indexPath.row)")
-////        let vc = self.storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! SpotDetailViewController
-////        //set placeID
-////        vc.placeID = (self.markers[indexPath.row].snippet)!
-////        self.navigationController?.pushViewController(vc, animated: true)
-//    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if tableView.cellForRow(at: indexPath) != nil{
+            
+            vc.instantiateDetailView(vc.folder.spots[indexPath.row])
+            
+        } else {
+            // Error indexPath is not on screen: this should never happen.
+        }
+    }
+    
+
+
 }

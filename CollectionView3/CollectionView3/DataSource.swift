@@ -4,50 +4,89 @@ import Firebase
 import GoogleMaps
 import GooglePlaces
 
-class DataSource {
+class DataController {
     
     let ref = Database.database().reference()
     let firebasePath: String = "MySpotsFolder"
     
-    var folders:[Folder] = []
+    static var folders:[Folder] = []
     
     
     init() {
         firstInit()
     }
     
+    func firstInit(){
+        
+        self.ref.child(firebasePath).observe(.value, with: { (snapshot) in
+            
+            DataController.folders.removeAll()
+            
+            for folder in snapshot.children{
+                let newFolder: Folder?
+                
+                if let snap = folder as? DataSnapshot {
+                    newFolder = self.makeFolder(folder: snap)
+                    DataController.folders.append(newFolder!)
+                }
+            }
+            
+            NotificationCenter.default.post(name: Notification.Name(rawValue:"FirebaseNotification"), object: nil)
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+        
+    }
+    
     func numberOfFolders() -> Int {
-        return folders.count
+        return DataController.folders.count
+    }
+    
+    
+    func deleteFolder(_ index:Int){
+        DataController.folders.remove(at: index)
+    }
+    
+    
+    func addFolder(_ folderName:String){
+        
+        let newfolder = Folder()
+        newfolder.folderName = folderName
+        DataController.folders.append(newfolder)
     }
     
     func numberOfSpots(_ index: Int) -> Int{
         
-        return folders[index].spots.count
+        return DataController.folders[index].spots.count
     }
 
     func getFolderLabelAtIndex(_ index: Int) -> String {
-        return folders[index].folderName!
+        return DataController.folders[index].folderName!
     }
     
     func getImageNameAtIndex(_ indexPath:IndexPath, _ placesClient:GMSPlacesClient, _ cell:MySpotsCell){
         
-        let folder = getFolder(folderIndex: indexPath)
-        let firstSpotPlaceID = folder.spots.first?.placeID
+        let folder = self.getFolder(folderIndex: indexPath)
         
-        print("FirstPhotoID: \(String(describing: firstSpotPlaceID))")
         
-        placesClient.lookUpPhotos(forPlaceID: firstSpotPlaceID!, callback: { (photos, error) -> Void in
+        if let firstSpotPlaceID = folder.spots.first?.placeID{
+    
+            print("FirstPhotoID: \(String(describing: firstSpotPlaceID))")
+        
+                placesClient.lookUpPhotos(forPlaceID: firstSpotPlaceID, callback: { (photos, error) -> Void in
             
-            
-            if let error = error {
-                // TODO: handle the error.
-                print("Error: \(error.localizedDescription)")
-            } else {
-                if let firstPhoto = photos?.results.first {
-                    self.loadImageForMetadata(firstPhoto, cell)
-                }
-            }
-        })
+                    if let error = error {
+                        // TODO: handle the error.
+                        print("Error: \(error.localizedDescription)")
+                    } else {
+                        if let firstPhoto = photos?.results.first {
+                            
+                            self.loadImageForMetadata(firstPhoto, cell)
+                        }
+                    }
+            })
+        }
+      
     }
     
     func loadImageForMetadata(_ photoMetadata:GMSPlacePhotoMetadata, _ cell:MySpotsCell){
@@ -67,35 +106,11 @@ class DataSource {
     
     
     func getFolder(folderIndex: IndexPath) -> Folder{
-        return folders[folderIndex[1]]
+        return DataController.folders[folderIndex[1]]
     }
     
     func getFolders() -> [Folder]{
-        return self.folders
-    }
-    
-    
-    func firstInit(){
-
-        self.ref.child(firebasePath).observe(.value, with: { (snapshot) in
-//        self.ref.child(firebasePath).observeSingleEvent(of: .value, with: { (snapshot) in
-        
-            self.folders.removeAll()
-            
-            for folder in snapshot.children{
-                let newFolder: Folder?
-        
-                if let snap = folder as? DataSnapshot {
-                    newFolder = self.makeFolder(folder: snap)
-                    self.folders.append(newFolder!)
-                }
-            }
-            
-            NotificationCenter.default.post(name: Notification.Name(rawValue:"FirebaseNotification"), object: nil)
-        }) { (error) in
-            print(error.localizedDescription)
-        }
-  
+        return DataController.folders
     }
 
 
@@ -131,6 +146,72 @@ class DataSource {
             }
         }
         return newFolder
+    }
+    
+    
+    func deleteMarkerDatabase(_ folderName:String, _ placeInfo:PlaceInformation){
+        let foldersRef = self.ref.child(firebasePath)
+        foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.exists() {
+                let folderKey = (snapshot.value as AnyObject).allKeys.first!
+                self.deleteSpot(foldersRef.child(folderKey as! String), placeInfo)
+            } else {
+                print("Error: we can't delete the spot")
+            }
+        })
+    }
+    
+    func deleteSpot(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
+        
+        
+        
+        folderRef.child("Spots").queryOrdered(byChild: "placeID").queryEqual(toValue: placeInfo.placeID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.exists() {
+                let folderKey = (snapshot.value as AnyObject).allKeys.first!
+
+                folderRef.child(folderKey as! String).removeValue { (error, ref) in
+                    if error != nil {
+                        print("error \(String(describing: error))")
+                    }
+                    DispatchQueue.main.async {
+                        print("deleeted!")
+//                        self.deleteFolder(index)
+
+                    }
+                }
+                
+            } else {
+                print("we don't have that, add it to the DB now")
+            }
+        })
+        
+    }
+    
+    func deleteFolderDatabase(_ index:Int, _ cView:UICollectionView){
+        let foldersRef = ref.child(firebasePath)
+        
+        let folderName = DataController.folders[index].folderName
+        
+        foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.exists() {
+                let folderKey = (snapshot.value as AnyObject).allKeys.first!
+                foldersRef.child(folderKey as! String).removeValue { (error, ref) in
+                    if error != nil {
+                        print("error \(String(describing: error))")
+                    }
+                    DispatchQueue.main.async {
+                        print("deleeted!")
+//                        cView.reloadData()
+                    }
+//                    self.deleteFolder(index)
+                }
+                
+                
+            } else {
+                print("we don't have that, add it to the DB now")
+            }
+        })
+    
     }
     
 
@@ -177,9 +258,18 @@ class DataSource {
         self.addMarker(folderRef, placeInfo)
     }
     
-    func addNewSpot(_ placeInfo:PlaceInformation, _ folderName:String){
+    func makeEmptyNewFolder(_ folderName:String){
+        let folderRef = ref.child(firebasePath).childByAutoId()
         
-        let foldersRef = ref.child(firebasePath)
+        let newFolder = ["category": "Not set", "folderName": folderName, "imageName":"garragePic", "spotsNum":0, "Spots":0] as [String : Any]
+        folderRef.updateChildValues(newFolder)
+        
+    }
+    
+    
+    func addNewSpot(_ placeInfo:PlaceInformation, _ folderName:String){
+
+        let foldersRef = self.ref.child(firebasePath)
         foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
