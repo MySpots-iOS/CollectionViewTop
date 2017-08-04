@@ -8,29 +8,31 @@
 
 import UIKit
 
-struct AlertControl{
+class AlertControl{
     
-    var vc:CommonViewController!
-    var placeInfo:PlaceInformation!
-    
-    init(_ vc:CommonViewController, _ placeInfo:PlaceInformation) {
-        self.vc = vc
-        self.placeInfo = placeInfo
-    }
-    
-    func saveToFolder(){
+//    var vc:CommonViewController!
+//    var placeInfo:PlaceInformation!
+//    
+//    init(_ vc:CommonViewController, _ placeInfo:PlaceInformation) {
+//        self.vc = vc
+//        self.placeInfo = placeInfo
+//    }
+//    
+    static func saveToFolder(_ vc:CommonViewController, _ placeInfo:PlaceInformation){
 
         let alert = UIAlertController(title:"Save to Folder", message: "Select a folder to save your spot", preferredStyle: UIAlertControllerStyle.alert)
         
         
-        let folders = DataController.getFolders()
+        let folders = vc.dataController.getFolders()
         for folder in folders{
             
             let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
                 (action: UIAlertAction!) in
                 
+                print(folder.folderName)
+                 print(placeInfo.addressName)
                 
-                self.vc.dataController.addNewSpot(self.placeInfo, folder.folderName!)
+                vc.dataController.addNewSpot(placeInfo, folder.folderName!)
             })
             alert.addAction(action)
         }
@@ -59,7 +61,7 @@ struct AlertControl{
                 // Get 1st TextField's text
                 let textField = alertController.textFields![0]
                 print(textField.text!)
-                self.vc.dataController.makeNewFolder(textField.text!, self.placeInfo)
+                vc.dataController.makeNewFolder(textField.text!, placeInfo)
             })
             
             // Cancel button
@@ -68,7 +70,7 @@ struct AlertControl{
             // Add action buttons and present the Alert
             alertController.addAction(cancel)
             alertController.addAction(submitAction)
-            self.vc.present(alertController, animated: true, completion: nil)
+            vc.present(alertController, animated: true, completion: nil)
             
         })
         
@@ -82,9 +84,41 @@ struct AlertControl{
     }
     
     
-    func deleteFromFolder(){
+    static func deleteFromFolder(){
         
         print("delete from Folder: AlertController")
+    }
+    
+    
+    static func addToNewFolder(_ vc:ViewController){
+        let alertController = UIAlertController(title: "Add to New Folder",
+                                                message: "Input new folder name",
+                                                preferredStyle: .alert)
+        
+        // Add 1 textField and customize it
+        alertController.addTextField { (textField: UITextField) in
+            textField.keyboardAppearance = .dark
+            textField.keyboardType = .default
+            textField.autocorrectionType = .default
+            textField.placeholder = "Type something here"
+            textField.clearButtonMode = .whileEditing
+        }
+        
+        // Submit button
+        let submitAction = UIAlertAction(title: "Submit", style:.destructive , handler: { (action) -> Void in
+            // Get 1st TextField's text
+            let textField = alertController.textFields![0]
+            print(textField.text!)
+            vc.dataController.makeEmptyNewFolder(textField.text!)
+        })
+        
+        // Cancel button
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: { (action) -> Void in })
+        
+        // Add action buttons and present the Alert
+        alertController.addAction(cancel)
+        alertController.addAction(submitAction)
+        vc.present(alertController, animated: true, completion: nil)
     }
 
 }

@@ -28,7 +28,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
-    var dataSource:DataController!
+
     
     var tableViewAppear = false
     var placeInfoAppear = true
@@ -42,31 +42,32 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        refreshTableView()
         
         
-        if !tableViewAppear && !placeInfoAppear {
-            tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
-        }
-        
-        if !tableViewAppear{
-            tableViewWrapper.center.y += tableViewWrapper.bounds.height
-        }
-        
-        if !placeInfoAppear{
-            placeInfoView.center.y  += view.bounds.height
-        }
-        
-        
-//        tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
+//        if !tableViewAppear && !placeInfoAppear{
+//            tableViewWrapper.center.y += tableViewWrapper.bounds.height
+//        }
 //        
 //        if !placeInfoAppear{
-//            placeInfoView.center.y  += view.bounds.height
-//        } else {
-//            
-//            tableViewWrapper.center.y += self.view.bounds.height
-//
+//            tableViewWrapper.center.y -= tableViewHeader.bounds.height
+//            placeInfoView.center.y += placeInfoView.bounds.height
 //        }
+        
+        
+//        if !placeInfoAppear{
+//            placeInfoView.center.y  += view.bounds.height
+//        }
+//        
+//        if !tableViewAppear{
+//            tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
+//            
+//            if placeInfoAppear{
+//                if placeInfoAppear{
+//                    tableViewWrapper.center.y += tableViewWrapper.bounds.height
+//                }
+//            }
+//        }
+
     }
     
     func refreshTableView(){
@@ -80,7 +81,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         self.mapView?.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
         
-        var markers = makeMarkerSearched()
+        let markers = makeMarkerSearched()
         locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.searchVC)
         
         mapView.delegate = self
@@ -95,7 +96,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         loadTemplate()
         
         
-        let tableViewDelegate = SearchTableViewDataSource(dataSource)
+        let tableViewDelegate = SearchTableViewDataSource(dataController)
         tableView.dataSource = tableViewDelegate
         tableView.delegate = tableViewDelegate
         tableView.rowHeight = 100
@@ -119,10 +120,10 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
         
         if !tableViewAppear {
-            Animation.animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
+            Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = true
         } else{
-            Animation.animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
+            Animation().animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = false
         }
     }
@@ -173,7 +174,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            Animation.animateShow(placeInfoView, tableViewWrapper, tableViewWrapper.bounds.height, ViewControllerFlag.searchVC)
+            Animation().animateShow(tableViewWrapper, placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
             placeInfoAppear = true
             setGeneralInformation(marker)
         } else{
@@ -187,11 +188,13 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         print("tapped!!")
         
         if !placeInfoAppear{
-            Animation.animateShow(tableViewWrapper, placeInfoView, view.bounds.height, ViewControllerFlag.searchVC)
+            Animation().animateShow(self.tableViewWrapper, self.placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
             placeInfoAppear = true
-        } else {
-            Animation.animateHide(tableViewWrapper, placeInfoView, view.bounds.height, ViewControllerFlag.searchVC)
+        } else{
+            
+            Animation().animateHide(self.tableViewWrapper, self.placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
             placeInfoAppear = false
+            
         }
     }
     

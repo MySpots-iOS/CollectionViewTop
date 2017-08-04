@@ -28,6 +28,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             GMSServices.provideAPIKey(APIKEY)
             GMSPlacesClient.provideAPIKey(APIKEY)
         }
+        
+        //dependency injection
+        let rootViewController = window?.rootViewController as! UINavigationController
+        let photoViewController = rootViewController.topViewController as! ViewController
+        
+        photoViewController.dataController = DataController()
+        
 
         return true
     }

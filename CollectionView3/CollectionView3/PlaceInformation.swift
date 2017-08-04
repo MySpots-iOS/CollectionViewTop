@@ -31,12 +31,12 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     }
 
     @IBAction func savedIconTapped(_ sender: Any?) {
-        let alert = AlertControl.init(vc, self)
+//        let alert = AlertControl.init(vc, self)
         
         if !saved{
-            alert.saveToFolder()
+            AlertControl.saveToFolder(vc, self)
         } else {
-            alert.deleteFromFolder()
+            AlertControl.deleteFromFolder()
         }
     }
     

@@ -10,39 +10,39 @@ import Foundation
 import UIKit
 
 
-class Animation {
+struct Animation {
     
 
-    static func animateShow(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ boundsHeight:CGFloat, _ vcFlag:ViewControllerFlag){
+    func animateShow(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ tableHeaderHight:CGFloat, _ vcFlag:ViewControllerFlag){
         
-        UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
-            placeInfoView.center.y -= boundsHeight
-            tableViewWrapper.center.y += boundsHeight
+        UIView.animate(withDuration: 0.2, delay: 0, options: [],animations: {
+            placeInfoView.center.y -= placeInfoView.bounds.height
+            tableViewWrapper.center.y += tableHeaderHight
         },completion: nil
         )
     }
     
-    static func animateHide(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ boundsHeight:CGFloat, _ vcFlag:ViewControllerFlag){
+    func animateHide(_ tableViewWrapper: UIView, _ placeInfoView:UIView,  _ tableHeaderHight:CGFloat, _ vcFlag:ViewControllerFlag){
         
-        UIView.animate(withDuration: 0.5, delay: 0, options: [],animations: {
-            placeInfoView.center.y += boundsHeight
-            tableViewWrapper.center.y -= boundsHeight
-        },completion: nil
+        UIView.animate(withDuration: 0.2, delay: 0, options: [],animations: {
+            placeInfoView.center.y += placeInfoView.bounds.height
+            tableViewWrapper.center.y -= tableHeaderHight
+         },completion: nil
         )
     }
     
-    static func animateShowList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
+    func animateShowList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
         
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,animations: {
-            tableViewWrapper.center.y -= boundsHeight - tableViewHeader.bounds.height
+            tableViewWrapper.center.y -= tableViewWrapper.bounds.height - tableViewHeader.bounds.height
             tableViewHeader.text = "Hide List"
         },completion: nil
         )
     }
-    
-    static func animateHideList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
+
+    func animateHideList(_ tableViewWrapper:UIView, _ tableViewHeader:UILabel, _ boundsHeight:CGFloat){
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,animations: {
-            tableViewWrapper.center.y += boundsHeight - tableViewHeader.bounds.height
+            tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
             tableViewHeader.text = "Show List"
         },completion: nil
         )

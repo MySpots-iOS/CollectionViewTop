@@ -28,7 +28,7 @@ class MapViewController: CommonViewController{
         super.viewDidLoad()
         
         let mapMaker = MapMaker()
-        let folder = DataController.getFolder(folderIndex: folderIndexPath)
+        let folder = dataController.getFolder(folderIndex: folderIndexPath)
         markers = mapMaker.makeMarkers(mapView: mapView, folder: folder)
 
         locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.mapVC)
@@ -67,13 +67,15 @@ class MapViewController: CommonViewController{
         super.viewWillAppear(animated)
         refreshTableView()
         
-        if !tableViewAppear && !placeInfoAppear {
-            tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
+        if !tableViewAppear && !placeInfoAppear{
+            tableViewWrapper.center.y += tableViewWrapper.bounds.height
         }
-
+        
         if !placeInfoAppear{
-            placeInfoView.center.y  += view.bounds.height
+           tableViewWrapper.center.y -= tableViewHeader.bounds.height
+            placeInfoView.center.y += placeInfoView.bounds.height
         }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -98,11 +100,12 @@ class MapViewController: CommonViewController{
     
     @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
         
+        
         if !tableViewAppear {
-            Animation.animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
+            Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = true
         } else{
-            Animation.animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
+            Animation().animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
             tableViewAppear = false
         }
     }
@@ -112,7 +115,7 @@ class MapViewController: CommonViewController{
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            Animation.animateShow(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
+            Animation().animateShow(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = true
             setGeneralInformation(marker)
         } else{
@@ -124,10 +127,10 @@ class MapViewController: CommonViewController{
     override func coordinateTapped(){
         
         if !placeInfoAppear{
-            Animation.animateShow(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
+            Animation().animateShow(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = true
         } else {
-            Animation.animateHide(tableViewWrapper, placeInfoView, self.view.bounds.height, ViewControllerFlag.mapVC)
+            Animation().animateHide(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
             placeInfoAppear = false
         }
     }
