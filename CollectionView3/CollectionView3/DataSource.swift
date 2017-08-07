@@ -43,9 +43,9 @@ class DataController {
     }
     
     
-    func deleteFolder(_ index:Int){
-        DataController.folders.remove(at: index)
-    }
+//    func deleteFolder(_ index:Int){
+//        DataController.folders.remove(at: index)
+//    }
     
     
     func addFolder(_ folderName:String){
@@ -199,11 +199,10 @@ class DataController {
                     DispatchQueue.main.async {
                         print("deleeted!")
                         
-                        self.deleteFolder(index)
+//                        self.deleteFolder(index)
 
-//                        cView.reloadData()
+                        cView.reloadData()
                     }
-//                    self.deleteFolder(index)
                 }
                 
                 

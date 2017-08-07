@@ -200,10 +200,10 @@ extension ViewController: UICollectionViewDataSource{
 
         
         // Remove an object from the collection view's dataSource
-        dataController.deleteFolder(i)
+//        dataController.deleteFolder(i)
         
         // Refresh the collection view
-        cView!.reloadData()
+//        cView!.reloadData()
     }
 
 }
