@@ -45,11 +45,16 @@ class TableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        print("tapped tableiview!")
+        
         if tableView.cellForRow(at: indexPath) != nil{
             
             vc.instantiateDetailView(vc.folder.spots[indexPath.row])
             
         } else {
+            
+            
+            print("Error: There is no cell")
             // Error indexPath is not on screen: this should never happen.
         }
     }

@@ -90,8 +90,6 @@ class AlertControl{
             placeInfo.setUnSavedIcon()
             placeInfo.saved = false
 
-            
-            
             vc.dataController.deleteMarkerDatabase(folder.folderName!, placeInfo)
         })
         

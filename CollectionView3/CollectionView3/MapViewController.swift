@@ -13,6 +13,7 @@ class MapViewController: CommonViewController{
     @IBOutlet weak var tableViewHeaderLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var markers: [GMSMarker] = []
+    var mapMaker:MapMaker!
     
     var mapViewDelegate:MapViewDelegate!
     
@@ -27,7 +28,7 @@ class MapViewController: CommonViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let mapMaker = MapMaker()
+        mapMaker = MapMaker()
         folder = dataController.getFolder(folderIndex: folderIndexPath)
         markers = mapMaker.makeMarkers(mapView: mapView, folder: folder)
 
@@ -53,6 +54,7 @@ class MapViewController: CommonViewController{
         tableView.delegate = tableViewDelegate
         tableView.rowHeight = 100
     }
+    
     
     func initCompleted(notification: Notification?) {
         self.nc.removeObserver(self)
@@ -183,7 +185,8 @@ class MapViewController: CommonViewController{
         self.myplaceInfoView.reloadInputViews()
     }
 
-    
 
 }
+
+
 

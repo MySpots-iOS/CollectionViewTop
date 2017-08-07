@@ -154,6 +154,7 @@ class DataController {
         foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
+                print(folderKey)
                 self.deleteSpot(foldersRef.child(folderKey as! String), placeInfo)
             } else {
                 print("Error: we can't delete the spot")
@@ -163,21 +164,17 @@ class DataController {
     
     func deleteSpot(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
         
+        let spotsRef = folderRef.child("Spots")
         
-        
-        folderRef.child("Spots").queryOrdered(byChild: "placeID").queryEqual(toValue: placeInfo.placeID).observeSingleEvent(of: .value, with: { (snapshot) in
+        spotsRef.queryOrdered(byChild: "placeID").queryEqual(toValue: placeInfo.placeID).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
 
-                folderRef.child(folderKey as! String).removeValue { (error, ref) in
+                spotsRef.child(folderKey as! String).removeValue { (error, ref) in
                     if error != nil {
                         print("error \(String(describing: error))")
                     }
-                    DispatchQueue.main.async {
-                        print("deleeted!")
-//                        self.deleteFolder(index)
-
-                    }
+                    print(ref)
                 }
                 
             } else {
@@ -201,6 +198,9 @@ class DataController {
                     }
                     DispatchQueue.main.async {
                         print("deleeted!")
+                        
+                        self.deleteFolder(index)
+
 //                        cView.reloadData()
                     }
 //                    self.deleteFolder(index)
@@ -222,7 +222,7 @@ class DataController {
         
         
         if let folderID = value?["folderID"] {
-            newSpot.folderID = folderID as? NSNumber
+            newSpot.folderID = folderID as? String
         }
         
         if let placeID = value?["placeID"]{
