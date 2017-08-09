@@ -12,16 +12,17 @@ import GooglePlaces
 
 class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
+    @IBOutlet weak var folderListBtn: UIView!
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
     
-    @IBOutlet weak var tableViewWrapper: UIView!
+
+//    @IBOutlet weak var tableViewWrapper: UIView!
+//    
+//    @IBOutlet weak var tableViewHeader: UIView!
+
     
-    @IBOutlet weak var tableViewHeader: UIView!
-    @IBOutlet weak var tableViewHeaderLabel: UILabel!
-    
-    @IBOutlet weak var tableView: UITableView!
-    
+
     var place:GMSPlace!
     
     //Search bar on navigation bar
@@ -40,39 +41,20 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         self.dismiss(animated: true, completion: nil)
     }
     
+    
+    @IBAction func folderListTapped(_ sender: Any) {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "tableVC") as! FolderListTableVC
+        //set placeID
+        vc.dataSource = dataController
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        
-//        if !tableViewAppear && !placeInfoAppear{
-//            tableViewWrapper.center.y += tableViewWrapper.bounds.height
-//        }
-//        
-//        if !placeInfoAppear{
-//            tableViewWrapper.center.y -= tableViewHeader.bounds.height
-//            placeInfoView.center.y += placeInfoView.bounds.height
-//        }
-        
-        
-//        if !placeInfoAppear{
-//            placeInfoView.center.y  += view.bounds.height
-//        }
-//        
-//        if !tableViewAppear{
-//            tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
-//            
-//            if placeInfoAppear{
-//                if placeInfoAppear{
-//                    tableViewWrapper.center.y += tableViewWrapper.bounds.height
-//                }
-//            }
-//        }
-
     }
     
-    func refreshTableView(){
-        tableView.reloadData()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,14 +76,10 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         savedMarker = markers.first!
         searchBarInit()
         loadTemplate()
-        
-        
-        let tableViewDelegate = SearchTableViewDataSource(dataController)
-        tableView.dataSource = tableViewDelegate
-        tableView.delegate = tableViewDelegate
-        tableView.rowHeight = 100
+        setGeneralInformation(savedMarker)
 
     }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -114,18 +92,6 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         vc.placeID = myplaceInfoView.getGooglePlaceID()
         vc.saved = myplaceInfoView.getSavedBool()
         self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    
-    @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
-        
-        if !tableViewAppear {
-            Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
-            tableViewAppear = true
-        } else{
-            Animation().animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
-            tableViewAppear = false
-        }
     }
 
     
@@ -174,7 +140,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            Animation().animateShow(tableViewWrapper, placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
+            Animation().animateShow(folderListBtn, placeInfoView, folderListBtn.bounds.height, ViewControllerFlag.searchVC)
             placeInfoAppear = true
             setGeneralInformation(marker)
         } else{
@@ -188,11 +154,11 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         print("tapped!!")
         
         if !placeInfoAppear{
-            Animation().animateShow(self.tableViewWrapper, self.placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
+            Animation().animateShow(folderListBtn, self.placeInfoView, folderListBtn.bounds.height, ViewControllerFlag.searchVC)
             placeInfoAppear = true
         } else{
             
-            Animation().animateHide(self.tableViewWrapper, self.placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
+            Animation().animateHide(folderListBtn, self.placeInfoView, folderListBtn.bounds.height, ViewControllerFlag.searchVC)
             placeInfoAppear = false
             
         }

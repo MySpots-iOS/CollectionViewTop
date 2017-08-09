@@ -11,9 +11,13 @@ import UIKit
 class SearchTableCell: UITableViewCell {
     
     
-//    @IBOutlet weak var placeName: UILabel!
-//    @IBOutlet weak var placeAddress: UILabel!
-//    @IBOutlet weak var imageIcon: UIImageView!
+    @IBOutlet weak var folderName: UILabel!
+    @IBOutlet weak var spotsNum: UILabel!
+    @IBOutlet weak var imageIcon: UIImageView!
+    
+    @IBOutlet weak var checkIcon: UIImageView!
+    
+    var isChecked:Bool = false
     
     
     override func awakeFromNib() {
@@ -23,10 +27,10 @@ class SearchTableCell: UITableViewCell {
 //        self.imageIcon = UIImageView(image: UIImage(named: "savedFolder"))
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
+//    override func setSelected(_ selected: Bool, animated: Bool) {
+//        super.setSelected(selected, animated: animated)
+//        
+//        // Configure the view for the selected state
+//    }
     
 }

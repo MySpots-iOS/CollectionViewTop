@@ -30,8 +30,7 @@ class ViewController: UIViewController{
         cView.delegate = self
         cView.dataSource = self
         
-        searchBarInit()
-        
+        searchBarInit() 
     }
     
 
