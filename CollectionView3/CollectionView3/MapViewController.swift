@@ -33,12 +33,11 @@ class MapViewController: CommonViewController {
         mapView.isUserInteractionEnabled = true
         mapView.settings.setAllGesturesEnabled(true)
         mapView.settings.consumesGesturesInView = true
-        
         self.loadTemplate()
         
         mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
-        mapView.isHidden = true
-            
+//        mapView.isHidden = true
+        
         
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("TableViewNotification"), object: nil)
         
@@ -82,6 +81,8 @@ class MapViewController: CommonViewController {
         myplaceInfoView.vc = self
         placeInfoView.addSubview(myplaceInfoView)
     }
+    
+
     
     
     @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
@@ -136,9 +137,7 @@ class MapViewController: CommonViewController {
 
         }
     }
-    
 
-    
     func setGeneralInformation(_ marker: GMSMarker) {
         
         myplaceInfoView.marker = marker
@@ -179,7 +178,7 @@ extension MapViewController: UITableViewDataSource ,UITableViewDelegate{
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return folder.spots.count
     }

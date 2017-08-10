@@ -12,10 +12,11 @@ import GooglePlaces
 
 class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
-    @IBOutlet weak var folderListBtn: UIView!
+//    @IBOutlet weak var folderListBtn: UIView!
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
     
+    @IBOutlet weak var listButton: UIButton!
 
 //    @IBOutlet weak var tableViewWrapper: UIView!
 //    
@@ -42,12 +43,12 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     }
     
     
-    @IBAction func folderListTapped(_ sender: Any) {
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "tableVC") as! FolderListTableVC
-        //set placeID
-        vc.dataSource = dataController
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
+//    @IBAction func folderListTapped(_ sender: Any) {
+//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "tableVC") as! FolderListTableVC
+//        //set placeID
+//        vc.dataSource = dataController
+//        self.navigationController?.pushViewController(vc, animated: true)
+//    }
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,7 +63,6 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         //Your map initiation code
         self.mapView?.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
-        
         let markers = makeMarkerSearched()
         locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.searchVC)
         
@@ -70,6 +70,9 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         mapView.isUserInteractionEnabled = true
         mapView.settings.setAllGesturesEnabled(true)
         mapView.settings.consumesGesturesInView = true
+        mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+
+        addListButton()
         
         
         polyLine.isTappable = true
@@ -80,6 +83,17 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
 
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if (segue.identifier == "folderListTableVC")
+        {
+            if let detailsViewController = segue.destination as? FolderListTableVC {
+                detailsViewController.dataSource = dataController
+            }
+        }
+    }
+    
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -93,8 +107,33 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         vc.saved = myplaceInfoView.getSavedBool()
         self.navigationController?.pushViewController(vc, animated: true)
     }
-
     
+    
+    @IBAction func listBtnPressed(_ sender: Any) {
+        
+        UIView.animate(withDuration: 0.4, delay: 0, options: [],animations: {
+         
+            self.listButton.layer.shadowOffset = CGSize(width: 5, height: 5)
+            self.listButton.layer.shadowRadius = 4
+        },completion: nil)
+        
+    }
+
+  
+    @IBAction func listBtnRelease(_ sender: Any) {
+        
+        UIView.animate(withDuration: 0.4, delay: 0, options: [],animations: {
+            self.listButton.layer.shadowOffset = CGSize(width: 2, height: 2)
+            self.listButton.layer.shadowRadius = 2
+        },completion: nil)
+        
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "tableVC") as! FolderListTableVC
+        //set placeID
+        vc.dataSource = dataController
+        self.navigationController?.pushViewController(vc, animated: true)
+
+    }
+
     func searchBarInit(){
         //Searchbar Init
         resultsViewController = GMSAutocompleteResultsViewController()
@@ -119,6 +158,14 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         myplaceInfoView.vc = self
         placeInfoView.addSubview(myplaceInfoView)
     }
+    
+    func addListButton(){
+            
+            listButton.layer.shadowColor = UIColor.black.cgColor
+            listButton.layer.shadowOffset = CGSize(width: 2, height: 2)
+            listButton.layer.shadowRadius = 2
+            listButton.layer.shadowOpacity = 0.3
+    }
 
 
     func makeMarkerSearched() -> [GMSMarker]{
@@ -140,9 +187,11 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            Animation().animateShow(folderListBtn, placeInfoView, folderListBtn.bounds.height, ViewControllerFlag.searchVC)
-            placeInfoAppear = true
             setGeneralInformation(marker)
+            UIView.animate(withDuration: 0.2, delay: 0, options: [],animations: {
+                self.placeInfoView.center.y -= self.placeInfoView.bounds.height
+            },completion: nil)
+            placeInfoAppear = true
         } else{
             setGeneralInformation(marker)
         }
@@ -151,17 +200,13 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
     override func coordinateTapped(){
         
-        print("tapped!!")
-        
-        if !placeInfoAppear{
-            Animation().animateShow(folderListBtn, self.placeInfoView, folderListBtn.bounds.height, ViewControllerFlag.searchVC)
-            placeInfoAppear = true
-        } else{
-            
-            Animation().animateHide(folderListBtn, self.placeInfoView, folderListBtn.bounds.height, ViewControllerFlag.searchVC)
-            placeInfoAppear = false
-            
+        if placeInfoAppear {
+            UIView.animate(withDuration: 0.2, delay: 0, options: [],animations: {
+                self.placeInfoView.center.y += self.placeInfoView.bounds.height
+            },completion: nil)
         }
+        
+        placeInfoAppear = false
     }
     
     
@@ -178,32 +223,30 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         }
         
         
-        if userData != nil{
-            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-         }
-
-        self.myplaceInfoView?.setSelectedPlaceName(place.name)
-        self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-        
-        if let rating  = place.rating as? Float{
-            self.myplaceInfoView?.setPlaceRate(rating)
+        if userData == nil{
+            self.myplaceInfoView?.setSelectedPlaceName(place.name)
+            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+        } else{
+            
+                        placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
+                            if let error = error {
+                                print("lookup place id query error: \(error.localizedDescription)")
+                                return
+                            }
+            
+                            guard let place = place else {
+                                print("No place details for \(userData ?? "no placeID")")
+                                return
+                            }
+            
+                            self.myplaceInfoView?.setSelectedPlaceName(place.name)
+                            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+                            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
+                            self.myplaceInfoView?.setPlaceRate(place.rating)
+                        })
         }
-//            placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
-//                if let error = error {
-//                    print("lookup place id query error: \(error.localizedDescription)")
-//                    return
-//                }
-//                
-//                guard let place = place else {
-//                    print("No place details for \(userData ?? "no placeID")")
-//                    return
-//                }
-//                
-//                self.myplaceInfoView?.setSelectedPlaceName(place.name)
-//                self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-//                self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-//                self.myplaceInfoView?.setPlaceRate(place.rating)
-//            })
+
+
 
         
         self.myplaceInfoView.reloadInputViews()
