@@ -570,6 +570,9 @@
                                 <state key="normal" title="Directions">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="directionsPressed:" destination="tcn-xe-uvr" eventType="touchUpInside" id="znd-jm-znX"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lD4-Vj-cD5">
                                 <rect key="frame" x="16" y="458" width="343" height="148"/>
@@ -696,7 +699,7 @@
                     <value key="contentSizeForViewInPopover" type="size" width="375" height="667"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Ouz-kg-fkZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ouz-kg-fkZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -715,7 +718,7 @@
                 <navigationController storyboardIdentifier="SearchMap" automaticallyAdjustsScrollViewInsets="NO" id="v45-ox-VtP" customClass="UINaviagtionController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="rXX-ba-f4l"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="1Zg-wO-YLm">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1Zg-wO-YLm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

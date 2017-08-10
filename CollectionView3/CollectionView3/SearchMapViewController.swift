@@ -177,22 +177,34 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
             self.myplaceInfoView?.setUnSavedIcon()
         }
         
-        placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
-            if let error = error {
-                print("lookup place id query error: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let place = place else {
-                print("No place details for \(userData ?? "no placeID")")
-                return
-            }
-            
-            self.myplaceInfoView?.setSelectedPlaceName(place.name)
-            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+        
+        if userData != nil{
             self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-            self.myplaceInfoView?.setPlaceRate(place.rating)
-        })
+         }
+
+        self.myplaceInfoView?.setSelectedPlaceName(place.name)
+        self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+        
+        if let rating  = place.rating as? Float{
+            self.myplaceInfoView?.setPlaceRate(rating)
+        }
+//            placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
+//                if let error = error {
+//                    print("lookup place id query error: \(error.localizedDescription)")
+//                    return
+//                }
+//                
+//                guard let place = place else {
+//                    print("No place details for \(userData ?? "no placeID")")
+//                    return
+//                }
+//                
+//                self.myplaceInfoView?.setSelectedPlaceName(place.name)
+//                self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+//                self.myplaceInfoView?.setGooglePlaceID(place.placeID)
+//                self.myplaceInfoView?.setPlaceRate(place.rating)
+//            })
+
         
         self.myplaceInfoView.reloadInputViews()
     }
@@ -209,6 +221,7 @@ extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
         print("Place address: \(String(describing: place.formattedAddress))")
         print("Place attributions: \(String(describing: place.attributions))")
         //        vc.place = place
+    
 
     }
     

@@ -17,6 +17,9 @@ class SpotDetailViewController: UIViewController{
     @IBOutlet weak var placeWebsite: UILabel!
     
     var placeID: String = ""
+    
+    var longitude:Double!
+    var latitude:Double!
     var saved: Bool = false
     fileprivate var placesClient: GMSPlacesClient!
     
@@ -41,7 +44,22 @@ class SpotDetailViewController: UIViewController{
         super.didReceiveMemoryWarning()
     }
     
-    
+    @IBAction func directionsPressed(_ sender: Any) {
+        
+        
+        if (UIApplication.shared.canOpenURL(NSURL(string:"https://maps.google.com")! as URL))
+        {
+            
+                    if let url = URL(string: "https://maps.google.com/?q=@\(self.latitude!),\(self.longitude!)") {
+                        UIApplication.shared.open(url, options: [:], completionHandler:nil)
+                    }
+        } else{
+            NSLog("Can't use com.google.maps://")
+          
+        }
+
+    }
+
     func getDetailInformationFromID(_ placeID: String) {
         placesClient.lookUpPlaceID(placeID, callback: { (place, error) -> Void in
             if let error = error {
@@ -59,6 +77,10 @@ class SpotDetailViewController: UIViewController{
             self.placeAddress.text = place.formattedAddress
             self.placePhone.text = place.phoneNumber
             self.placeWebsite.text = place.website?.absoluteString
+            
+            self.longitude = place.coordinate.longitude
+            self.latitude = place.coordinate.latitude
+            
         })
         
         placesClient.lookUpPhotos(forPlaceID: placeID, callback: { (photos, error) -> Void in

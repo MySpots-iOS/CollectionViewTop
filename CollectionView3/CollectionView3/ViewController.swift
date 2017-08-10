@@ -193,16 +193,9 @@ extension ViewController: UICollectionViewDataSource{
     
     
     func deleteMySpotsFolder(sender:UIButton) {
-        //        // Put the index number of the delete button the use tapped in a variable
         let i: Int = (sender.layer.value(forKey: "index")) as! Int
         dataController.deleteFolderDatabase(i, cView)
 
-        
-        // Remove an object from the collection view's dataSource
-//        dataController.deleteFolder(i)
-        
-        // Refresh the collection view
-//        cView!.reloadData()
     }
 
 }
@@ -246,8 +239,6 @@ extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
         tableVC.place = place
         tableVC.dataController = self.dataController
         self.present(vc, animated: true, completion: nil)
-//        gotoMapView()
-
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,

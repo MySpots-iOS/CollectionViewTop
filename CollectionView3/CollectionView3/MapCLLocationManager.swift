@@ -38,8 +38,8 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
         let location: CLLocation = locations.last!
         //print("Location: \(location)")
         
-        let marker = GMSMarker(position: location.coordinate)
-        markers.append(marker)
+//        let marker = GMSMarker(position: location.coordinate)
+//        markers.append(marker)
         
         let camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
 
