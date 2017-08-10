@@ -130,12 +130,10 @@ class MapViewController: CommonViewController {
     
     override func coordinateTapped(){
         
-        if !placeInfoAppear{
-            Animation().animateShow(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
-            placeInfoAppear = true
-        } else {
+        if placeInfoAppear{
             Animation().animateHide(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
-            placeInfoAppear = false
+                placeInfoAppear = false
+
         }
     }
     
