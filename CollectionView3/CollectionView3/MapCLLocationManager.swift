@@ -32,6 +32,7 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
         locationManager.distanceFilter = 100
         locationManager.startUpdatingLocation()
     }
+    
 
     // Handle incoming location events.
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -63,6 +64,8 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
             }
         
     }
+    
+
     
     // Handle authorization for the location manager.
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {

@@ -10,19 +10,11 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
+class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, FolderListTableDelegate{
     
-//    @IBOutlet weak var folderListBtn: UIView!
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
-    
     @IBOutlet weak var listButton: UIButton!
-
-//    @IBOutlet weak var tableViewWrapper: UIView!
-//    
-//    @IBOutlet weak var tableViewHeader: UIView!
-
-    
 
     var place:GMSPlace!
     
@@ -30,7 +22,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
-
+    var mapMaker:MapMaker?
     
     var tableViewAppear = false
     var placeInfoAppear = true
@@ -38,28 +30,21 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     let polyLine: GMSPolyline = GMSPolyline()
     var savedMarker:GMSMarker!
     
+    
+    
+    
     @IBAction func backPushed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
-    
-//    @IBAction func folderListTapped(_ sender: Any) {
-//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "tableVC") as! FolderListTableVC
-//        //set placeID
-//        vc.dataSource = dataController
-//        self.navigationController?.pushViewController(vc, animated: true)
-//    }
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        mapMaker = MapMaker()
         //Your map initiation code
         self.mapView?.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
@@ -89,10 +74,38 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         {
             if let detailsViewController = segue.destination as? FolderListTableVC {
                 detailsViewController.dataSource = dataController
+                detailsViewController.folderListdelegate = self
             }
         }
     }
     
+    func generateMarkers(_ markers:[GMSMarker]){
+        var bounds = GMSCoordinateBounds()
+        for marker in markers {
+            bounds = bounds.includingCoordinate(marker.position)
+        }
+        mapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsetsMake(50.0, 100.0 ,50.0 ,50.0)))
+    }
+    
+    
+    
+    func receiveFolderOnOff(_ cellIsChecked:[Bool]){
+        
+        print("hi")
+               
+        let folders = dataController.getFolders()
+        
+        
+        for (index, cell) in cellIsChecked.enumerated(){
+            
+            if cell{
+                print(folders[index].folderName ?? "foldername")
+                let markers = mapMaker?.makeMarkers(mapView: mapView, folder: folders[index])
+                locationManager.markers += markers!
+            }
+        }
+        generateMarkers(locationManager.markers)
+    }
 
 
     override func didReceiveMemoryWarning() {
@@ -176,6 +189,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         let marker = GMSMarker(position: place.coordinate)
         marker.appearAnimation = .pop
         marker.map = mapView
+        marker.userData = place.placeID
         markers.append(marker)
         
         return markers

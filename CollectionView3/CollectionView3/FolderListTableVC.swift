@@ -8,14 +8,22 @@
 
 import UIKit
 
+protocol FolderListTableDelegate {
+    func receiveFolderOnOff(_ cellIsChecked:[Bool])
+}
+
+
 class FolderListTableVC: UIViewController {
 
     
     @IBOutlet weak var tableView: UITableView!
     
+    var cellisChecked:[Bool] = []
+    
     var folders:[Folder] = []
     var dataSource:DataController!
-    var showFolder:Bool = false
+    var folderListdelegate:FolderListTableDelegate?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +33,25 @@ class FolderListTableVC: UIViewController {
         tableView.allowsMultipleSelection = true
         tableView.rowHeight = 80
         folders = dataSource.getFolders()
+        
+        
+        
+        
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(back))
+        self.navigationItem.leftBarButtonItem = newBackButton
+    }
+    
+    
+    func back(sender: Any?) {
+        
+        let cells = tableView.visibleCells
+        for foldercell in cells{
+                cellisChecked.append(foldercell.isSelected)
+        }
+        
+        self.folderListdelegate?.receiveFolderOnOff(self.cellisChecked)
+        self.navigationController?.popViewController(animated: true)
         
     }
     
@@ -39,6 +66,7 @@ class FolderListTableVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 }
 
 extension FolderListTableVC: UITableViewDelegate, UITableViewDataSource{
