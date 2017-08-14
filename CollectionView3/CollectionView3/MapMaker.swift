@@ -12,9 +12,11 @@ import GoogleMaps
 class MapMaker {
     
     func makeMarkers(mapView: GMSMapView, folder: Folder) -> [GMSMarker]{
-        
+
         let data:Folder? = folder
         var markers:[GMSMarker] = []
+        
+
         
         if (data != nil){
             for spot in (data?.spots)!{

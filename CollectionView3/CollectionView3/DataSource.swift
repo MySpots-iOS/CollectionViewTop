@@ -50,7 +50,6 @@ class DataController {
     }
     
     func numberOfSpots(_ index: Int) -> Int{
-        
         return DataController.folders[index].spots.count
     }
 
@@ -86,7 +85,6 @@ class DataController {
     func makeFolder(folder:DataSnapshot) -> Folder {
         
         let newFolder = Folder()
-        
         let value = folder.value as? NSDictionary
         
         if let category = value?["category"] {
@@ -97,15 +95,10 @@ class DataController {
             newFolder.folderName = folderName as? String
         }
         
-
-
         let spots = folder.childSnapshot(forPath: "Spots")
-
-        
         for spot in spots.children{
             
             print(spot)
-
             if let snap = spot as? DataSnapshot{
                 if let newSpot:Spot = makeSpot(snap){
                     newFolder.spots.append(newSpot)
@@ -148,7 +141,6 @@ class DataController {
                 print("we don't have that, add it to the DB now")
             }
         })
-        
     }
     
     func deleteFolderDatabase(_ index:Int, _ cView:UICollectionView){
@@ -166,8 +158,6 @@ class DataController {
                     DispatchQueue.main.async {
                         print("deleeted!")
                         
-//                        self.deleteFolder(index)
-
                         cView.reloadData()
                     }
                 }

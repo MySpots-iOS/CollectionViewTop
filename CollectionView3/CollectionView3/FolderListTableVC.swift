@@ -33,9 +33,7 @@ class FolderListTableVC: UIViewController {
         tableView.allowsMultipleSelection = true
         tableView.rowHeight = 80
         folders = dataSource.getFolders()
-        
-        
-        
+ 
         
         self.navigationItem.hidesBackButton = true
         let newBackButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(back))
@@ -64,7 +62,6 @@ class FolderListTableVC: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
 }
@@ -94,32 +91,22 @@ extension FolderListTableVC: UITableViewDelegate, UITableViewDataSource{
         
         return cell
     }
-    
-    
-
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        
         let cell = tableView.cellForRow(at: indexPath) as! SearchTableCell
-    
-        
-            cell.backgroundColor = UIColor.mainLightGray()
-            cell.checkIcon.image = UIImage(named: "icon_checked")
+        cell.backgroundColor = UIColor.mainLightGray()
+        cell.checkIcon.image = UIImage(named: "icon_checked")
             cell.isChecked = false
-       
 
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         
         let cell = tableView.cellForRow(at: indexPath) as! SearchTableCell
-        
-            cell.backgroundColor = UIColor.white
-            cell.checkIcon.image = UIImage(named: "icon_unchecked")
-            cell.isChecked = true
-
-
+        cell.backgroundColor = UIColor.white
+        cell.checkIcon.image = UIImage(named: "icon_unchecked")
+        cell.isChecked = true
 
     }
     

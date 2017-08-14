@@ -29,8 +29,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
 
     let polyLine: GMSPolyline = GMSPolyline()
     var savedMarker:GMSMarker!
-    
-    
+    var temporaryMarkers:[GMSMarker]!
     
     
     @IBAction func backPushed(_ sender: Any) {
@@ -48,8 +47,8 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
         //Your map initiation code
         self.mapView?.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
-        let markers = makeMarkerSearched()
-        locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.searchVC)
+        temporaryMarkers = makeMarkerSearched()
+        locationManager = MapCLLocationManager(mapView, temporaryMarkers, ViewControllerFlag.searchVC)
         
         mapView.delegate = self
         mapView.isUserInteractionEnabled = true
@@ -61,7 +60,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
         
         
         polyLine.isTappable = true
-        savedMarker = markers.first!
+        savedMarker = temporaryMarkers.first!
         searchBarInit()
         loadTemplate()
         setGeneralInformation(savedMarker)
@@ -76,25 +75,28 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
         }
         mapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsetsMake(50.0, 100.0 ,50.0 ,50.0)))
     }
-    
-    
+
     
     func receiveFolderOnOff(_ cellIsChecked:[Bool]){
         
-        print("hi")
-               
-        let folders = dataController.getFolders()
+        mapView.clear()
         
+        let folders = dataController.getFolders()
+        temporaryMarkers = makeMarkerSearched()
+        savedMarker = temporaryMarkers.first!
+        
+        //showMarkers.append(savedMarker)
         
         for (index, cell) in cellIsChecked.enumerated(){
             
             if cell{
                 print(folders[index].folderName ?? "foldername")
-                let markers = mapMaker?.makeMarkers(mapView: mapView, folder: folders[index])
-                locationManager.markers += markers!
+                
+                let markers = mapMaker!.makeMarkers(mapView: mapView, folder: folders[index])
+                temporaryMarkers! += markers
             }
         }
-        generateMarkers(locationManager.markers)
+        generateMarkers(temporaryMarkers)
     }
 
 
@@ -233,30 +235,26 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
             self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
         } else{
             
-                        placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
-                            if let error = error {
-                                print("lookup place id query error: \(error.localizedDescription)")
-                                return
-                            }
+            placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
+                    if let error = error {
+                        print("lookup place id query error: \(error.localizedDescription)")
+                        return
+                    }
             
-                            guard let place = place else {
-                                print("No place details for \(userData ?? "no placeID")")
-                                return
-                            }
+                    guard let place = place else {
+                        print("No place details for \(userData ?? "no placeID")")
+                        return
+                    }
             
-                            self.myplaceInfoView?.setSelectedPlaceName(place.name)
-                            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-                            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-                            self.myplaceInfoView?.setPlaceRate(place.rating)
-                        })
+                    self.myplaceInfoView?.setSelectedPlaceName(place.name)
+                    self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+                    self.myplaceInfoView?.setGooglePlaceID(place.placeID)
+                    self.myplaceInfoView?.setPlaceRate(place.rating)
+            })
         }
 
-
-
-        
         self.myplaceInfoView.reloadInputViews()
     }
-    
 }
 
 extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
@@ -269,8 +267,6 @@ extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
         print("Place address: \(String(describing: place.formattedAddress))")
         print("Place attributions: \(String(describing: place.attributions))")
         //        vc.place = place
-    
-
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
@@ -303,7 +299,6 @@ extension SearchMapViewController:GMSMapViewDelegate{
         if savedMarker != nil{
             savedMarker.map = nil
         }
-
         self.coordinateTapped()
     }
     
