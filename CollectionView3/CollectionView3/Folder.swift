@@ -12,7 +12,5 @@ class Folder: NSObject {
 //    var id: NSNumber?
     var folderName: String?
     var category: String?
-    var imageName: String?
-    
     var spots:[Spot] = []
 }

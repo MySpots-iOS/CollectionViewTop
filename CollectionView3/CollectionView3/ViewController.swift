@@ -157,15 +157,14 @@ extension ViewController: UICollectionViewDataSource{
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier,for:indexPath) as! MySpotsCell
 
-
-        let placesClient:GMSPlacesClient = GMSPlacesClient.shared()
-        dataController.getImageNameAtIndex(indexPath, placesClient, cell)
-
+        
+        let image:UIImage = dataController.getImageAtIndex(indexPath.row)
         let folderName = dataController.getFolderLabelAtIndex(indexPath.row)
         let spotsNum = dataController.numberOfSpots(indexPath.row)
 
         cell.mySpotsLabel.text = folderName
         cell.spotsNumLabel.text = "\(spotsNum) Spots"
+        cell.update(image)
         
         if self.navigationItem.rightBarButtonItem!.title == "Edit" {
             cell.deleteButton.isHidden = true

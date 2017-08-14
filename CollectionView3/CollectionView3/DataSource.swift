@@ -42,12 +42,6 @@ class DataController {
         return DataController.folders.count
     }
     
-    
-//    func deleteFolder(_ index:Int){
-//        DataController.folders.remove(at: index)
-//    }
-    
-    
     func addFolder(_ folderName:String){
         
         let newfolder = Folder()
@@ -64,47 +58,22 @@ class DataController {
         return DataController.folders[index].folderName!
     }
     
-    func getImageNameAtIndex(_ indexPath:IndexPath, _ placesClient:GMSPlacesClient, _ cell:MySpotsCell){
+    func getImageAtIndex(_ index: Int) -> UIImage{
         
-        let folder = self.getFolder(folderIndex: indexPath)
+        let spots = DataController.folders[index].spots
+        var image = UIImage()
         
-        
-        if let firstSpotPlaceID = folder.spots.first?.placeID{
-    
-            print("FirstPhotoID: \(String(describing: firstSpotPlaceID))")
-        
-                placesClient.lookUpPhotos(forPlaceID: firstSpotPlaceID, callback: { (photos, error) -> Void in
-            
-                    if let error = error {
-                        // TODO: handle the error.
-                        print("Error: \(error.localizedDescription)")
-                    } else {
-                        if let firstPhoto = photos?.results.first {
-                            
-                            self.loadImageForMetadata(firstPhoto, cell)
-                        }
-                    }
-            })
-        }
-      
-    }
-    
-    func loadImageForMetadata(_ photoMetadata:GMSPlacePhotoMetadata, _ cell:MySpotsCell){
-        
-        
-        GMSPlacesClient.shared().loadPlacePhoto(photoMetadata, callback: {
-            (photo, error) -> Void in
-            if let error = error {
-                // TODO: handle the error.
-                print("Error: \(error.localizedDescription)")
-            } else {
-                cell.update(photo)
+        if spots.count > 0{
+            for spot in spots{
+                if spot.imageName != nil{
+                    image = spot.imageName!
+                }
             }
-        })
-        
+        }
+        return image
     }
     
-    
+
     func getFolder(folderIndex: IndexPath) -> Folder{
         return DataController.folders[folderIndex[1]]
     }
@@ -128,9 +97,7 @@ class DataController {
             newFolder.folderName = folderName as? String
         }
         
-        if let imageName = value?["imageName"] {
-            newFolder.imageName = imageName as? String
-        }
+
 
         let spots = folder.childSnapshot(forPath: "Spots")
 
@@ -218,17 +185,21 @@ class DataController {
         
         let newSpot = Spot()
         let value = spots.value as? NSDictionary
-        
-        
+
         if let folderID = value?["folderID"] {
             newSpot.folderID = folderID as? String
         }
         
-        if let placeID = value?["placeID"]{
-            newSpot.placeID = placeID as? String
+        guard let placeID = value?["placeID"] as? String else{
+            return nil
         }
-        
+        newSpot.placeID = placeID
 
+        lookUpPhotos(placeID, completion: { result in
+            newSpot.imageName = result
+        })
+        
+        
         guard let spotName = value!["spotName"] as? String else {
             return nil
         }
@@ -247,6 +218,46 @@ class DataController {
         
         return newSpot
     }
+    
+    
+    
+    func lookUpPhotos(_ placeID:String, completion:@escaping(UIImage) -> Void){
+        
+        GMSPlacesClient.shared().lookUpPhotos(forPlaceID: placeID, callback: { (photos, error) -> Void in
+            
+            if let error = error {
+                // TODO: handle the error.
+                print("Error: \(error.localizedDescription)")
+            } else {
+                if let firstPhoto = photos?.results.first {
+                    
+                    self.loadImageforMetaPhoto(firstPhoto, completion: {(result) in
+                        completion(result)
+                    })
+                }
+            }
+        })
+    }
+    
+    
+    func loadImageforMetaPhoto(_ photoMetadata:GMSPlacePhotoMetadata, completion:@escaping(UIImage) -> Void){
+        
+        GMSPlacesClient.shared().loadPlacePhoto(photoMetadata, callback: {
+            (photo, error) -> Void in
+            if let error = error {
+                // TODO: handle the error.
+                print("Error: \(error.localizedDescription)")
+            } else {
+                
+                if let photoData = photo{
+                    completion(photoData)
+                }
+            }
+        })
+    }
+    
+    
+
     
     func makeNewFolder(_ folderName:String, _ placeInfo:PlaceInformation){
         
