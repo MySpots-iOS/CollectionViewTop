@@ -68,16 +68,6 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
 
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if (segue.identifier == "folderListTableVC")
-        {
-            if let detailsViewController = segue.destination as? FolderListTableVC {
-                detailsViewController.dataSource = dataController
-                detailsViewController.folderListdelegate = self
-            }
-        }
-    }
     
     func generateMarkers(_ markers:[GMSMarker]){
         var bounds = GMSCoordinateBounds()
@@ -143,6 +133,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "tableVC") as! FolderListTableVC
         //set placeID
         vc.dataSource = dataController
+        vc.folderListdelegate = self
         self.navigationController?.pushViewController(vc, animated: true)
 
     }
