@@ -262,11 +262,19 @@ extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
                            didAutocompleteWith place: GMSPlace) {
         self.searchController?.isActive = false
-        // Do something with the selected place.
-        print("Place name: \(place.name)")
-        print("Place address: \(String(describing: place.formattedAddress))")
-        print("Place attributions: \(String(describing: place.attributions))")
-        //        vc.place = place
+        
+        savedMarker.map = nil
+        
+        let marker = mapMaker?.makeTemporaryMarker(place)
+        let camera = GMSCameraPosition(target: (marker?.position)!, zoom: 15, bearing: 0, viewingAngle: 0)
+        
+        savedMarker = marker
+        savedMarker.map = mapView
+        
+        mapView.animate(to: camera)
+        savedMarker.appearAnimation = .pop
+        
+        setGeneralInformation(savedMarker!)
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,

@@ -18,6 +18,8 @@ class DataController {
     
     func firstInit(){
         
+        
+        
         self.ref.child(firebasePath).observe(.value, with: { (snapshot) in
             
             DataController.folders.removeAll()
@@ -59,6 +61,8 @@ class DataController {
     
     func getImageAtIndex(_ index: Int) -> UIImage{
         
+        let index = index
+        
         let spots = DataController.folders[index].spots
         var image = UIImage()
         
@@ -98,7 +102,7 @@ class DataController {
         let spots = folder.childSnapshot(forPath: "Spots")
         for spot in spots.children{
             
-            print(spot)
+//            print(spot)
             if let snap = spot as? DataSnapshot{
                 if let newSpot:Spot = makeSpot(snap){
                     newFolder.spots.append(newSpot)
@@ -114,7 +118,6 @@ class DataController {
         foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
-                print(folderKey)
                 self.deleteSpot(foldersRef.child(folderKey as! String), placeInfo)
             } else {
                 print("Error: we can't delete the spot")
@@ -142,6 +145,7 @@ class DataController {
             }
         })
     }
+    
     
     func deleteFolderDatabase(_ index:Int, _ cView:UICollectionView){
         let foldersRef = ref.child(firebasePath)
@@ -185,10 +189,12 @@ class DataController {
         }
         newSpot.placeID = placeID
 
+        
         lookUpPhotos(placeID, completion: { result in
             newSpot.imageName = result
         })
         
+     
         
         guard let spotName = value!["spotName"] as? String else {
             return nil
@@ -246,7 +252,6 @@ class DataController {
         })
     }
     
-    
 
     
     func makeNewFolder(_ folderName:String, _ placeInfo:PlaceInformation){
@@ -284,12 +289,12 @@ class DataController {
     func addMarker(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
         let folderKey = folderRef.key
         
-        print("latitude:\(placeInfo.marker.position.latitude), longitude:\(placeInfo.marker.position.longitude), placeID:\(placeInfo.placeID), name: \(placeInfo.placeName)")
+//        print("latitude:\(placeInfo.marker.position.latitude), longitude:\(placeInfo.marker.position.longitude), placeID:\(placeInfo.placeID), name: \(placeInfo.placeName)")
         
         let addSpot = ["folderID":folderKey,"latitude":placeInfo.marker.position.latitude, "longitude":placeInfo.marker.position.longitude,"placeID":placeInfo.placeID, "spotName":placeInfo.placeName.text!] as [String : Any]
         
         let spotRef = folderRef.child("Spots").childByAutoId()
-        print(spotRef)
+//        print(spotRef)
         
         spotRef.setValue(addSpot)
     }

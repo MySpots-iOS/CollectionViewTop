@@ -30,6 +30,7 @@ class ViewController: UIViewController{
         cView.delegate = self
         cView.dataSource = self
         
+
         searchBarInit()
     }
     
@@ -42,6 +43,7 @@ class ViewController: UIViewController{
     
     func initCompleted(notification: Notification?) {
         self.nc.removeObserver(self)
+        fetchSpotImages()
         refreshCollectionView()
     }
     
@@ -59,6 +61,7 @@ class ViewController: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
     
     
     @IBAction func editFolders(_ sender: Any) {
@@ -96,7 +99,6 @@ class ViewController: UIViewController{
     func getIndexPathForSelectedCell() -> IndexPath? {
         
         var indexPath:IndexPath?
-        
         if cView.indexPathsForSelectedItems!.count > 0 {
             indexPath = cView.indexPathsForSelectedItems![0]
         }
@@ -122,6 +124,29 @@ class ViewController: UIViewController{
         searchController?.hidesNavigationBarDuringPresentation = false
     }
     
+    
+    func fetchSpotImages(){
+        
+        let folders = dataController.getFolders()
+        for folder in folders{
+            for spot in folder.spots{
+                guard let placeID = spot.placeID else{
+                    print("error")
+                    return
+                }
+                dataController.lookUpPhotos(placeID, completion: { spotImage in
+                    
+                    DispatchQueue.main.async {
+                        spot.imageName = spotImage
+                        //reloadCV for each folder is done
+                        if spot == folder.spots.last{
+                            self.cView.reloadData()
+                        }
+                    }
+                })
+            }
+        }
+    }
     
     func goBack(){
         self.dismiss(animated: true)
