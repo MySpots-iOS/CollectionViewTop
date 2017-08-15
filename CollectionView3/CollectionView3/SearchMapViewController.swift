@@ -10,31 +10,27 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
+class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, FolderListTableDelegate{
     
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
-    
-    @IBOutlet weak var tableViewWrapper: UIView!
-    
-    @IBOutlet weak var tableViewHeader: UIView!
-    @IBOutlet weak var tableViewHeaderLabel: UILabel!
-    
-    @IBOutlet weak var tableView: UITableView!
-    
+    @IBOutlet weak var listButton: UIButton!
+
     var place:GMSPlace!
     
     //Search bar on navigation bar
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
-
+    var mapMaker:MapMaker?
     
     var tableViewAppear = false
     var placeInfoAppear = true
 
     let polyLine: GMSPolyline = GMSPolyline()
     var savedMarker:GMSMarker!
+    var temporaryMarkers:[GMSMarker]!
+    
     
     @IBAction func backPushed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -42,66 +38,67 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
-        
-//        if !tableViewAppear && !placeInfoAppear{
-//            tableViewWrapper.center.y += tableViewWrapper.bounds.height
-//        }
-//        
-//        if !placeInfoAppear{
-//            tableViewWrapper.center.y -= tableViewHeader.bounds.height
-//            placeInfoView.center.y += placeInfoView.bounds.height
-//        }
-        
-        
-//        if !placeInfoAppear{
-//            placeInfoView.center.y  += view.bounds.height
-//        }
-//        
-//        if !tableViewAppear{
-//            tableViewWrapper.center.y += tableViewWrapper.bounds.height - tableViewHeader.bounds.height
-//            
-//            if placeInfoAppear{
-//                if placeInfoAppear{
-//                    tableViewWrapper.center.y += tableViewWrapper.bounds.height
-//                }
-//            }
-//        }
-
     }
     
-    func refreshTableView(){
-        tableView.reloadData()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        mapMaker = MapMaker()
         //Your map initiation code
         self.mapView?.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
-        
-        let markers = makeMarkerSearched()
-        locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.searchVC)
+        temporaryMarkers = makeMarkerSearched()
+        locationManager = MapCLLocationManager(mapView, temporaryMarkers, ViewControllerFlag.searchVC)
         
         mapView.delegate = self
         mapView.isUserInteractionEnabled = true
         mapView.settings.setAllGesturesEnabled(true)
         mapView.settings.consumesGesturesInView = true
+        mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+
+        addListButton()
         
         
         polyLine.isTappable = true
-        savedMarker = markers.first!
+        savedMarker = temporaryMarkers.first!
         searchBarInit()
         loadTemplate()
-        
-        
-        let tableViewDelegate = SearchTableViewDataSource(dataController)
-        tableView.dataSource = tableViewDelegate
-        tableView.delegate = tableViewDelegate
-        tableView.rowHeight = 100
+        setGeneralInformation(savedMarker)
 
     }
+    
+    
+    func generateMarkers(_ markers:[GMSMarker]){
+        var bounds = GMSCoordinateBounds()
+        for marker in markers {
+            bounds = bounds.includingCoordinate(marker.position)
+        }
+        mapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsetsMake(50.0, 100.0 ,50.0 ,50.0)))
+    }
+
+    
+    func receiveFolderOnOff(_ cellIsChecked:[Bool]){
+        
+        mapView.clear()
+        
+        let folders = dataController.getFolders()
+        temporaryMarkers = makeMarkerSearched()
+        savedMarker = temporaryMarkers.first!
+        
+        //showMarkers.append(savedMarker)
+        
+        for (index, cell) in cellIsChecked.enumerated(){
+            
+            if cell{
+                print(folders[index].folderName ?? "foldername")
+                
+                let markers = mapMaker!.makeMarkers(mapView: mapView, folder: folders[index])
+                temporaryMarkers! += markers
+            }
+        }
+        generateMarkers(temporaryMarkers)
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -117,18 +114,32 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     }
     
     
-    @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
+    @IBAction func listBtnPressed(_ sender: Any) {
         
-        if !tableViewAppear {
-            Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
-            tableViewAppear = true
-        } else{
-            Animation().animateHideList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
-            tableViewAppear = false
-        }
+        UIView.animate(withDuration: 0.4, delay: 0, options: [],animations: {
+         
+            self.listButton.layer.shadowOffset = CGSize(width: 5, height: 5)
+            self.listButton.layer.shadowRadius = 4
+        },completion: nil)
+        
     }
 
-    
+  
+    @IBAction func listBtnRelease(_ sender: Any) {
+        
+        UIView.animate(withDuration: 0.4, delay: 0, options: [],animations: {
+            self.listButton.layer.shadowOffset = CGSize(width: 2, height: 2)
+            self.listButton.layer.shadowRadius = 2
+        },completion: nil)
+        
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "tableVC") as! FolderListTableVC
+        //set placeID
+        vc.dataSource = dataController
+        vc.folderListdelegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
+
+    }
+
     func searchBarInit(){
         //Searchbar Init
         resultsViewController = GMSAutocompleteResultsViewController()
@@ -153,6 +164,14 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         myplaceInfoView.vc = self
         placeInfoView.addSubview(myplaceInfoView)
     }
+    
+    func addListButton(){
+            
+            listButton.layer.shadowColor = UIColor.black.cgColor
+            listButton.layer.shadowOffset = CGSize(width: 2, height: 2)
+            listButton.layer.shadowRadius = 2
+            listButton.layer.shadowOpacity = 0.3
+    }
 
 
     func makeMarkerSearched() -> [GMSMarker]{
@@ -163,6 +182,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         let marker = GMSMarker(position: place.coordinate)
         marker.appearAnimation = .pop
         marker.map = mapView
+        marker.userData = place.placeID
         markers.append(marker)
         
         return markers
@@ -174,9 +194,11 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
         myplaceInfoView.saved = isSaved
         
         if !placeInfoAppear {
-            Animation().animateShow(tableViewWrapper, placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
-            placeInfoAppear = true
             setGeneralInformation(marker)
+            UIView.animate(withDuration: 0.2, delay: 0, options: [],animations: {
+                self.placeInfoView.center.y -= self.placeInfoView.bounds.height
+            },completion: nil)
+            placeInfoAppear = true
         } else{
             setGeneralInformation(marker)
         }
@@ -185,17 +207,13 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
     
     override func coordinateTapped(){
         
-        print("tapped!!")
-        
-        if !placeInfoAppear{
-            Animation().animateShow(self.tableViewWrapper, self.placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
-            placeInfoAppear = true
-        } else{
-            
-            Animation().animateHide(self.tableViewWrapper, self.placeInfoView, tableViewHeader.bounds.height, ViewControllerFlag.searchVC)
-            placeInfoAppear = false
-            
+        if placeInfoAppear {
+            UIView.animate(withDuration: 0.2, delay: 0, options: [],animations: {
+                self.placeInfoView.center.y += self.placeInfoView.bounds.height
+            },completion: nil)
         }
+        
+        placeInfoAppear = false
     }
     
     
@@ -211,26 +229,32 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate {
             self.myplaceInfoView?.setUnSavedIcon()
         }
         
-        placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
-            if let error = error {
-                print("lookup place id query error: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let place = place else {
-                print("No place details for \(userData ?? "no placeID")")
-                return
-            }
-            
+        
+        if userData == nil{
             self.myplaceInfoView?.setSelectedPlaceName(place.name)
             self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-            self.myplaceInfoView?.setPlaceRate(place.rating)
-        })
-        
+        } else{
+            
+            placesClient.lookUpPlaceID(userData as! String, callback: { (place, error) -> Void in
+                    if let error = error {
+                        print("lookup place id query error: \(error.localizedDescription)")
+                        return
+                    }
+            
+                    guard let place = place else {
+                        print("No place details for \(userData ?? "no placeID")")
+                        return
+                    }
+            
+                    self.myplaceInfoView?.setSelectedPlaceName(place.name)
+                    self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
+                    self.myplaceInfoView?.setGooglePlaceID(place.placeID)
+                    self.myplaceInfoView?.setPlaceRate(place.rating)
+            })
+        }
+
         self.myplaceInfoView.reloadInputViews()
     }
-    
 }
 
 extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
@@ -238,12 +262,19 @@ extension SearchMapViewController:GMSAutocompleteResultsViewControllerDelegate{
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
                            didAutocompleteWith place: GMSPlace) {
         self.searchController?.isActive = false
-        // Do something with the selected place.
-        print("Place name: \(place.name)")
-        print("Place address: \(String(describing: place.formattedAddress))")
-        print("Place attributions: \(String(describing: place.attributions))")
-        //        vc.place = place
-
+        
+        savedMarker.map = nil
+        
+        let marker = mapMaker?.makeTemporaryMarker(place)
+        let camera = GMSCameraPosition(target: (marker?.position)!, zoom: 15, bearing: 0, viewingAngle: 0)
+        
+        savedMarker = marker
+        savedMarker.map = mapView
+        
+        mapView.animate(to: camera)
+        savedMarker.appearAnimation = .pop
+        
+        setGeneralInformation(savedMarker!)
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
@@ -276,7 +307,6 @@ extension SearchMapViewController:GMSMapViewDelegate{
         if savedMarker != nil{
             savedMarker.map = nil
         }
-
         self.coordinateTapped()
     }
     

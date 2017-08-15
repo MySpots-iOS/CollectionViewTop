@@ -8,13 +8,16 @@
 
 import Foundation
 import GoogleMaps
+import GooglePlaces
 
 class MapMaker {
     
     func makeMarkers(mapView: GMSMapView, folder: Folder) -> [GMSMarker]{
-        
+
         let data:Folder? = folder
         var markers:[GMSMarker] = []
+        
+
         
         if (data != nil){
             for spot in (data?.spots)!{
@@ -34,6 +37,16 @@ class MapMaker {
         marker.snippet = spot.spotName!
         marker.icon = GMSMarker.markerImage(with: UIColor.green)
         marker.userData = spot.placeID
+        
+        return marker
+    }
+    
+    func makeTemporaryMarker(_ place: GMSPlace) -> GMSMarker{
+        
+        let marker = GMSMarker(position: place.coordinate)
+        marker.snippet =  place.name
+        marker.icon = GMSMarker.markerImage(with: UIColor.red)
+        marker.userData = place.placeID
         
         return marker
     }

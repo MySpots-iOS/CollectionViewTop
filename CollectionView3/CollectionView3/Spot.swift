@@ -18,6 +18,9 @@ class Spot:NSObject{
     var placeID:String?
     var spotName:String?
 
+    
+    var imageName: UIImage?
+
 }
 
 

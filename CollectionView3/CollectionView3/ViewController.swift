@@ -30,8 +30,8 @@ class ViewController: UIViewController{
         cView.delegate = self
         cView.dataSource = self
         
+
         searchBarInit()
-        
     }
     
 
@@ -43,6 +43,7 @@ class ViewController: UIViewController{
     
     func initCompleted(notification: Notification?) {
         self.nc.removeObserver(self)
+        fetchSpotImages()
         refreshCollectionView()
     }
     
@@ -60,6 +61,7 @@ class ViewController: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
     
     
     @IBAction func editFolders(_ sender: Any) {
@@ -97,7 +99,6 @@ class ViewController: UIViewController{
     func getIndexPathForSelectedCell() -> IndexPath? {
         
         var indexPath:IndexPath?
-        
         if cView.indexPathsForSelectedItems!.count > 0 {
             indexPath = cView.indexPathsForSelectedItems![0]
         }
@@ -123,6 +124,29 @@ class ViewController: UIViewController{
         searchController?.hidesNavigationBarDuringPresentation = false
     }
     
+    
+    func fetchSpotImages(){
+        
+        let folders = dataController.getFolders()
+        for folder in folders{
+            for spot in folder.spots{
+                guard let placeID = spot.placeID else{
+                    print("error")
+                    return
+                }
+                dataController.lookUpPhotos(placeID, completion: { spotImage in
+                    
+                    DispatchQueue.main.async {
+                        spot.imageName = spotImage
+                        //reloadCV for each folder is done
+                        if spot == folder.spots.last{
+                            self.cView.reloadData()
+                        }
+                    }
+                })
+            }
+        }
+    }
     
     func goBack(){
         self.dismiss(animated: true)
@@ -158,15 +182,14 @@ extension ViewController: UICollectionViewDataSource{
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier,for:indexPath) as! MySpotsCell
 
-
-        let placesClient:GMSPlacesClient = GMSPlacesClient.shared()
-        dataController.getImageNameAtIndex(indexPath, placesClient, cell)
-
+        
+        let image:UIImage = dataController.getImageAtIndex(indexPath.row)
         let folderName = dataController.getFolderLabelAtIndex(indexPath.row)
         let spotsNum = dataController.numberOfSpots(indexPath.row)
 
         cell.mySpotsLabel.text = folderName
         cell.spotsNumLabel.text = "\(spotsNum) Spots"
+        cell.update(image)
         
         if self.navigationItem.rightBarButtonItem!.title == "Edit" {
             cell.deleteButton.isHidden = true
@@ -194,16 +217,9 @@ extension ViewController: UICollectionViewDataSource{
     
     
     func deleteMySpotsFolder(sender:UIButton) {
-        //        // Put the index number of the delete button the use tapped in a variable
         let i: Int = (sender.layer.value(forKey: "index")) as! Int
         dataController.deleteFolderDatabase(i, cView)
 
-        
-        // Remove an object from the collection view's dataSource
-//        dataController.deleteFolder(i)
-        
-        // Refresh the collection view
-//        cView!.reloadData()
     }
 
 }
@@ -247,8 +263,6 @@ extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
         tableVC.place = place
         tableVC.dataController = self.dataController
         self.present(vc, animated: true, completion: nil)
-//        gotoMapView()
-
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,

@@ -32,14 +32,15 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
         locationManager.distanceFilter = 100
         locationManager.startUpdatingLocation()
     }
+    
 
     // Handle incoming location events.
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location: CLLocation = locations.last!
         //print("Location: \(location)")
         
-        let marker = GMSMarker(position: location.coordinate)
-        markers.append(marker)
+//        let marker = GMSMarker(position: location.coordinate)
+//        markers.append(marker)
         
         let camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
 
@@ -63,6 +64,8 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
             }
         
     }
+    
+
     
     // Handle authorization for the location manager.
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
