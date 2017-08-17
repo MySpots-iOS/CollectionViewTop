@@ -194,13 +194,16 @@ class DataController {
             newSpot.imageName = result
         })
         
-     
         
         guard let spotName = value!["spotName"] as? String else {
             return nil
         }
         newSpot.spotName  = spotName
         
+        guard let address = value!["address"] as? String else {
+            return nil
+        }
+        newSpot.address = address
 
         guard let latitude =  value?["latitude"] as? Double else {
             return nil

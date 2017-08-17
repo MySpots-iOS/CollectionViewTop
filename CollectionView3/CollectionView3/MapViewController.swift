@@ -23,6 +23,9 @@ class MapViewController: CommonViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapMaker = MapMaker()
+        
+        tableViewHeader.backgroundColor = UIColor.mainDarkGreen()
+        
         folder = dataController.getFolder(folderIndex: folderIndexPath)
         markers = mapMaker.makeMarkers(mapView: mapView, folder: folder)
         locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.mapVC)
@@ -43,7 +46,7 @@ class MapViewController: CommonViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.rowHeight = 100
+        tableView.rowHeight = 80
     }
     
     
@@ -186,9 +189,10 @@ extension MapViewController: UITableViewDataSource ,UITableViewDelegate{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! CustomTableViewCell
         
+        cell.placeName.textColor = UIColor.mainDarkGreen()
         let spot = folder.spots[indexPath.row]
         cell.placeName.text = spot.spotName
-        cell.placeAddress.text = spot.placeID
+        cell.placeAddress.text = spot.address
         
         return cell
     }

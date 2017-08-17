@@ -16,4 +16,5 @@ class CustomTableViewCell: UITableViewCell {
     @IBOutlet weak var imageIcon: UIImageView!
 
 
+
 }
