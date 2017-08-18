@@ -13,8 +13,8 @@ class SpotDetailViewController: UIViewController{
     
     @IBOutlet weak var directionButton: UIButton!
     @IBOutlet weak var placeHours: UILabel!
-    @IBOutlet weak var placePhone: UILabel!
-    @IBOutlet weak var placeWebsite: UILabel!
+    @IBOutlet weak var placePhone: UITextView!
+    @IBOutlet weak var placeWebsite: UITextView!
     
     var placeID: String = ""
     
@@ -44,9 +44,11 @@ class SpotDetailViewController: UIViewController{
         super.didReceiveMemoryWarning()
     }
     
+
+    
     @IBAction func directionsPressed(_ sender: Any) {
         
-        
+
         if (UIApplication.shared.canOpenURL(NSURL(string:"https://maps.google.com")! as URL))
         {
             
@@ -67,7 +69,7 @@ class SpotDetailViewController: UIViewController{
                 return
             }
             
-            guard let place = place else {
+            guard let place:GMSPlace = place else {
                 print("No place details for \(placeID)")
                 return
             }
@@ -77,6 +79,17 @@ class SpotDetailViewController: UIViewController{
             self.placeAddress.text = place.formattedAddress
             self.placePhone.text = place.phoneNumber
             self.placeWebsite.text = place.website?.absoluteString
+            
+            switch(place.openNowStatus){
+            case .yes:
+                self.placeHours.text = "Now Open"
+            case .no:
+                self.placeHours.text = "Closed"
+            case .unknown:
+                self.placeHours.text = "N/A"
+            }
+            
+            
             
             self.longitude = place.coordinate.longitude
             self.latitude = place.coordinate.latitude
