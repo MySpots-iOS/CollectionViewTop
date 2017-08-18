@@ -294,7 +294,8 @@ class DataController {
         
 //        print("latitude:\(placeInfo.marker.position.latitude), longitude:\(placeInfo.marker.position.longitude), placeID:\(placeInfo.placeID), name: \(placeInfo.placeName)")
         
-        let addSpot = ["folderID":folderKey,"latitude":placeInfo.marker.position.latitude, "longitude":placeInfo.marker.position.longitude,"placeID":placeInfo.placeID, "spotName":placeInfo.placeName.text!] as [String : Any]
+        
+        let addSpot = ["folderID":folderKey,"latitude":placeInfo.marker.position.latitude, "longitude":placeInfo.marker.position.longitude,"placeID":placeInfo.placeID, "spotName":placeInfo.placeName.text!, "address":placeInfo.addressName.text!] as [String : Any]
         
         let spotRef = folderRef.child("Spots").childByAutoId()
 //        print(spotRef)

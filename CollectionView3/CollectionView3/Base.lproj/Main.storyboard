@@ -450,10 +450,14 @@
                                     </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VwI-zC-Hgc">
                                         <rect key="frame" x="295" y="0.0" width="48" height="60"/>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="48" id="AUa-KP-P9H"/>
                                             <constraint firstAttribute="height" constant="60" id="o10-ou-MbE"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="lzc-Gk-OxL" appends="YES" id="Tpq-gu-Cxw"/>
+                                        </connections>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FeI-BJ-vhk">
                                         <rect key="frame" x="0.0" y="0.0" width="287" height="86"/>
@@ -629,6 +633,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="liw-Ci-rgt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="lzc-Gk-OxL"/>
             </objects>
             <point key="canvasLocation" x="3359.1999999999998" y="803.74812593703155"/>
         </scene>

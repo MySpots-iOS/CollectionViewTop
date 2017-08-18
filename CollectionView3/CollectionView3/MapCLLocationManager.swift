@@ -19,6 +19,8 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
     var markers:[GMSMarker] = []
     var vcFlag:ViewControllerFlag!
     
+
+    
     init(_ mapView: GMSMapView, _ markers:[GMSMarker], _ vcFlag:ViewControllerFlag) {
         super.init()
         self.mapView = mapView

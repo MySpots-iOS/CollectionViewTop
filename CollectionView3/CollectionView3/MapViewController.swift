@@ -29,7 +29,7 @@ class MapViewController: CommonViewController {
         folder = dataController.getFolder(folderIndex: folderIndexPath)
         markers = mapMaker.makeMarkers(mapView: mapView, folder: folder)
         locationManager = MapCLLocationManager(mapView, markers, ViewControllerFlag.mapVC)
-        mapViewDelegate = MapViewDelegate(self)
+        mapViewDelegate = MapViewDelegate(self, markers)
         
         
         mapView.delegate = mapViewDelegate

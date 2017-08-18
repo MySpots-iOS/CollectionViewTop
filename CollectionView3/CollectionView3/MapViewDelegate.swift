@@ -14,16 +14,23 @@ class MapViewDelegate: NSObject, GMSMapViewDelegate{
     var vc:CommonViewController!
     var savedMarker:GMSMarker!
     
-    init(_ vc:CommonViewController) {
+    var markers:[GMSMarker]!
+    
+    init(_ vc:CommonViewController, _ markers:[GMSMarker]) {
         super.init()
         self.vc = vc
+        self.markers = markers
         let polyLine: GMSPolyline = GMSPolyline()
         polyLine.isTappable = true
     }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         
-        let isSaved = true
+        var isSaved:Bool = false
+        
+        if markers.contains(marker){
+            isSaved = true
+        }
         vc.markerTapped(marker, isSaved)
         return true
     }
