@@ -30,6 +30,11 @@ class ViewController: UIViewController{
         cView.delegate = self
         cView.dataSource = self
         
+//        fetchSpotImages(completion: { (Void) in
+//            DispatchQueue.main.async {
+//                self.refreshCollectionView()
+//            }
+//        })
 
         searchBarInit()
     }

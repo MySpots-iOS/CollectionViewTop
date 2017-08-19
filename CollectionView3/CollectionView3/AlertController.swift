@@ -8,8 +8,25 @@
 
 import UIKit
 
-class AlertControl{
 
+enum AlertAction{
+    case AddNewSpot
+    case DeleteSpot
+    case MakeNewFolder
+    case DeleteMarkerDatabase
+    case AddFolder
+    case MakeEmptyNewFolder
+}
+
+protocol AlertControlDelegate{
+    func dataAction(_ alertAction:AlertAction)
+}
+
+
+class AlertControl{
+    
+    static var delegate: AlertControlDelegate?
+    
     static func saveToFolder(_ vc:CommonViewController, _ placeInfo:PlaceInformation){
 
         let alert = UIAlertController(title:"Save to Folder", message: "Select a folder to save your spot", preferredStyle: UIAlertControllerStyle.alert)
@@ -24,7 +41,9 @@ class AlertControl{
                 print(folder.folderName!)
                  print(placeInfo.addressName)
                 
-                vc.dataController.addNewSpot(placeInfo, folder.folderName!)
+                delegate?.dataAction(AlertAction.AddNewSpot as! AlertControlDelegate as! AlertAction)
+                
+//                vc.dataController.addNewSpot(placeInfo, folder.folderName!)
             })
             alert.addAction(action)
         }
@@ -90,7 +109,7 @@ class AlertControl{
             placeInfo.setUnSavedIcon()
             placeInfo.saved = false
 
-            vc.dataController.deleteMarkerDatabase(folder.folderName!, placeInfo)
+            vc.dataController.deleteMarkerDatabase(folder.folderName!, placeInfo.placeID)
         })
         
         // Cancel button

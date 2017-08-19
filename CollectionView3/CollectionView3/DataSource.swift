@@ -113,23 +113,23 @@ class DataController {
     }
     
     
-    func deleteMarkerDatabase(_ folderName:String, _ placeInfo:PlaceInformation){
+    func deleteMarkerDatabase(_ folderName:String, _ placeID:String){
         let foldersRef = self.ref.child(firebasePath)
         foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
-                self.deleteSpot(foldersRef.child(folderKey as! String), placeInfo)
+                self.deleteSpot(foldersRef.child(folderKey as! String), placeID)
             } else {
                 print("Error: we can't delete the spot")
             }
         })
     }
     
-    func deleteSpot(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
+    func deleteSpot(_ folderRef:DatabaseReference, _ placeID:String){
         
         let spotsRef = folderRef.child("Spots")
         
-        spotsRef.queryOrdered(byChild: "placeID").queryEqual(toValue: placeInfo.placeID).observeSingleEvent(of: .value, with: { (snapshot) in
+        spotsRef.queryOrdered(byChild: "placeID").queryEqual(toValue: placeID).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
 

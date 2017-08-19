@@ -52,7 +52,6 @@ class FolderListTableVC: UIViewController {
         self.navigationController?.popViewController(animated: true)
         
     }
-    
 
     
     func refreshTableView(){

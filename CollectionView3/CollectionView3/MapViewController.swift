@@ -3,7 +3,7 @@ import GoogleMaps
 import GooglePlacePicker
 
 
-class MapViewController: CommonViewController {
+class MapViewController: CommonViewController{
     
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var placeInfoView: UIView!
@@ -58,6 +58,8 @@ class MapViewController: CommonViewController {
     func refreshTableView() {
         self.tableView.reloadData()
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

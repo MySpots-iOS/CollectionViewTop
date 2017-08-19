@@ -45,6 +45,13 @@ class SpotDetailViewController: UIViewController{
     }
     
 
+    @IBAction func iconPressed(_ sender: Any) {
+        if saved{
+
+        } else {
+            
+        }
+    }
     
     @IBAction func directionsPressed(_ sender: Any) {
         
