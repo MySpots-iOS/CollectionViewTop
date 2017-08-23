@@ -20,6 +20,8 @@ class MapViewController: CommonViewController{
     var placeInfoAppear = false
     var nc = NotificationCenter.default
     
+    var alertControl:AlertControl!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapMaker = MapMaker()
@@ -80,11 +82,14 @@ class MapViewController: CommonViewController{
     }
     
     func loadTemplate(){
-        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
-        myplaceInfoView.vc = self
+        alertControl = AlertControl()
+        alertControl.delegate = self
+        alertControl.presentDelegate = self
+        
+        myplaceInfoView = PlaceInformation(alertControl,dataController, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
         placeInfoView.addSubview(myplaceInfoView)
-        AlertControl.delegate = self
-        AlertControl.presentDelegate = self
+        
+
     }
     
 

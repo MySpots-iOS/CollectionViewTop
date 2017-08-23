@@ -15,6 +15,7 @@ class ViewController: UIViewController{
     let segIdentifier = "mapSeg"
     
     var dataController:DataController!
+    var alertControl:AlertControl!
     
     //Search bar on navigation bar
     var resultsViewController: GMSAutocompleteResultsViewController?
@@ -29,15 +30,17 @@ class ViewController: UIViewController{
 
         cView.delegate = self
         cView.dataSource = self
-        AlertControl.delegate = self
-        AlertControl.presentDelegate = self
+        
+        alertControl = AlertControl()
+        alertControl.delegate = self
+        alertControl.presentDelegate = self
         
         searchBarInit()
     }
     
 
     @IBAction func addNewFolder(_ sender: UIButton) {
-        AlertControl.addToNewFolder()
+        alertControl.addToNewFolder()
     }
     
     func initCompleted(notification: Notification?) {

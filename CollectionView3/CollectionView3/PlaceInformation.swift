@@ -10,16 +10,18 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     @IBOutlet weak var distanceIcon: UIImageView!
     
     var placeID: String = ""
-    var saved: Bool = false
-    var vc:CommonViewController!
+    var saved: Bool = false    
+    var dataController:DataController!
     var marker:GMSMarker!
+    var alertControl:AlertControl!
     
     @IBOutlet var gestureR: UITapGestureRecognizer!
     
-    init(_ vc:CommonViewController, frame: CGRect) {
+    init(_ alertControl:AlertControl, _ dataController:DataController, frame: CGRect) {
         super.init(frame: frame)
         
-        self.vc = vc
+        self.dataController = dataController
+        self.alertControl = alertControl
         autoresizesSubviews = false
         loadXibView()
     }
@@ -32,9 +34,9 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     @IBAction func savedIconTapped(_ sender: Any?) {
         
         if !saved{
-            AlertControl.saveToFolder(vc, self)
+            self.alertControl.saveToFolder(dataController.getFolders(), self)
         } else {
-            AlertControl.deleteFromFolder(vc, vc.folder, self)
+            self.alertControl.deleteFromFolder(self)
         }
     }
 

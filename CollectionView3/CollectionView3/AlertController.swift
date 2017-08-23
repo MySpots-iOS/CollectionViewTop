@@ -30,32 +30,30 @@ protocol AlertPresentDelegate {
 }
 
 
-
-
 class AlertControl{
     
-    static var delegate: AlertControlDelegate?
-    static var presentDelegate: AlertPresentDelegate??
+    var delegate: AlertControlDelegate?
+    var presentDelegate: AlertPresentDelegate??
 
     
-    static func saveToFolder(_ vc:CommonViewController, _ placeInfo:PlaceInformation){
+    func saveToFolder(_ folders:[Folder], _ placeInfo:PlaceInformation){
 
         let alert = UIAlertController(title:"Save to Folder", message: "Select a folder to save your spot", preferredStyle: UIAlertControllerStyle.alert)
         
         
-        let folders = vc.dataController.getFolders()
-        for folder in folders{
-            
-            let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
-                (action: UIAlertAction!) in
+            for folder in folders{
                 
-                print(folder.folderName!)
-                 print(placeInfo.addressName)
-                
-                self.delegate?.dataAction(AlertAction.AddNewSpot)
-            })
-            alert.addAction(action)
-        }
+                let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
+                    (action: UIAlertAction!) in
+                    
+                    print(folder.folderName!)
+                    print(placeInfo.addressName)
+                    
+                    self.delegate?.dataAction(AlertAction.AddNewSpot)
+                })
+                alert.addAction(action)
+            }
+
         
         //The last one creates another dialog
         
@@ -107,7 +105,7 @@ class AlertControl{
     }
     
     
-    static func deleteFromFolder(_ vc:CommonViewController, _ folder:Folder, _ placeInfo:PlaceInformation){
+    func deleteFromFolder(_ placeInfo:PlaceInformation){
         
         
         let alertController = UIAlertController(title: "Delete Spot?",
@@ -136,7 +134,7 @@ class AlertControl{
 
     
     
-    static func addToNewFolder(){
+    func addToNewFolder(){
         let alertController = UIAlertController(title: "Add New Folder",
                                                 message: "Input new folder name",
                                                 preferredStyle: .alert)

@@ -31,6 +31,8 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
     var savedMarker:GMSMarker!
     var temporaryMarkers:[GMSMarker]!
     
+    var alertControl:AlertControl!
+    
     
     @IBAction func backPushed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -160,11 +162,14 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
     
     
     func loadTemplate(){
-        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
-        myplaceInfoView.vc = self
+        
+        alertControl = AlertControl()
+        alertControl.delegate = self
+        alertControl.presentDelegate = self
+        
+        myplaceInfoView = PlaceInformation(alertControl, dataController, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
         placeInfoView.addSubview(myplaceInfoView)
-        AlertControl.delegate = self
-        AlertControl.presentDelegate = self
+
     }
     
     func addListButton(){
