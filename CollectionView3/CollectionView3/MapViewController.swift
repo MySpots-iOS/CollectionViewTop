@@ -232,8 +232,8 @@ extension MapViewController:AlertPresentDelegate, AlertControlDelegate{
     func dataAction(_ action: AlertAction) {
         
         switch action {
-        case .AddNewSpot:
-            dataController.addNewSpot(myplaceInfoView, folder.folderName!)
+        case let .AddNewSpot(folderName):
+            dataController.addNewSpot(myplaceInfoView, folderName)
         case let .MakeNewFolder(name):
             dataController.makeNewFolder(name, myplaceInfoView)
         case .DeleteMarkerDatabase:

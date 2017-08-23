@@ -32,6 +32,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
     var temporaryMarkers:[GMSMarker]!
     
     var alertControl:AlertControl!
+    var checkedFolders = [String:[AnyObject]]()
     
     
     @IBAction func backPushed(_ sender: Any) {
@@ -92,9 +93,11 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
         for (index, cell) in cellIsChecked.enumerated(){
             
             if cell{
-                print(folders[index].folderName ?? "foldername")
-                
+                let folderName = folders[index].folderName ?? "foldername"
                 let markers = mapMaker!.makeMarkers(mapView: mapView, folder: folders[index])
+                
+                checkedFolders[folderName] = markers
+                
                 temporaryMarkers! += markers
             }
         }
@@ -370,14 +373,29 @@ extension SearchMapViewController: AlertControlDelegate,AlertPresentDelegate{
     func dataAction(_ action: AlertAction) {
         
         switch action {
-        case .AddNewSpot:
-            dataController.addNewSpot(myplaceInfoView, folder.folderName!)
+        case let .AddNewSpot(name):
+            dataController.addNewSpot(myplaceInfoView, name)
         case let .MakeNewFolder(name):
             dataController.makeNewFolder(name, myplaceInfoView)
         case .DeleteMarkerDatabase:
-            dataController.deleteMarkerDatabase(folder.folderName!, myplaceInfoView.placeID)
+            let key = self.findKeyForValue(value: myplaceInfoView.marker, dictionary: checkedFolders as! [String : [GMSMarker]])
+           // let keys =(checkedFolders as NSDictionary).allKeys(for: myplaceInfoView.marker)
+            dataController.deleteMarkerDatabase(key!, myplaceInfoView.placeID)
         default:
             return
         }
+    }
+    
+    func findKeyForValue(value: GMSMarker, dictionary: [String: [GMSMarker]]) ->String?
+    {
+        for (key, array) in dictionary
+        {
+            if (array.contains(value))
+            {
+                return key
+            }
+        }
+        
+        return nil
     }
 }

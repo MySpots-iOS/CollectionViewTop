@@ -10,7 +10,7 @@ import UIKit
 
 
 enum AlertAction{
-    case AddNewSpot
+    case AddNewSpot(String)
     case DeleteSpot
     case MakeNewFolder(String)
     case DeleteMarkerDatabase
@@ -49,7 +49,7 @@ class AlertControl{
                     print(folder.folderName!)
                     print(placeInfo.addressName)
                     
-                    self.delegate?.dataAction(AlertAction.AddNewSpot)
+                    self.delegate?.dataAction(AlertAction.AddNewSpot(folder.folderName!))
                 })
                 alert.addAction(action)
             }

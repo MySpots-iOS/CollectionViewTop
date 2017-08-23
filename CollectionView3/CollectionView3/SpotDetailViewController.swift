@@ -96,8 +96,6 @@ class SpotDetailViewController: UIViewController{
                 self.placeHours.text = "N/A"
             }
             
-            
-            
             self.longitude = place.coordinate.longitude
             self.latitude = place.coordinate.latitude
             
