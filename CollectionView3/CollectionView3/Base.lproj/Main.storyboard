@@ -105,7 +105,7 @@
                                             </constraints>
                                             <state key="normal" title="+ Add Folder"/>
                                             <connections>
-                                                <action selector="addNewFolder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hS4-fI-ICJ"/>
+                                                <action selector="addNewFolder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iqL-zO-UAl"/>
                                             </connections>
                                         </button>
                                     </subviews>

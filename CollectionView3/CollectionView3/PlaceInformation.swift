@@ -2,7 +2,7 @@
 import UIKit
 import GoogleMaps
 
-class PlaceInformation: UIView, UIGestureRecognizerDelegate, AlertControlDelegate{
+class PlaceInformation: UIView, UIGestureRecognizerDelegate{
 
     @IBOutlet weak var placeName: UILabel!
     @IBOutlet weak var addressName: UILabel!
@@ -21,7 +21,6 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate, AlertControlDelegat
         
         self.vc = vc
         autoresizesSubviews = false
-        AlertControl.delegate = self
         loadXibView()
     }
     
@@ -31,7 +30,6 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate, AlertControlDelegat
     }
 
     @IBAction func savedIconTapped(_ sender: Any?) {
-//        let alert = AlertControl.init(vc, self)
         
         if !saved{
             AlertControl.saveToFolder(vc, self)
@@ -39,19 +37,7 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate, AlertControlDelegat
             AlertControl.deleteFromFolder(vc, vc.folder, self)
         }
     }
-    
-    func dataAction(_ action:AlertAction){
-        
-        switch action {
-        case .AddNewSpot:
-            vc.dataController.addNewSpot(self, vc.folder.folderName!)
-      
-            
-        default:
-            <#code#>
-        }
-    }
-    
+
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         

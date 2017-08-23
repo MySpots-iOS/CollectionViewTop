@@ -163,6 +163,8 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
         myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
         myplaceInfoView.vc = self
         placeInfoView.addSubview(myplaceInfoView)
+        AlertControl.delegate = self
+        AlertControl.presentDelegate = self
     }
     
     func addListButton(){
@@ -353,3 +355,24 @@ extension SearchMapViewController:GMSMapViewDelegate{
 
 }
 
+
+extension SearchMapViewController: AlertControlDelegate,AlertPresentDelegate{
+    
+    func showAlertController(_ alertAction: UIAlertController) {
+        self.present(alertAction, animated: true, completion: nil)
+    }
+    
+    func dataAction(_ action: AlertAction) {
+        
+        switch action {
+        case .AddNewSpot:
+            dataController.addNewSpot(myplaceInfoView, folder.folderName!)
+        case let .MakeNewFolder(name):
+            dataController.makeNewFolder(name, myplaceInfoView)
+        case .DeleteMarkerDatabase:
+            dataController.deleteMarkerDatabase(folder.folderName!, myplaceInfoView.placeID)
+        default:
+            return
+        }
+    }
+}

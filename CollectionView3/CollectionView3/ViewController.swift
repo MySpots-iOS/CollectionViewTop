@@ -29,22 +29,16 @@ class ViewController: UIViewController{
 
         cView.delegate = self
         cView.dataSource = self
+        AlertControl.delegate = self
+        AlertControl.presentDelegate = self
         
-//        fetchSpotImages(completion: { (Void) in
-//            DispatchQueue.main.async {
-//                self.refreshCollectionView()
-//            }
-//        })
-
         searchBarInit()
     }
     
 
     @IBAction func addNewFolder(_ sender: UIButton) {
-        
-        AlertControl.addToNewFolder(self)
+        AlertControl.addToNewFolder()
     }
-    
     
     func initCompleted(notification: Notification?) {
         self.nc.removeObserver(self)
@@ -66,8 +60,6 @@ class ViewController: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
     
     @IBAction func editFolders(_ sender: Any) {
         
@@ -285,4 +277,24 @@ extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 
+}
+
+extension ViewController: AlertControlDelegate, AlertPresentDelegate{
+    
+    func dataAction(_ alertAction: AlertAction) {
+        
+        switch alertAction {
+        case let .AddFolder(name):
+            dataController.addFolder(name)
+            refreshCollectionView()
+        case let .MakeEmptyNewFolder(name):
+            dataController.makeEmptyNewFolder(name)
+        default:
+            return
+        }
+    }
+    
+    func showAlertController(_ alertAction: UIAlertController) {
+        self.present(alertAction, animated: true, completion: nil)
+    }
 }

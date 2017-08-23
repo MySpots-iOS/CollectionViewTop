@@ -59,8 +59,6 @@ class MapViewController: CommonViewController{
         self.tableView.reloadData()
     }
     
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -85,11 +83,11 @@ class MapViewController: CommonViewController{
         myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
         myplaceInfoView.vc = self
         placeInfoView.addSubview(myplaceInfoView)
+        AlertControl.delegate = self
+        AlertControl.presentDelegate = self
     }
     
 
-    
-    
     @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
         //set placeID
@@ -109,7 +107,6 @@ class MapViewController: CommonViewController{
     
     
     @IBAction func showListTapped(_ sender: UITapGestureRecognizer) {
-        
         
         if !tableViewAppear {
             Animation().animateShowList(tableViewWrapper, tableViewHeaderLabel, tableViewWrapper.bounds.height)
@@ -217,9 +214,28 @@ extension MapViewController: UITableViewDataSource ,UITableViewDelegate{
         tableViewAppear = false
         placeInfoAppear = true
     }
-    
-    
 
 }
 
+
+extension MapViewController:AlertPresentDelegate, AlertControlDelegate{
+    
+    func showAlertController(_ alertAction: UIAlertController) {
+        self.present(alertAction, animated: true, completion: nil)
+    }
+    
+    func dataAction(_ action: AlertAction) {
+        
+        switch action {
+        case .AddNewSpot:
+            dataController.addNewSpot(myplaceInfoView, folder.folderName!)
+        case let .MakeNewFolder(name):
+            dataController.makeNewFolder(name, myplaceInfoView)
+        case .DeleteMarkerDatabase:
+            dataController.deleteMarkerDatabase(folder.folderName!, myplaceInfoView.placeID)
+        default:
+            return
+        }
+    }
+}
 

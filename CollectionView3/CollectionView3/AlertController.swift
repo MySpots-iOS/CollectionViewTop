@@ -12,20 +12,31 @@ import UIKit
 enum AlertAction{
     case AddNewSpot
     case DeleteSpot
-    case MakeNewFolder
+    case MakeNewFolder(String)
     case DeleteMarkerDatabase
-    case AddFolder
-    case MakeEmptyNewFolder
+    case AddFolder(String)
+    case MakeEmptyNewFolder(String)
 }
+
+
 
 protocol AlertControlDelegate{
     func dataAction(_ alertAction:AlertAction)
 }
 
 
+protocol AlertPresentDelegate {
+    func showAlertController(_ alertAction: UIAlertController)
+}
+
+
+
+
 class AlertControl{
     
     static var delegate: AlertControlDelegate?
+    static var presentDelegate: AlertPresentDelegate??
+
     
     static func saveToFolder(_ vc:CommonViewController, _ placeInfo:PlaceInformation){
 
@@ -41,9 +52,7 @@ class AlertControl{
                 print(folder.folderName!)
                  print(placeInfo.addressName)
                 
-                delegate?.dataAction(AlertAction.AddNewSpot as! AlertControlDelegate as! AlertAction)
-                
-//                vc.dataController.addNewSpot(placeInfo, folder.folderName!)
+                self.delegate?.dataAction(AlertAction.AddNewSpot)
             })
             alert.addAction(action)
         }
@@ -72,7 +81,8 @@ class AlertControl{
                 // Get 1st TextField's text
                 let textField = alertController.textFields![0]
                 print(textField.text!)
-                vc.dataController.makeNewFolder(textField.text!, placeInfo)
+                
+                self.delegate?.dataAction(AlertAction.MakeNewFolder(textField.text!))
             })
             
             // Cancel button
@@ -81,7 +91,9 @@ class AlertControl{
             // Add action buttons and present the Alert
             alertController.addAction(cancel)
             alertController.addAction(submitAction)
-            vc.present(alertController, animated: true, completion: nil)
+            
+            
+            self.presentDelegate??.showAlertController(alertController)
             
         })
         
@@ -91,7 +103,7 @@ class AlertControl{
         alert.addAction(action3)
         alert.addAction(cancel)
         
-        vc.present(alert, animated: true, completion: nil)
+        self.presentDelegate??.showAlertController(alert)
     }
     
     
@@ -109,7 +121,7 @@ class AlertControl{
             placeInfo.setUnSavedIcon()
             placeInfo.saved = false
 
-            vc.dataController.deleteMarkerDatabase(folder.folderName!, placeInfo.placeID)
+            self.delegate?.dataAction(AlertAction.DeleteMarkerDatabase)
         })
         
         // Cancel button
@@ -118,12 +130,13 @@ class AlertControl{
         // Add action buttons and present the Alert
         alertController.addAction(cancel)
         alertController.addAction(submitAction)
-        vc.present(alertController, animated: true, completion: nil)
+        
+        self.presentDelegate??.showAlertController(alertController)
     }
 
     
     
-    static func addToNewFolder(_ vc:ViewController){
+    static func addToNewFolder(){
         let alertController = UIAlertController(title: "Add New Folder",
                                                 message: "Input new folder name",
                                                 preferredStyle: .alert)
@@ -143,10 +156,8 @@ class AlertControl{
             let textField = alertController.textFields![0]
             print(textField.text!)
             
-            vc.dataController.addFolder(textField.text!)
-            vc.cView.reloadData()
-            
-            vc.dataController.makeEmptyNewFolder(textField.text!)
+            self.delegate?.dataAction(AlertAction.AddFolder(textField.text!))
+            self.delegate?.dataAction(AlertAction.MakeEmptyNewFolder(textField.text!))
             
         })
         
@@ -156,7 +167,8 @@ class AlertControl{
         // Add action buttons and present the Alert
         alertController.addAction(cancel)
         alertController.addAction(submitAction)
-        vc.present(alertController, animated: true, completion: nil)
+        
+        self.presentDelegate??.showAlertController(alertController)
     }
 
 }
