@@ -16,7 +16,6 @@ class SpotDetailViewController: UIViewController{
     @IBOutlet weak var placePhone: UITextView!
     @IBOutlet weak var placeWebsite: UITextView!
     
-    var placeID: String = ""
     var gmsPlace:GMSPlace!
     
     var longitude:Double!
@@ -76,7 +75,7 @@ class SpotDetailViewController: UIViewController{
     func getDetailInformationFromID(_ gmsPlace: GMSPlace?) {
 
             guard let place:GMSPlace = gmsPlace else {
-                print("No place details for \(placeID)")
+                print("No place details for \(self.gmsPlace.placeID)")
                 return
             }
             
@@ -99,7 +98,7 @@ class SpotDetailViewController: UIViewController{
             self.latitude = place.coordinate.latitude
         
         
-        GMSPlacesClient.shared().lookUpPhotos(forPlaceID: self.placeID, callback: { (photos, error) -> Void in
+        GMSPlacesClient.shared().lookUpPhotos(forPlaceID: place.placeID, callback: { (photos, error) -> Void in
             if let error = error {
                 // TODO: handle the error.
                 print("Error: \(error.localizedDescription)")
@@ -151,8 +150,8 @@ extension SpotDetailViewController: AlertControlDelegate, AlertPresentDelegate{
             
             setUnSavedIcon()
             saved = false
-            let folderName = dataController.findKeyForValue(placeID)
-            dataController.deleteMarkerDatabase(folderName!, placeID)
+            let folderName = dataController.findKeyForValue(self.gmsPlace.placeID)
+            dataController.deleteMarkerDatabase(folderName!, self.gmsPlace.placeID)
         default:
             return
         }

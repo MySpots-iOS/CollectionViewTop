@@ -113,7 +113,6 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
     @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
         //set placeID
-        vc.placeID = myplaceInfoView.placeID
         vc.gmsPlace = myplaceInfoView.place
         vc.saved = myplaceInfoView.saved
         vc.dataController = self.dataController

@@ -50,7 +50,6 @@ class FolderListTableVC: UIViewController {
         
         self.folderListdelegate?.receiveFolderOnOff(self.cellisChecked)
         self.navigationController?.popViewController(animated: true)
-        
     }
 
     

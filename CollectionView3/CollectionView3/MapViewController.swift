@@ -95,18 +95,8 @@ class MapViewController: CommonViewController{
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
         //set placeID
         vc.gmsPlace = myplaceInfoView.place
-        vc.placeID = myplaceInfoView.placeID
         vc.saved = myplaceInfoView.saved
         vc.dataController = self.dataController
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    
-    override func instantiateDetailView(_ spot:Spot){
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
-        //set placeID
-        vc.placeID = spot.placeID!
-        vc.saved = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -215,7 +205,6 @@ extension MapViewController: UITableViewDataSource ,UITableViewDelegate{
         tableViewAppear = false
         placeInfoAppear = true
     }
-
 }
 
 

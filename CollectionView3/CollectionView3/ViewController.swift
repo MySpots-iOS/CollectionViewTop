@@ -219,9 +219,7 @@ extension ViewController: UICollectionViewDataSource{
     func deleteMySpotsFolder(sender:UIButton) {
         let i: Int = (sender.layer.value(forKey: "index")) as! Int
         dataController.deleteFolderDatabase(i, cView)
-
     }
-
 }
 
 
