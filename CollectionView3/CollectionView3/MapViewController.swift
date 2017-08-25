@@ -97,6 +97,7 @@ class MapViewController: CommonViewController{
         vc.gmsPlace = myplaceInfoView.place
         vc.placeID = myplaceInfoView.placeID
         vc.saved = myplaceInfoView.saved
+        vc.dataController = self.dataController
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -228,10 +229,15 @@ extension MapViewController:AlertPresentDelegate, AlertControlDelegate{
         
         switch action {
         case let .AddNewSpot(folderName):
-            dataController.addNewSpot(myplaceInfoView, folderName)
+            dataController.addNewSpot(myplaceInfoView.place, folderName)
         case let .MakeNewFolder(name):
-            dataController.makeNewFolder(name, myplaceInfoView)
+            dataController.makeNewFolder(name, myplaceInfoView.place)
         case .DeleteMarkerDatabase:
+            
+            myplaceInfoView.marker.map = nil
+            myplaceInfoView.setUnSavedIcon()
+            myplaceInfoView.saved = false
+            
             dataController.deleteMarkerDatabase(folder.folderName!, myplaceInfoView.placeID)
         default:
             return

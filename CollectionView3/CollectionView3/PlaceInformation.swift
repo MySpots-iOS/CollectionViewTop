@@ -40,7 +40,7 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
         if !saved{
             self.alertControl.saveToFolder(dataController.getFolders(), self)
         } else {
-            self.alertControl.deleteFromFolder(self)
+            self.alertControl.deleteFromFolder()
         }
     }
 
@@ -95,14 +95,6 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     
     func setGooglePlaceID(_ placeID: String) {
         self.placeID = placeID
-    }
-    
-    func getGooglePlaceID() -> String {
-        return self.placeID
-    }
-    
-    func getSavedBool() -> Bool {
-        return self.saved
     }
     
 }

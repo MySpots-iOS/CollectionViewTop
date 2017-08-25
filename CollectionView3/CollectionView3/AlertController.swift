@@ -105,8 +105,7 @@ class AlertControl{
     }
     
     
-    func deleteFromFolder(_ placeInfo:PlaceInformation){
-        
+    func deleteFromFolder(){
         
         let alertController = UIAlertController(title: "Delete Spot?",
                                                 message: " ",
@@ -114,11 +113,6 @@ class AlertControl{
         
         // Submit button
         let submitAction = UIAlertAction(title: "Delete", style:.destructive , handler: { (action) -> Void in
-            
-            placeInfo.marker.map = nil
-            placeInfo.setUnSavedIcon()
-            placeInfo.saved = false
-
             self.delegate?.dataAction(AlertAction.DeleteMarkerDatabase)
         })
         

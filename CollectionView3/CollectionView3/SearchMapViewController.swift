@@ -116,6 +116,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
         vc.placeID = myplaceInfoView.placeID
         vc.gmsPlace = myplaceInfoView.place
         vc.saved = myplaceInfoView.saved
+        vc.dataController = self.dataController
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -324,10 +325,8 @@ extension SearchMapViewController:GMSMapViewDelegate{
         
         
         let infoMarker = GMSMarker(position: location)
-        //        infoMarker.snippet = placeID
         infoMarker.title = name
         infoMarker.appearAnimation = .pop
-        //        infoMarker.infoWindowAnchor.y = 1
         infoMarker.userData = placeID
         infoMarker.map = mapView
         mapView.selectedMarker = infoMarker
@@ -356,8 +355,6 @@ extension SearchMapViewController:GMSMapViewDelegate{
             }
         }
     }
-    
-
 }
 
 
@@ -371,28 +368,21 @@ extension SearchMapViewController: AlertControlDelegate,AlertPresentDelegate{
         
         switch action {
         case let .AddNewSpot(name):
-            dataController.addNewSpot(myplaceInfoView, name)
+            dataController.addNewSpot(myplaceInfoView.place, name)
         case let .MakeNewFolder(name):
-            dataController.makeNewFolder(name, myplaceInfoView)
+            dataController.makeNewFolder(name, myplaceInfoView.place)
         case .DeleteMarkerDatabase:
-            let key = self.findKeyForValue(value: myplaceInfoView.marker, dictionary: checkedFolders as! [String : [GMSMarker]])
-           // let keys =(checkedFolders as NSDictionary).allKeys(for: myplaceInfoView.marker)
-            dataController.deleteMarkerDatabase(key!, myplaceInfoView.placeID)
+            
+            myplaceInfoView.marker.map = nil
+            myplaceInfoView.setUnSavedIcon()
+            myplaceInfoView.saved = false
+            
+            let folderName = dataController.findKeyForValue(myplaceInfoView.placeID)
+            dataController.deleteMarkerDatabase(folderName!, myplaceInfoView.placeID)
         default:
             return
         }
     }
     
-    func findKeyForValue(value: GMSMarker, dictionary: [String: [GMSMarker]]) ->String?
-    {
-        for (key, array) in dictionary
-        {
-            if (array.contains(value))
-            {
-                return key
-            }
-        }
-        
-        return nil
-    }
+
 }
