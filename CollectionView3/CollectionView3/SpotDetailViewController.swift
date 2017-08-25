@@ -17,11 +17,13 @@ class SpotDetailViewController: UIViewController{
     @IBOutlet weak var placeWebsite: UITextView!
     
     var placeID: String = ""
+    var gmsPlace:GMSPlace!
     
     var longitude:Double!
     var latitude:Double!
     var saved: Bool = false
     fileprivate var placesClient: GMSPlacesClient!
+    var alertControl:AlertControl!
     
     
     override func viewDidLoad() {
@@ -30,7 +32,8 @@ class SpotDetailViewController: UIViewController{
         self.placeName.textColor = UIColor.mainDarkGreen()
         self.directionButton.backgroundColor = UIColor.mainDarkGreen()
         placesClient = GMSPlacesClient.shared()
-        getDetailInformationFromID(self.placeID)
+        getDetailInformationFromID(gmsPlace)
+
         
         if saved == true {
             setSavedIcon()
@@ -47,9 +50,8 @@ class SpotDetailViewController: UIViewController{
 
     @IBAction func iconPressed(_ sender: Any) {
         if saved{
-
         } else {
-            
+            //alertControl.deleteFromFolder(places)
         }
     }
     
@@ -69,14 +71,14 @@ class SpotDetailViewController: UIViewController{
 
     }
 
-    func getDetailInformationFromID(_ placeID: String) {
-        placesClient.lookUpPlaceID(placeID, callback: { (place, error) -> Void in
-            if let error = error {
-                print("lookup place id query error: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let place:GMSPlace = place else {
+    func getDetailInformationFromID(_ gmsPlace: GMSPlace?) {
+//        placesClient.lookUpPlaceID(placeID, callback: { (place, error) -> Void in
+//            if let error = error {
+//                print("lookup place id query error: \(error.localizedDescription)")
+//                return
+//            }
+        
+            guard let place:GMSPlace = gmsPlace else {
                 print("No place details for \(placeID)")
                 return
             }
@@ -99,9 +101,9 @@ class SpotDetailViewController: UIViewController{
             self.longitude = place.coordinate.longitude
             self.latitude = place.coordinate.latitude
             
-        })
+//        })
         
-        placesClient.lookUpPhotos(forPlaceID: placeID, callback: { (photos, error) -> Void in
+        placesClient.lookUpPhotos(forPlaceID: self.placeID, callback: { (photos, error) -> Void in
             if let error = error {
                 // TODO: handle the error.
                 print("Error: \(error.localizedDescription)")
@@ -134,3 +136,41 @@ class SpotDetailViewController: UIViewController{
         self.toggleSaveIcon.image = UIImage(named: "saveFolder")
     }
 }
+
+
+//extension SpotDetailViewController: AlertControlDelegate, AlertPresentDelegate{
+//    
+//    func showAlertController(_ alertAction: UIAlertController) {
+//        self.present(alertAction, animated: true, completion: nil)
+//    }
+//    
+//    func dataAction(_ action: AlertAction) {
+//        
+//        switch action {
+//        case let .AddNewSpot(name):
+//            dataController.addNewSpot(myplaceInfoView, name)
+//        case let .MakeNewFolder(name):
+//            dataController.makeNewFolder(name, myplaceInfoView)
+//        case .DeleteMarkerDatabase:
+//            let key = self.findKeyForValue(value: myplaceInfoView.marker, dictionary: checkedFolders as! [String : [GMSMarker]])
+//            // let keys =(checkedFolders as NSDictionary).allKeys(for: myplaceInfoView.marker)
+//            dataController.deleteMarkerDatabase(key!, myplaceInfoView.placeID)
+//        default:
+//            return
+//        }
+//    }
+//    
+//    func findKeyForValue(value: GMSMarker, dictionary: [String: [GMSMarker]]) ->String?
+//    {
+//        for (key, array) in dictionary
+//        {
+//            if (array.contains(value))
+//            {
+//                return key
+//            }
+//        }
+//        
+//        return nil
+//    }
+//
+//}

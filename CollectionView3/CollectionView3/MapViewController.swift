@@ -41,8 +41,6 @@ class MapViewController: CommonViewController{
         self.loadTemplate()
         
         mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
-//        mapView.isHidden = true
-        
         
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("TableViewNotification"), object: nil)
         
@@ -96,8 +94,9 @@ class MapViewController: CommonViewController{
     @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
         //set placeID
-        vc.placeID = myplaceInfoView.getGooglePlaceID()
-        vc.saved = myplaceInfoView.getSavedBool()
+        vc.gmsPlace = myplaceInfoView.place
+        vc.placeID = myplaceInfoView.placeID
+        vc.saved = myplaceInfoView.saved
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -141,7 +140,6 @@ class MapViewController: CommonViewController{
         if placeInfoAppear{
             Animation().animateHide(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
                 placeInfoAppear = false
-
         }
     }
 
@@ -168,10 +166,7 @@ class MapViewController: CommonViewController{
                 return
             }
             
-            self.myplaceInfoView?.setSelectedPlaceName(place.name)
-            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-            self.myplaceInfoView?.setPlaceRate(place.rating)
+            self.myplaceInfoView.setUpInfo(place)
         })
         
         self.myplaceInfoView.reloadInputViews()

@@ -113,8 +113,9 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
     @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
         //set placeID
-        vc.placeID = myplaceInfoView.getGooglePlaceID()
-        vc.saved = myplaceInfoView.getSavedBool()
+        vc.placeID = myplaceInfoView.placeID
+        vc.gmsPlace = myplaceInfoView.place
+        vc.saved = myplaceInfoView.saved
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -255,11 +256,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
                         print("No place details for \(userData ?? "no placeID")")
                         return
                     }
-            
-                    self.myplaceInfoView?.setSelectedPlaceName(place.name)
-                    self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-                    self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-                    self.myplaceInfoView?.setPlaceRate(place.rating)
+                    self.myplaceInfoView.setUpInfo(place)
             })
         }
 
