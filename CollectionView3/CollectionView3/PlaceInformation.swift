@@ -1,6 +1,7 @@
 
 import UIKit
 import GoogleMaps
+import GooglePlaces
 
 class PlaceInformation: UIView, UIGestureRecognizerDelegate{
 
@@ -9,19 +10,23 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     @IBOutlet weak var placeRating: UILabel!
     @IBOutlet weak var distanceIcon: UIImageView!
     
+    
+    var place:GMSPlace!
+    
     var placeID: String = ""
-    var saved: Bool = false
-    var vc:CommonViewController!
+    var saved: Bool = false    
+    var dataController:DataController!
     var marker:GMSMarker!
+    var alertControl:AlertControl!
     
     @IBOutlet var gestureR: UITapGestureRecognizer!
     
-    init(_ vc:CommonViewController, frame: CGRect) {
+    init(_ alertControl:AlertControl, _ dataController:DataController, frame: CGRect) {
         super.init(frame: frame)
         
-        self.vc = vc
+        self.dataController = dataController
+        self.alertControl = alertControl
         autoresizesSubviews = false
- 
         loadXibView()
     }
     
@@ -31,15 +36,14 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     }
 
     @IBAction func savedIconTapped(_ sender: Any?) {
-//        let alert = AlertControl.init(vc, self)
         
         if !saved{
-            AlertControl.saveToFolder(vc, self)
+            self.alertControl.saveToFolder(dataController.getFolders())
         } else {
-            AlertControl.deleteFromFolder(vc, vc.folder, self)
+            self.alertControl.deleteFromFolder()
         }
     }
-    
+
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         
@@ -56,6 +60,16 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
         self.placeName.textColor = UIColor.mainDarkGreen()
         self.distanceIcon.isUserInteractionEnabled = true
         self.addSubview(view)
+    }
+    
+    
+    func setUpInfo(_ place:GMSPlace){
+        self.place = place
+        
+        setSelectedPlaceName(place.name)
+        setSelectedAddress(place.formattedAddress!)
+        setGooglePlaceID(place.placeID)
+        setPlaceRate(place.rating)
     }
     
     
@@ -81,14 +95,6 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     
     func setGooglePlaceID(_ placeID: String) {
         self.placeID = placeID
-    }
-    
-    func getGooglePlaceID() -> String {
-        return self.placeID
-    }
-    
-    func getSavedBool() -> Bool {
-        return self.saved
     }
     
 }

@@ -15,6 +15,7 @@ class ViewController: UIViewController{
     let segIdentifier = "mapSeg"
     
     var dataController:DataController!
+    var alertControl:AlertControl!
     
     //Search bar on navigation bar
     var resultsViewController: GMSAutocompleteResultsViewController?
@@ -30,16 +31,17 @@ class ViewController: UIViewController{
         cView.delegate = self
         cView.dataSource = self
         
-
+        alertControl = AlertControl()
+        alertControl.delegate = self
+        alertControl.presentDelegate = self
+        
         searchBarInit()
     }
     
 
     @IBAction func addNewFolder(_ sender: UIButton) {
-        
-        AlertControl.addToNewFolder(self)
+        alertControl.addToNewFolder()
     }
-    
     
     func initCompleted(notification: Notification?) {
         self.nc.removeObserver(self)
@@ -61,8 +63,6 @@ class ViewController: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
     
     @IBAction func editFolders(_ sender: Any) {
         
@@ -219,9 +219,7 @@ extension ViewController: UICollectionViewDataSource{
     func deleteMySpotsFolder(sender:UIButton) {
         let i: Int = (sender.layer.value(forKey: "index")) as! Int
         dataController.deleteFolderDatabase(i, cView)
-
     }
-
 }
 
 
@@ -280,4 +278,24 @@ extension ViewController:GMSAutocompleteResultsViewControllerDelegate{
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 
+}
+
+extension ViewController: AlertControlDelegate, AlertPresentDelegate{
+    
+    func dataAction(_ alertAction: AlertAction) {
+        
+        switch alertAction {
+        case let .AddFolder(name):
+            dataController.addFolder(name)
+            refreshCollectionView()
+        case let .MakeEmptyNewFolder(name):
+            dataController.makeEmptyNewFolder(name)
+        default:
+            return
+        }
+    }
+    
+    func showAlertController(_ alertAction: UIAlertController) {
+        self.present(alertAction, animated: true, completion: nil)
+    }
 }

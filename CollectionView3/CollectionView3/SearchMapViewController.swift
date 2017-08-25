@@ -31,6 +31,9 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
     var savedMarker:GMSMarker!
     var temporaryMarkers:[GMSMarker]!
     
+    var alertControl:AlertControl!
+    var checkedFolders = [String:[AnyObject]]()
+    
     
     @IBAction func backPushed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -90,9 +93,11 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
         for (index, cell) in cellIsChecked.enumerated(){
             
             if cell{
-                print(folders[index].folderName ?? "foldername")
-                
+                let folderName = folders[index].folderName ?? "foldername"
                 let markers = mapMaker!.makeMarkers(mapView: mapView, folder: folders[index])
+                
+                checkedFolders[folderName] = markers
+                
                 temporaryMarkers! += markers
             }
         }
@@ -108,8 +113,9 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
     @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
         //set placeID
-        vc.placeID = myplaceInfoView.getGooglePlaceID()
-        vc.saved = myplaceInfoView.getSavedBool()
+        vc.gmsPlace = myplaceInfoView.place
+        vc.saved = myplaceInfoView.saved
+        vc.dataController = self.dataController
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -160,9 +166,14 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
     
     
     func loadTemplate(){
-        myplaceInfoView = PlaceInformation(self, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
-        myplaceInfoView.vc = self
+        
+        alertControl = AlertControl()
+        alertControl.delegate = self
+        alertControl.presentDelegate = self
+        
+        myplaceInfoView = PlaceInformation(alertControl, dataController, frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
         placeInfoView.addSubview(myplaceInfoView)
+
     }
     
     func addListButton(){
@@ -245,11 +256,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
                         print("No place details for \(userData ?? "no placeID")")
                         return
                     }
-            
-                    self.myplaceInfoView?.setSelectedPlaceName(place.name)
-                    self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-                    self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-                    self.myplaceInfoView?.setPlaceRate(place.rating)
+                    self.myplaceInfoView.setUpInfo(place)
             })
         }
 
@@ -317,10 +324,8 @@ extension SearchMapViewController:GMSMapViewDelegate{
         
         
         let infoMarker = GMSMarker(position: location)
-        //        infoMarker.snippet = placeID
         infoMarker.title = name
         infoMarker.appearAnimation = .pop
-        //        infoMarker.infoWindowAnchor.y = 1
         infoMarker.userData = placeID
         infoMarker.map = mapView
         mapView.selectedMarker = infoMarker
@@ -349,7 +354,34 @@ extension SearchMapViewController:GMSMapViewDelegate{
             }
         }
     }
+}
+
+
+extension SearchMapViewController: AlertControlDelegate,AlertPresentDelegate{
+    
+    func showAlertController(_ alertAction: UIAlertController) {
+        self.present(alertAction, animated: true, completion: nil)
+    }
+    
+    func dataAction(_ action: AlertAction) {
+        
+        switch action {
+        case let .AddNewSpot(name):
+            dataController.addNewSpot(myplaceInfoView.place, name)
+        case let .MakeNewFolder(name):
+            dataController.makeNewFolder(name, myplaceInfoView.place)
+        case .DeleteMarkerDatabase:
+            
+            myplaceInfoView.marker.map = nil
+            myplaceInfoView.setUnSavedIcon()
+            myplaceInfoView.saved = false
+            
+            let folderName = dataController.findKeyForValue(myplaceInfoView.placeID)
+            dataController.deleteMarkerDatabase(folderName!, myplaceInfoView.placeID)
+        default:
+            return
+        }
+    }
     
 
 }
-

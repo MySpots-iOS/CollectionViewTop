@@ -30,8 +30,6 @@ class CommonViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
         // Do any additional setup after loading the view.
     }
 
@@ -47,10 +45,6 @@ class CommonViewController: UIViewController {
         print("CommonCV: coorinator tapped!")
     }
     
-    func instantiateDetailView(_ spot:Spot){
-        print("CommonCV: tableViewTapped")
-    }
-
 }
 
 

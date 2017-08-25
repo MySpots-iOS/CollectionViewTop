@@ -113,23 +113,23 @@ class DataController {
     }
     
     
-    func deleteMarkerDatabase(_ folderName:String, _ placeInfo:PlaceInformation){
+    func deleteMarkerDatabase(_ folderName:String, _ placeID:String){
         let foldersRef = self.ref.child(firebasePath)
         foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
-                self.deleteSpot(foldersRef.child(folderKey as! String), placeInfo)
+                self.deleteSpot(foldersRef.child(folderKey as! String), placeID)
             } else {
                 print("Error: we can't delete the spot")
             }
         })
     }
     
-    func deleteSpot(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
+    func deleteSpot(_ folderRef:DatabaseReference, _ placeID:String){
         
         let spotsRef = folderRef.child("Spots")
         
-        spotsRef.queryOrdered(byChild: "placeID").queryEqual(toValue: placeInfo.placeID).observeSingleEvent(of: .value, with: { (snapshot) in
+        spotsRef.queryOrdered(byChild: "placeID").queryEqual(toValue: placeID).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
 
@@ -194,13 +194,16 @@ class DataController {
             newSpot.imageName = result
         })
         
-     
         
         guard let spotName = value!["spotName"] as? String else {
             return nil
         }
         newSpot.spotName  = spotName
         
+        guard let address = value!["address"] as? String else {
+            return nil
+        }
+        newSpot.address = address
 
         guard let latitude =  value?["latitude"] as? Double else {
             return nil
@@ -254,13 +257,13 @@ class DataController {
     
 
     
-    func makeNewFolder(_ folderName:String, _ placeInfo:PlaceInformation){
+    func makeNewFolder(_ folderName:String, _ place:GMSPlace){
         
         let folderRef = ref.child(firebasePath).childByAutoId()
         
         let newFolder = ["category": "Not set", "folderName": folderName, "imageName":"garragePic", "spotsNum":1, "Spots":0] as [String : Any]
         folderRef.updateChildValues(newFolder)
-        self.addMarker(folderRef, placeInfo)
+        self.addMarker(folderRef, place)
     }
     
     func makeEmptyNewFolder(_ folderName:String){
@@ -272,13 +275,13 @@ class DataController {
     }
     
     
-    func addNewSpot(_ placeInfo:PlaceInformation, _ folderName:String){
+    func addNewSpot(_ place:GMSPlace, _ folderName:String){
 
         let foldersRef = self.ref.child(firebasePath)
         foldersRef.queryOrdered(byChild: "folderName").queryEqual(toValue: folderName).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
                 let folderKey = (snapshot.value as AnyObject).allKeys.first!
-                self.addMarker(foldersRef.child(folderKey as! String), placeInfo)
+                self.addMarker(foldersRef.child(folderKey as! String), place)
 
             } else {
                 print("we don't have that, add it to the DB now")
@@ -286,18 +289,35 @@ class DataController {
         })
     }
     
-    func addMarker(_ folderRef:DatabaseReference, _ placeInfo:PlaceInformation){
+    func addMarker(_ folderRef:DatabaseReference, _ place:GMSPlace){
         let folderKey = folderRef.key
         
-//        print("latitude:\(placeInfo.marker.position.latitude), longitude:\(placeInfo.marker.position.longitude), placeID:\(placeInfo.placeID), name: \(placeInfo.placeName)")
-        
-        let addSpot = ["folderID":folderKey,"latitude":placeInfo.marker.position.latitude, "longitude":placeInfo.marker.position.longitude,"placeID":placeInfo.placeID, "spotName":placeInfo.placeName.text!] as [String : Any]
+        let addSpot = ["folderID":folderKey,"latitude":place.coordinate.latitude, "longitude":place.coordinate.longitude,"placeID":place.placeID, "spotName":place.name, "address":place.formattedAddress!] as [String : Any]
         
         let spotRef = folderRef.child("Spots").childByAutoId()
-//        print(spotRef)
         
         spotRef.setValue(addSpot)
     }
-
+    
+    
+    func findKeyForValue(_ placeID: String) ->String?
+    {
+        let folders = getFolders()
+        
+        for folder in folders{
+            
+            var spotIDs:[String] = []
+            for spot in folder.spots{
+                spotIDs.append(spot.placeID!)
+            }
+            
+            if (spotIDs.contains(placeID))
+                {
+                return folder.folderName
+            }
+        }
+        
+        return nil
+    }
 }
 

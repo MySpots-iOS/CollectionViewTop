@@ -13,15 +13,16 @@ class SpotDetailViewController: UIViewController{
     
     @IBOutlet weak var directionButton: UIButton!
     @IBOutlet weak var placeHours: UILabel!
-    @IBOutlet weak var placePhone: UILabel!
-    @IBOutlet weak var placeWebsite: UILabel!
+    @IBOutlet weak var placePhone: UITextView!
+    @IBOutlet weak var placeWebsite: UITextView!
     
-    var placeID: String = ""
+    var gmsPlace:GMSPlace!
     
     var longitude:Double!
     var latitude:Double!
     var saved: Bool = false
-    fileprivate var placesClient: GMSPlacesClient!
+    var alertControl:AlertControl!
+    var dataController:DataController!
     
     
     override func viewDidLoad() {
@@ -29,8 +30,10 @@ class SpotDetailViewController: UIViewController{
         
         self.placeName.textColor = UIColor.mainDarkGreen()
         self.directionButton.backgroundColor = UIColor.mainDarkGreen()
-        placesClient = GMSPlacesClient.shared()
-        getDetailInformationFromID(self.placeID)
+        getDetailInformationFromID(gmsPlace)
+        alertControl = AlertControl()
+        alertControl.delegate = self
+        alertControl.presentDelegate = self
         
         if saved == true {
             setSavedIcon()
@@ -44,8 +47,17 @@ class SpotDetailViewController: UIViewController{
         super.didReceiveMemoryWarning()
     }
     
+
+    @IBAction func iconPressed(_ sender: Any) {
+        if !saved{
+            let folders = dataController.getFolders()
+            alertControl.saveToFolder(folders)
+        } else {
+            alertControl.deleteFromFolder()
+        }
+    }
+    
     @IBAction func directionsPressed(_ sender: Any) {
-        
         
         if (UIApplication.shared.canOpenURL(NSURL(string:"https://maps.google.com")! as URL))
         {
@@ -60,15 +72,10 @@ class SpotDetailViewController: UIViewController{
 
     }
 
-    func getDetailInformationFromID(_ placeID: String) {
-        placesClient.lookUpPlaceID(placeID, callback: { (place, error) -> Void in
-            if let error = error {
-                print("lookup place id query error: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let place = place else {
-                print("No place details for \(placeID)")
+    func getDetailInformationFromID(_ gmsPlace: GMSPlace?) {
+
+            guard let place:GMSPlace = gmsPlace else {
+                print("No place details for \(self.gmsPlace.placeID)")
                 return
             }
             
@@ -78,12 +85,20 @@ class SpotDetailViewController: UIViewController{
             self.placePhone.text = place.phoneNumber
             self.placeWebsite.text = place.website?.absoluteString
             
+            switch(place.openNowStatus){
+            case .yes:
+                self.placeHours.text = "Now Open"
+            case .no:
+                self.placeHours.text = "Closed"
+            case .unknown:
+                self.placeHours.text = "N/A"
+            }
+            
             self.longitude = place.coordinate.longitude
             self.latitude = place.coordinate.latitude
-            
-        })
         
-        placesClient.lookUpPhotos(forPlaceID: placeID, callback: { (photos, error) -> Void in
+        
+        GMSPlacesClient.shared().lookUpPhotos(forPlaceID: place.placeID, callback: { (photos, error) -> Void in
             if let error = error {
                 // TODO: handle the error.
                 print("Error: \(error.localizedDescription)")
@@ -115,4 +130,31 @@ class SpotDetailViewController: UIViewController{
     func setUnSavedIcon() {
         self.toggleSaveIcon.image = UIImage(named: "saveFolder")
     }
+}
+
+
+extension SpotDetailViewController: AlertControlDelegate, AlertPresentDelegate{
+    
+    func showAlertController(_ alertAction: UIAlertController) {
+        self.present(alertAction, animated: true, completion: nil)
+    }
+    
+    func dataAction(_ action: AlertAction) {
+        
+        switch action {
+        case let .AddNewSpot(name):
+            dataController.addNewSpot(gmsPlace, name)
+        case let .MakeNewFolder(name):
+            dataController.makeNewFolder(name, gmsPlace)
+        case .DeleteMarkerDatabase:
+            
+            setUnSavedIcon()
+            saved = false
+            let folderName = dataController.findKeyForValue(self.gmsPlace.placeID)
+            dataController.deleteMarkerDatabase(folderName!, self.gmsPlace.placeID)
+        default:
+            return
+        }
+    }
+    
 }
