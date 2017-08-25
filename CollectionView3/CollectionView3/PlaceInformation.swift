@@ -38,7 +38,7 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     @IBAction func savedIconTapped(_ sender: Any?) {
         
         if !saved{
-            self.alertControl.saveToFolder(dataController.getFolders(), self)
+            self.alertControl.saveToFolder(dataController.getFolders())
         } else {
             self.alertControl.deleteFromFolder()
         }

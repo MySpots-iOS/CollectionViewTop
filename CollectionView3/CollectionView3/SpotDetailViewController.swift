@@ -32,7 +32,9 @@ class SpotDetailViewController: UIViewController{
         self.placeName.textColor = UIColor.mainDarkGreen()
         self.directionButton.backgroundColor = UIColor.mainDarkGreen()
         getDetailInformationFromID(gmsPlace)
-
+        alertControl = AlertControl()
+        alertControl.delegate = self
+        alertControl.presentDelegate = self
         
         if saved == true {
             setSavedIcon()
@@ -48,8 +50,9 @@ class SpotDetailViewController: UIViewController{
     
 
     @IBAction func iconPressed(_ sender: Any) {
-        if saved{
-//            alertControl.saveToFolder(<#T##folders: [Folder]##[Folder]#>, <#T##placeInfo: PlaceInformation##PlaceInformation#>)
+        if !saved{
+            let folders = dataController.getFolders()
+            alertControl.saveToFolder(folders)
         } else {
             alertControl.deleteFromFolder()
         }
@@ -145,6 +148,9 @@ extension SpotDetailViewController: AlertControlDelegate, AlertPresentDelegate{
         case let .MakeNewFolder(name):
             dataController.makeNewFolder(name, gmsPlace)
         case .DeleteMarkerDatabase:
+            
+            setUnSavedIcon()
+            saved = false
             let folderName = dataController.findKeyForValue(placeID)
             dataController.deleteMarkerDatabase(folderName!, placeID)
         default:

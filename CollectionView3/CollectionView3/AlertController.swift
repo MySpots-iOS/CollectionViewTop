@@ -36,7 +36,7 @@ class AlertControl{
     var presentDelegate: AlertPresentDelegate??
 
     
-    func saveToFolder(_ folders:[Folder], _ placeInfo:PlaceInformation){
+    func saveToFolder(_ folders:[Folder]){
 
         let alert = UIAlertController(title:"Save to Folder", message: "Select a folder to save your spot", preferredStyle: UIAlertControllerStyle.alert)
         
@@ -45,9 +45,6 @@ class AlertControl{
                 
                 let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
                     (action: UIAlertAction!) in
-                    
-                    print(folder.folderName!)
-                    print(placeInfo.addressName)
                     
                     self.delegate?.dataAction(AlertAction.AddNewSpot(folder.folderName!))
                 })
