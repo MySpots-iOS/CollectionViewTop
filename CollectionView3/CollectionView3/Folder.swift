@@ -9,7 +9,6 @@
 import UIKit
 
 class Folder: NSObject {
-//    var id: NSNumber?
     var folderName: String?
     var category: String?
     var spots:[Spot] = []

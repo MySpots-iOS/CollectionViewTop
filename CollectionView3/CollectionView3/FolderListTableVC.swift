@@ -79,7 +79,7 @@ extension FolderListTableVC: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchVCTableCell", for: indexPath) as! SearchTableCell
         cell.folderName.text = folders[indexPath.row].folderName
         cell.spotsNum.text = "\(folders[indexPath.row].spots.count) spots"
-        cell.imageIcon.backgroundColor = UIColor.cyan
+        cell.imageIcon.image = folders[indexPath.row].spots.first?.imageName
         
         if cell.isChecked{
             cell.checkIcon.image = UIImage(named:"icon_checked")

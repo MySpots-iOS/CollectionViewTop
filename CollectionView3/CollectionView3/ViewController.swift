@@ -23,6 +23,8 @@ class ViewController: UIViewController{
     var resultView: UITextView?
     
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

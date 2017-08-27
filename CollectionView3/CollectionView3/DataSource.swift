@@ -18,8 +18,6 @@ class DataController {
     
     func firstInit(){
         
-        
-        
         self.ref.child(firebasePath).observe(.value, with: { (snapshot) in
             
             DataController.folders.removeAll()
@@ -102,7 +100,6 @@ class DataController {
         let spots = folder.childSnapshot(forPath: "Spots")
         for spot in spots.children{
             
-//            print(spot)
             if let snap = spot as? DataSnapshot{
                 if let newSpot:Spot = makeSpot(snap){
                     newFolder.spots.append(newSpot)
@@ -165,7 +162,6 @@ class DataController {
                         cView.reloadData()
                     }
                 }
-                
                 
             } else {
                 print("we don't have that, add it to the DB now")
