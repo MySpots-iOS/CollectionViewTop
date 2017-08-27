@@ -54,7 +54,7 @@ class AlertControl{
         
         //The last one creates another dialog
         
-        let action3 = UIAlertAction(title: "+ Create New Folder", style: UIAlertActionStyle.default, handler: {
+        let action3 = UIAlertAction(title: "+ Create Folder", style: .destructive, handler: {
             (action: UIAlertAction!) in
             
             
@@ -97,6 +97,10 @@ class AlertControl{
         
         alert.addAction(action3)
         alert.addAction(cancel)
+        
+        
+        let height:NSLayoutConstraint = NSLayoutConstraint(item: alert.view, attribute:.height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 440)
+        alert.view.addConstraint(height)
         
         self.presentDelegate??.showAlertController(alert)
     }

@@ -15,7 +15,6 @@ class SpotDetailViewController: UIViewController{
     @IBOutlet weak var placeHours: UITextView!
     @IBOutlet weak var placePhone: UITextView!
     @IBOutlet weak var placeWebsite: UITextView!
-    @IBOutlet weak var placeDescription: UITextView!
     
     var gmsPlace:GMSPlace!
     
@@ -33,11 +32,6 @@ class SpotDetailViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
-//        scrollView.delegate = self.scrollView as? UIScrollViewDelegate
-//        self.scrollView.contentSize = CGSize(width: 375, height: self.view.frame.height)
-        
         
         self.placeName.textColor = UIColor.mainDarkGreen()
         self.directionButton.backgroundColor = UIColor.mainDarkGreen()
@@ -92,12 +86,6 @@ class SpotDetailViewController: UIViewController{
     func setHalfStar(_ imageView:UIImageView){
         imageView.image = #imageLiteral(resourceName: "icon_halfstar")
     }
-    
-    
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        scrollView.contentOffset.y = 0.0
-//    }
-//    
 
 
     func getDetailInformationFromID(_ gmsPlace: GMSPlace?) {
@@ -108,7 +96,10 @@ class SpotDetailViewController: UIViewController{
         }
             
         self.placeName.text = place.name
-
+        
+//        if let placetypes = place.types.first{
+//            self.placeType.text = placetypes
+//        }
 
         if place.rating >= 1 { setFullStar(ratingOne)}
         else if place.rating > 0 && place.rating < 1 { setHalfStar(ratingOne)}
@@ -137,16 +128,16 @@ class SpotDetailViewController: UIViewController{
         self.placeAddress.text = place.formattedAddress
         self.placePhone.text = place.phoneNumber
         self.placeWebsite.text = place.website?.absoluteString
-        self.placeDescription.text = place.description
-            
-//        switch(place.openNowStatus){
-//            case .yes:
-//                self.placeHours.text = "Now Open"
-//            case .no:
-//                self.placeHours.text = "Closed"
-//            case .unknown:
-//                self.placeHours.text = "N/A"
-//        }
+        
+        
+        switch(place.openNowStatus){
+            case .yes:
+                self.placeHours.text = "Now Open"
+            case .no:
+                self.placeHours.text = "Closed"
+            case .unknown:
+                self.placeHours.text = "N/A"
+        }
         
         self.longitude = place.coordinate.longitude
         self.latitude = place.coordinate.latitude
