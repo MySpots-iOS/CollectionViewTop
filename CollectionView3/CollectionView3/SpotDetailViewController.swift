@@ -22,6 +22,7 @@ class SpotDetailViewController: UIViewController{
     var latitude:Double!
     var saved: Bool = false
     fileprivate var placesClient: GMSPlacesClient!
+    var alertControl:AlertControl!
     
     
     override func viewDidLoad() {
@@ -31,6 +32,7 @@ class SpotDetailViewController: UIViewController{
         self.directionButton.backgroundColor = UIColor.mainDarkGreen()
         placesClient = GMSPlacesClient.shared()
         getDetailInformationFromID(self.placeID)
+
         
         if saved == true {
             setSavedIcon()
@@ -47,7 +49,7 @@ class SpotDetailViewController: UIViewController{
 
     @IBAction func iconPressed(_ sender: Any) {
         if saved{
-
+            
         } else {
             
         }
@@ -134,3 +136,41 @@ class SpotDetailViewController: UIViewController{
         self.toggleSaveIcon.image = UIImage(named: "saveFolder")
     }
 }
+
+
+//extension SpotDetailViewController: AlertControlDelegate, AlertPresentDelegate{
+//    
+//    func showAlertController(_ alertAction: UIAlertController) {
+//        self.present(alertAction, animated: true, completion: nil)
+//    }
+//    
+//    func dataAction(_ action: AlertAction) {
+//        
+//        switch action {
+//        case let .AddNewSpot(name):
+//            dataController.addNewSpot(myplaceInfoView, name)
+//        case let .MakeNewFolder(name):
+//            dataController.makeNewFolder(name, myplaceInfoView)
+//        case .DeleteMarkerDatabase:
+//            let key = self.findKeyForValue(value: myplaceInfoView.marker, dictionary: checkedFolders as! [String : [GMSMarker]])
+//            // let keys =(checkedFolders as NSDictionary).allKeys(for: myplaceInfoView.marker)
+//            dataController.deleteMarkerDatabase(key!, myplaceInfoView.placeID)
+//        default:
+//            return
+//        }
+//    }
+//    
+//    func findKeyForValue(value: GMSMarker, dictionary: [String: [GMSMarker]]) ->String?
+//    {
+//        for (key, array) in dictionary
+//        {
+//            if (array.contains(value))
+//            {
+//                return key
+//            }
+//        }
+//        
+//        return nil
+//    }
+//
+//}

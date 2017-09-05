@@ -1,6 +1,7 @@
 
 import UIKit
 import GoogleMaps
+import GooglePlaces
 
 class PlaceInformation: UIView, UIGestureRecognizerDelegate{
 
@@ -8,6 +9,9 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
     @IBOutlet weak var addressName: UILabel!
     @IBOutlet weak var placeRating: UILabel!
     @IBOutlet weak var distanceIcon: UIImageView!
+    
+    
+    var place:GMSPlace!
     
     var placeID: String = ""
     var saved: Bool = false    
@@ -56,6 +60,16 @@ class PlaceInformation: UIView, UIGestureRecognizerDelegate{
         self.placeName.textColor = UIColor.mainDarkGreen()
         self.distanceIcon.isUserInteractionEnabled = true
         self.addSubview(view)
+    }
+    
+    
+    func setUpInfo(_ place:GMSPlace){
+        self.place = place
+        
+        setSelectedPlaceName(place.name)
+        setSelectedAddress(place.formattedAddress!)
+        setGooglePlaceID(place.placeID)
+        setPlaceRate(place.rating)
     }
     
     

@@ -168,10 +168,9 @@ class MapViewController: CommonViewController{
                 return
             }
             
-            self.myplaceInfoView?.setSelectedPlaceName(place.name)
-            self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-            self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-            self.myplaceInfoView?.setPlaceRate(place.rating)
+            self.myplaceInfoView.setUpInfo(place)
+            
+
         })
         
         self.myplaceInfoView.reloadInputViews()

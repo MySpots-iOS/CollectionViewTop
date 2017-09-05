@@ -255,11 +255,7 @@ class SearchMapViewController: CommonViewController, CLLocationManagerDelegate, 
                         print("No place details for \(userData ?? "no placeID")")
                         return
                     }
-            
-                    self.myplaceInfoView?.setSelectedPlaceName(place.name)
-                    self.myplaceInfoView?.setSelectedAddress(place.formattedAddress!)
-                    self.myplaceInfoView?.setGooglePlaceID(place.placeID)
-                    self.myplaceInfoView?.setPlaceRate(place.rating)
+                    self.myplaceInfoView.setUpInfo(place)
             })
         }
 
