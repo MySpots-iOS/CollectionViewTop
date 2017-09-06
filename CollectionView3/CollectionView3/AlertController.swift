@@ -36,7 +36,7 @@ class AlertControl{
     var presentDelegate: AlertPresentDelegate??
 
     
-    func saveToFolder(_ folders:[Folder], _ placeInfo:PlaceInformation){
+    func saveToFolder(_ folders:[Folder]){
 
         let alert = UIAlertController(title:"Save to Folder", message: "Select a folder to save your spot", preferredStyle: UIAlertControllerStyle.alert)
         
@@ -45,9 +45,6 @@ class AlertControl{
                 
                 let action = UIAlertAction(title: folder.folderName, style: UIAlertActionStyle.default, handler: {
                     (action: UIAlertAction!) in
-                    
-                    print(folder.folderName!)
-                    print(placeInfo.addressName)
                     
                     self.delegate?.dataAction(AlertAction.AddNewSpot(folder.folderName!))
                 })
@@ -105,8 +102,7 @@ class AlertControl{
     }
     
     
-    func deleteFromFolder(_ placeInfo:PlaceInformation){
-        
+    func deleteFromFolder(){
         
         let alertController = UIAlertController(title: "Delete Spot?",
                                                 message: " ",
@@ -114,11 +110,6 @@ class AlertControl{
         
         // Submit button
         let submitAction = UIAlertAction(title: "Delete", style:.destructive , handler: { (action) -> Void in
-            
-            placeInfo.marker.map = nil
-            placeInfo.setUnSavedIcon()
-            placeInfo.saved = false
-
             self.delegate?.dataAction(AlertAction.DeleteMarkerDatabase)
         })
         

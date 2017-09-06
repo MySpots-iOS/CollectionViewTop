@@ -41,8 +41,6 @@ class MapViewController: CommonViewController{
         self.loadTemplate()
         
         mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
-//        mapView.isHidden = true
-        
         
         nc.addObserver(self, selector: #selector(self.initCompleted(notification:)), name: Notification.Name("TableViewNotification"), object: nil)
         
@@ -96,17 +94,9 @@ class MapViewController: CommonViewController{
     @IBAction func gotoDetailView(_ sender: UITapGestureRecognizer) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
         //set placeID
-        vc.placeID = myplaceInfoView.getGooglePlaceID()
-        vc.saved = myplaceInfoView.getSavedBool()
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    
-    override func instantiateDetailView(_ spot:Spot){
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "toDetailView") as! SpotDetailViewController
-        //set placeID
-        vc.placeID = spot.placeID!
-        vc.saved = true
+        vc.gmsPlace = myplaceInfoView.place
+        vc.saved = myplaceInfoView.saved
+        vc.dataController = self.dataController
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -141,7 +131,6 @@ class MapViewController: CommonViewController{
         if placeInfoAppear{
             Animation().animateHide(tableViewWrapper, placeInfoView, self.tableViewHeader.bounds.height, ViewControllerFlag.mapVC)
                 placeInfoAppear = false
-
         }
     }
 
@@ -169,7 +158,6 @@ class MapViewController: CommonViewController{
             }
             
             self.myplaceInfoView.setUpInfo(place)
-            
 
         })
         
@@ -218,7 +206,6 @@ extension MapViewController: UITableViewDataSource ,UITableViewDelegate{
         tableViewAppear = false
         placeInfoAppear = true
     }
-
 }
 
 
@@ -232,10 +219,15 @@ extension MapViewController:AlertPresentDelegate, AlertControlDelegate{
         
         switch action {
         case let .AddNewSpot(folderName):
-            dataController.addNewSpot(myplaceInfoView, folderName)
+            dataController.addNewSpot(myplaceInfoView.place, folderName)
         case let .MakeNewFolder(name):
-            dataController.makeNewFolder(name, myplaceInfoView)
+            dataController.makeNewFolder(name, myplaceInfoView.place)
         case .DeleteMarkerDatabase:
+            
+            myplaceInfoView.marker.map = nil
+            myplaceInfoView.setUnSavedIcon()
+            myplaceInfoView.saved = false
+            
             dataController.deleteMarkerDatabase(folder.folderName!, myplaceInfoView.placeID)
         default:
             return

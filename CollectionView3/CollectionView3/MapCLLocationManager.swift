@@ -67,8 +67,6 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
         
     }
     
-
-    
     // Handle authorization for the location manager.
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         

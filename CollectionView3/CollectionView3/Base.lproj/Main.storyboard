@@ -448,7 +448,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VwI-zC-Hgc">
+                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VwI-zC-Hgc">
                                         <rect key="frame" x="295" y="0.0" width="48" height="60"/>
                                         <gestureRecognizers/>
                                         <constraints>
@@ -650,7 +650,7 @@
                     <value key="contentSizeForViewInPopover" type="size" width="375" height="667"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Ouz-kg-fkZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ouz-kg-fkZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -669,7 +669,7 @@
                 <navigationController storyboardIdentifier="SearchMap" automaticallyAdjustsScrollViewInsets="NO" id="v45-ox-VtP" customClass="UINaviagtionController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="rXX-ba-f4l"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="1Zg-wO-YLm">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1Zg-wO-YLm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
